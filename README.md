@@ -1,3 +1,5 @@
+This is an unofficial fork of [SpaceTech](https://gitee.com/narcissu14/SpaceTech)
+
 # SpaceTech —— 太空科技
 SpaceTech的开源协议为[GNU AGPL](https://gitee.com/narcissu14/SpaceTech/blob/master/LICENSE)
 
