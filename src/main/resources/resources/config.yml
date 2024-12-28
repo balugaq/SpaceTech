@@ -1,0 +1,5 @@
+SpaceWorld:
+  SpaceWorldList:
+  - space
+## 如果你的Slimefun没有使用远古工艺（即不存在 元物质 的Slimefun），请将此项配置改为 OriginalSlimefun: true
+OriginalSlimefun: false

@@ -1,0 +1,8 @@
+name: SpaceTech
+version: ${project.version}
+main: com.narcissu14.spacetech.SpaceTech
+depend: [CS-CoreLib, Slimefun]
+authors: [Narcissu14]
+description: Slimefun太空科技扩展
+api-version: 1.13
+website: plugin.narcissu14.com
