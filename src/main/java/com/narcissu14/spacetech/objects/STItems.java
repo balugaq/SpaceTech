@@ -4,17 +4,18 @@ import com.narcissu14.spacetech.SpaceTech;
 import com.narcissu14.spacetech.utils.CustomPotionItem;
 import com.narcissu14.spacetech.utils.ItemUtils;
 import com.narcissu14.spacetech.utils.SkullUtil;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 /**
@@ -205,6 +206,22 @@ public class STItems {
             return miningTools.get(sfItem.getId());
         }
         return 5;
+    }
+
+    public static int getToolCapacity(ItemStack item) {
+        if (SlimefunUtils.isItemSimilar(ORE_RIG_REINFORCED, item, false, false)) {
+            return 256;
+        }
+
+        if (SlimefunUtils.isItemSimilar(ORE_RIG_CARBONADO, item, false, false)) {
+            return 512;
+        }
+
+        if (SlimefunUtils.isItemSimilar(ORE_RIG_TITIANIUM, item, false, false)) {
+            return 1024;
+        }
+
+        return 0;
     }
 
     /**

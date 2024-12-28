@@ -2,14 +2,13 @@ package com.narcissu14.spacetech.objects.blocks;
 
 import com.narcissu14.spacetech.objects.STItems;
 import com.narcissu14.spacetech.utils.ActionBarAPI;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
-import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.utils.ChargeUtils;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.energy.ItemEnergy;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -98,7 +97,7 @@ public class SpaceOre extends AbstractOre {
             if (charge < cost) {
                 return false;
             }
-            ChargeUtils.setCharge(meta, charge - cost, charge);
+            ChargeUtils.setCharge(meta, charge - cost, STItems.getToolCapacity(item));
             item.setItemMeta(meta);
             player.getInventory().setItemInMainHand(item);
             return true;

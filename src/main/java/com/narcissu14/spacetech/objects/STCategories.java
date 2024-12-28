@@ -2,8 +2,8 @@ package com.narcissu14.spacetech.objects;
 
 import com.narcissu14.spacetech.SpaceTech;
 import com.narcissu14.spacetech.utils.SkullUtil;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import org.bukkit.NamespacedKey;
 
 /**

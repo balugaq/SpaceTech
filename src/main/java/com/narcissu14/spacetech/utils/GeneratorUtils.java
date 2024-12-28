@@ -1,8 +1,11 @@
 package com.narcissu14.spacetech.utils;
 
-import me.mrCookieSlime.CSCoreLibPlugin.general.World.CustomSkull;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
@@ -48,7 +51,7 @@ public class GeneratorUtils {
         s.update();
         try
         {
-            CustomSkull.setSkull(s.getBlock(), CustomSkull.getTexture(item));
+            PlayerHead.setSkin(s.getBlock(), PlayerSkin.fromHashCode(SkullUtil.getHash(item)), false);
         }
         catch (Exception e1)
         {

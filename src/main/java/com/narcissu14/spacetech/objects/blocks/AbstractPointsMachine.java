@@ -7,6 +7,7 @@ import com.narcissu14.spacetech.utils.MachineHelper;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
@@ -18,6 +19,7 @@ import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
@@ -45,7 +47,7 @@ import java.util.Map;
  * 抽象的点数累积型机器(例如UU机)
  * 输入的原材料可以变为点数，也能直接产出产品或是消耗点数后产出产品
  */
-public abstract class AbstractPointsMachine extends SlimefunItem {
+public abstract class AbstractPointsMachine extends AContainer {
     static final String POINTS_KEY = "machine-points";
     private static final int[] POINTS_BORDER = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
     private static final int[] POINTS_INFO = {10, 11, 12, 13, 14, 15, 16};
@@ -58,8 +60,13 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
     private static ItemStack NO_POINTS_ITEM = new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1);
     protected List<PointMachineRecipe> recipes = new ArrayList<PointMachineRecipe>();
 
-    public AbstractPointsMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
-        super(itemGroup, item, name, recipeType, recipe);
+    public AbstractPointsMachine(ItemGroup itemGroup, ItemStack itemStack, String id, RecipeType recipeType, ItemStack[] recipe) {
+        this(itemGroup, new SlimefunItemStack(id, itemStack), recipeType, recipe);
+    }
+
+    public AbstractPointsMachine(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+        super(itemGroup, item, recipeType, recipe);
+        String name = this.getItemName();
 
         new BlockMenuPreset(name, getInventoryTitle()) {
             @Override
@@ -127,7 +134,7 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
         registerDefaultRecipes();
     }
 
-    private void constructMenu(BlockMenuPreset preset) {
+    public void constructMenu(BlockMenuPreset preset) {
         for (int i : POINTS_BORDER) {
             preset.addItem(i, new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "),
                     new ChestMenu.MenuClickHandler() {
@@ -546,4 +553,8 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
             }
         }
     }
+
+    public abstract int getCapacity();
+
+    public abstract int getSpeed();
 }

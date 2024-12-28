@@ -1,11 +1,11 @@
 package com.narcissu14.spacetech.objects.blocks;
 
 import com.narcissu14.spacetech.objects.STItems;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
-import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -43,4 +43,9 @@ public abstract class OreRefiningMachine extends AContainer {
     public String getMachineIdentifier() {
         return name;
     }
+    public abstract int getCapacity();
+
+    public abstract int getEnergyConsumption();
+
+    public abstract int getSpeed();
 }

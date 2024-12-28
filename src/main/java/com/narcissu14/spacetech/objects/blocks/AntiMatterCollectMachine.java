@@ -2,8 +2,8 @@ package com.narcissu14.spacetech.objects.blocks;
 
 import com.narcissu14.spacetech.container.PointMachineRecipe;
 import com.narcissu14.spacetech.objects.STItems;
-import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
