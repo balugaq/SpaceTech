@@ -2,23 +2,24 @@ package com.narcissu14.spacetech.objects.blocks;
 
 import com.narcissu14.spacetech.container.PointMachineRecipe;
 import com.narcissu14.spacetech.setup.config.STConfig;
-import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
+import com.narcissu14.spacetech.utils.ChargeableBlock;
+import com.narcissu14.spacetech.utils.MachineHelper;
+import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
+import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Misc.compatibles.ProtectionUtils;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunBlockHandler;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.UnregisterReason;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineHelper;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.handlers.BlockTicker;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
+import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
@@ -26,6 +27,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -43,27 +46,24 @@ import java.util.Map;
  * 输入的原材料可以变为点数，也能直接产出产品或是消耗点数后产出产品
  */
 public abstract class AbstractPointsMachine extends SlimefunItem {
-    public static Map<Block, PointMachineRecipe> processing = new HashMap<Block, PointMachineRecipe>();
-    public static Map<Block, Integer> progress = new HashMap<Block, Integer>();
-    protected List<PointMachineRecipe> recipes = new ArrayList<PointMachineRecipe>();
-    protected static Map<Block, ItemStack> charginItems = new HashMap<Block, ItemStack>();
-
+    static final String POINTS_KEY = "machine-points";
     private static final int[] POINTS_BORDER = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
     private static final int[] POINTS_INFO = {10, 11, 12, 13, 14, 15, 16};
     private static final int[] BORDER = {27, 30, 31, 32, 35, 36, 39, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
     private static final int[] INPUT_SIGN = {28, 29};
     private static final int[] OUTPUT_SIGN = {33, 34};
+    public static Map<Block, PointMachineRecipe> processing = new HashMap<Block, PointMachineRecipe>();
+    public static Map<Block, Integer> progress = new HashMap<Block, Integer>();
+    protected static Map<Block, ItemStack> charginItems = new HashMap<Block, ItemStack>();
     private static ItemStack NO_POINTS_ITEM = new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1);
-    static final String POINTS_KEY = "machine-points";
+    protected List<PointMachineRecipe> recipes = new ArrayList<PointMachineRecipe>();
 
-    public AbstractPointsMachine(Category category, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
-        super(category, item, name, recipeType, recipe);
+    public AbstractPointsMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
+        super(itemGroup, item, name, recipeType, recipe);
 
-        new BlockMenuPreset(name, getInventoryTitle())
-        {
+        new BlockMenuPreset(name, getInventoryTitle()) {
             @Override
-            public void init()
-            {
+            public void init() {
                 AbstractPointsMachine.this.constructMenu(this);
             }
 
@@ -73,37 +73,36 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
             }
 
             @Override
-            public boolean canOpen(Block b, Player p)
-            {
-                boolean perm = p.hasPermission("slimefun.inventory.bypass") || CSCoreLib.getLib().getProtectionManager().canAccessChest(p.getUniqueId(), b, true);
-                return perm && (STConfig.originalSlimefun || ProtectionUtils.canAccessItem(p,b));
+            public boolean canOpen(Block b, Player p) {
+                boolean perm = p.hasPermission("slimefun.inventory.bypass") || Slimefun.getProtectionManager().hasPermission(p, b, Interaction.INTERACT_BLOCK);
+                return perm && (STConfig.originalSlimefun || AbstractPointsMachine.this.canUse(p, true));
             }
 
             @Override
-            public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow)
-            {
+            public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
                 if (flow.equals(ItemTransportFlow.INSERT)) {
                     return AbstractPointsMachine.this.getInputSlots();
                 }
                 return AbstractPointsMachine.this.getOutputSlots();
             }
         };
-        registerBlockHandler(name, new SlimefunBlockHandler()
-        {
+        addItemHandler(new BlockPlaceHandler(false) {
             @Override
-            public void onPlace(Player p, Block b, SlimefunItem item) {
-                runOnBlockPlace(p, b, item);
+            public void onPlayerPlace(BlockPlaceEvent e) {
+                Player p = e.getPlayer();
+                Block b = e.getBlockPlaced();
+                runOnBlockPlace(p, b);
                 if (BlockStorage.getLocationInfo(b.getLocation(), POINTS_KEY) == null) {
                     BlockStorage.addBlockInfo(b, POINTS_KEY, "0", false);
                 }
             }
+        }, new BlockBreakHandler(false, false) {
 
             @Override
-            public boolean onBreak(Player p, Block b, SlimefunItem item, UnregisterReason reason)
-            {
+            public void onPlayerBreak(BlockBreakEvent e, ItemStack tool, List<ItemStack> drops) {
+                Block b = e.getBlock();
                 BlockMenu inv = BlockStorage.getInventory(b);
-                if (inv != null)
-                {
+                if (inv != null) {
                     for (int slot : AbstractPointsMachine.this.getInputSlots()) {
                         if (inv.getItemInSlot(slot) != null) {
                             b.getWorld().dropItemNaturally(b.getLocation(), inv.getItemInSlot(slot));
@@ -122,15 +121,15 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
                     b.getWorld().dropItemNaturally(b.getLocation(), dropItem);
                 }
                 AbstractPointsMachine.charginItems.remove(b);
-                return true;
+                return;
             }
         });
         registerDefaultRecipes();
     }
 
-    private void constructMenu(BlockMenuPreset preset){
-        for(int i : POINTS_BORDER){
-            preset.addItem(i, new CustomItem(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "),
+    private void constructMenu(BlockMenuPreset preset) {
+        for (int i : POINTS_BORDER) {
+            preset.addItem(i, new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "),
                     new ChestMenu.MenuClickHandler() {
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
@@ -138,8 +137,8 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
                         }
                     });
         }
-        for(int i : BORDER){
-            preset.addItem(i, new CustomItem(new ItemStack(Material.ORANGE_STAINED_GLASS_PANE, 1), " "),
+        for (int i : BORDER) {
+            preset.addItem(i, new CustomItemStack(new ItemStack(Material.ORANGE_STAINED_GLASS_PANE, 1), " "),
                     new ChestMenu.MenuClickHandler() {
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
@@ -147,8 +146,8 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
                         }
                     });
         }
-        for(int i : OUTPUT_SIGN){
-            preset.addItem(i, new CustomItem(new ItemStack(Material.BLUE_STAINED_GLASS_PANE, 1), "§b输出槽"),
+        for (int i : OUTPUT_SIGN) {
+            preset.addItem(i, new CustomItemStack(new ItemStack(Material.BLUE_STAINED_GLASS_PANE, 1), "§b输出槽"),
                     new ChestMenu.MenuClickHandler() {
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
@@ -156,8 +155,8 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
                         }
                     });
         }
-        for(int i : INPUT_SIGN){
-            preset.addItem(i, new CustomItem(new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1), "§e输入槽"),
+        for (int i : INPUT_SIGN) {
+            preset.addItem(i, new CustomItemStack(new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1), "§e输入槽"),
                     new ChestMenu.MenuClickHandler() {
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
@@ -166,7 +165,7 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
                     });
         }
         //进度显示
-        preset.addItem(40, new CustomItem(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "),
+        preset.addItem(40, new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "),
                 new ChestMenu.MenuClickHandler() {
                     @Override
                     public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
@@ -189,7 +188,7 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
         }
         //POINT量信息
         for (int i : POINTS_INFO) {
-            preset.addItem(i, new CustomItem(NO_POINTS_ITEM, " "), new ChestMenu.MenuClickHandler() {
+            preset.addItem(i, new CustomItemStack(NO_POINTS_ITEM, " "), new ChestMenu.MenuClickHandler() {
                 @Override
                 public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
                     return false;
@@ -198,11 +197,11 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
         }
     }
 
-    public int[] getInputSlots(){
+    public int[] getInputSlots() {
         return new int[]{37, 38};
     }
 
-    public int[] getOutputSlots(){
+    public int[] getOutputSlots() {
         return new int[]{42, 43};
     }
 
@@ -225,7 +224,7 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
     /**
      * onPlace中额外的触发内容
      */
-    public void runOnBlockPlace(Player p, Block b, SlimefunItem item) {
+    public void runOnBlockPlace(Player p, Block b) {
 
     }
 
@@ -252,14 +251,14 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
     /**
      * 获取指定物品的点数
      * WARNING: 为了效率此处没有检测是否为可充点物品
-     *          请在每次使用前确保物品为可充点物品
+     * 请在每次使用前确保物品为可充点物品
      */
     public abstract int getItemPoints(ItemStack input);
 
     /**
      * 修改指定物品的点数
      * WARNING: 为了效率此处没有检测是否为可充点物品
-     *          请在每次使用前确保物品为可充点物品
+     * 请在每次使用前确保物品为可充点物品
      */
     public abstract ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd);
 
@@ -267,13 +266,11 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
         return new ItemStack(Material.FLINT_AND_STEEL);
     }
 
-    public PointMachineRecipe getProcessing(Block b)
-    {
+    public PointMachineRecipe getProcessing(Block b) {
         return processing.get(b);
     }
 
-    public boolean isProcessing(Block b)
-    {
+    public boolean isProcessing(Block b) {
         return getProcessing(b) != null;
     }
 
@@ -302,12 +299,11 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
         return this.recipes;
     }
 
-    private Inventory inject(Block b)
-    {
+    private Inventory inject(Block b) {
         int size = BlockStorage.getInventory(b).toInventory().getSize();
         Inventory inv = Bukkit.createInventory(null, size);
         for (int i = 0; i < size; i++) {
-            inv.setItem(i, new CustomItem(Material.COMMAND_BLOCK, " &4ALL YOUR PLACEHOLDERS ARE BELONG TO US"));
+            inv.setItem(i, new CustomItemStack(Material.COMMAND_BLOCK, " &4ALL YOUR PLACEHOLDERS ARE BELONG TO US"));
         }
         for (int slot : getOutputSlots()) {
             inv.setItem(slot, BlockStorage.getInventory(b).getItemInSlot(slot));
@@ -315,13 +311,11 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
         return inv;
     }
 
-    protected boolean fits(Block b, ItemStack[] items)
-    {
+    protected boolean fits(Block b, ItemStack[] items) {
         return inject(b).addItem(items).isEmpty();
     }
 
-    protected void pushMainItems(Block b, PointMachineRecipe recipe)
-    {
+    protected void pushMainItems(Block b, PointMachineRecipe recipe) {
         //旧point值
         int nowValue = Integer.parseInt(BlockStorage.getLocationInfo(b.getLocation(), POINTS_KEY));
         //新point值
@@ -357,7 +351,7 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
             ItemStack outItem = modifyItemPoints(output, points, true);
 
             boolean canOutput = false;
-            for (int slot : getOutputSlots()){
+            for (int slot : getOutputSlots()) {
                 if (BlockStorage.getInventory(b).getItemInSlot(slot) == null) {
                     Inventory inv = inject(b);
                     inv.addItem(outItem);
@@ -382,34 +376,31 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
     private void placePointsBar(int nowValue, int newValue, Block b) {
         for (int i : POINTS_INFO) {
             if (newValue != 0 && (i - POINTS_INFO[0]) * getPointsMax() / 7 <= nowValue) {
-                BlockStorage.getInventory(b).replaceExistingItem(i, new CustomItem(getPointsItem(), getPointsName() + newValue + "§7/§e" + getPointsMax()));
+                BlockStorage.getInventory(b).replaceExistingItem(i, new CustomItemStack(getPointsItem(), getPointsName() + newValue + "§7/§e" + getPointsMax()));
             } else {
-                BlockStorage.getInventory(b).replaceExistingItem(i, new CustomItem(NO_POINTS_ITEM, getPointsName() + newValue + "§7/§e" + getPointsMax()));
+                BlockStorage.getInventory(b).replaceExistingItem(i, new CustomItemStack(NO_POINTS_ITEM, getPointsName() + newValue + "§7/§e" + getPointsMax()));
             }
         }
     }
 
     @Override
-    public void register(boolean slimefun)
-    {
-        addItemHandler(new BlockTicker()
-        {
+    public void register(SlimefunAddon addon) {
+        addItemHandler(new BlockTicker() {
             @Override
-            public void tick(Block b, SlimefunItem sf, Config data)
-            {
+            public void tick(Block b, SlimefunItem sf, Config data) {
                 AbstractPointsMachine.this.tick(b);
             }
 
             @Override
-            public void uniqueTick() {}
+            public void uniqueTick() {
+            }
 
             @Override
-            public boolean isSynchronized()
-            {
+            public boolean isSynchronized() {
                 return false;
             }
         });
-        super.register(slimefun);
+        super.register(addon);
     }
 
     protected void tick(Block b) {
@@ -420,31 +411,27 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
                 ItemStack item = getProgressBar().clone();
                 im = item.getItemMeta();
                 if (im instanceof Damageable) {
-                	((Damageable)im).setDamage(MachineHelper.getDurability(item, timeleft, processing.get(b).getTicks()));
+                    ((Damageable) im).setDamage(MachineHelper.getDurability(item, timeleft, processing.get(b).getTicks()));
                 }
                 im.setDisplayName(" ");
                 List<String> lore = new ArrayList<String>();
-                lore.add(MachineHelper.getProgress(timeleft, processing.get(b).getTicks()));
+                lore.add(ChestMenuUtils.getProgressBar(timeleft, processing.get(b).getTicks()));
                 lore.add("");
-                lore.add(MachineHelper.getTimeLeft(timeleft / 2));
                 im.setLore(lore);
                 item.setItemMeta(im);
 
                 BlockStorage.getInventory(b).replaceExistingItem(40, item);
-                if (ChargableBlock.isChargable(b))
-                {
-                    if (ChargableBlock.getCharge(b) < getEnergyConsumption()) {
+                if (ChargeableBlock.isChargeable(b)) {
+                    if (ChargeableBlock.getCharge(b) < getEnergyConsumption()) {
                         return;
                     }
-                    ChargableBlock.addCharge(b, -getEnergyConsumption());
+                    ChargeableBlock.addCharge(b, -getEnergyConsumption());
+                    progress.put(b, timeleft - 1);
+                } else {
                     progress.put(b, timeleft - 1);
                 }
-                else {
-                    progress.put(b, timeleft - 1);
-                }
-            }
-            else {
-                BlockStorage.getInventory(b).replaceExistingItem(40, new CustomItem(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "));
+            } else {
+                BlockStorage.getInventory(b).replaceExistingItem(40, new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "));
                 if (!startTickCheck(b, processing.get(b))) {
                     return;
                 }
@@ -453,16 +440,13 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
                 processing.remove(b);
                 charginItems.remove(b);
             }
-        }
-        else
-        {
+        } else {
             //如果没有在进行生产流程
             PointMachineRecipe r = null;
             Map<Integer, Integer> found = new HashMap<Integer, Integer>();
 
             recipeCheck:
-            for (PointMachineRecipe recipe : this.recipes)
-            {
+            for (PointMachineRecipe recipe : this.recipes) {
                 //判断是否有足够扣除的点数
                 if (!recipe.getCheckType().equals(PointMachineRecipe.PointCheckType.NO_CHECK)) {
                     int value = Integer.valueOf(BlockStorage.getLocationInfo(b.getLocation(), POINTS_KEY));
@@ -500,8 +484,7 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
                 if (recipe.getType().equals(PointMachineRecipe.RecipeResultType.ITEM)) {
                     for (ItemStack input : recipe.getInput()) {
                         for (int slot : getInputSlots()) {
-                            if (SlimefunManager.isItemSimiliar(BlockStorage.getInventory(b).getItemInSlot(slot), input, true))
-                            {
+                            if (SlimefunUtils.isItemSimilar(BlockStorage.getInventory(b).getItemInSlot(slot), input, true)) {
                                 if (input != null) {
                                     found.put(slot, input.getAmount());
                                 }
@@ -509,8 +492,7 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
                             }
                         }
                     }
-                    if (found.size() == recipe.getInput().length)
-                    {
+                    if (found.size() == recipe.getInput().length) {
                         r = recipe;
                         break;
                     }
@@ -530,7 +512,7 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
                     ItemStack realInput = null;
                     for (ItemStack input : recipe.getInput()) {
                         for (int slot : getInputSlots()) {
-                            if (SlimefunManager.isItemSimiliar(BlockStorage.getInventory(b).getItemInSlot(slot), input, false)) {
+                            if (SlimefunUtils.isItemSimilar(BlockStorage.getInventory(b).getItemInSlot(slot), input, false)) {
                                 if (input != null) {
                                     found.put(slot, input.getAmount());
                                     realInput = input;
@@ -541,16 +523,14 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
                     if (realInput != null) {
                         charginItems.put(b, realInput);
                     }
-                    if (found.size() == recipe.getInput().length)
-                    {
+                    if (found.size() == recipe.getInput().length) {
                         r = recipe;
                         break;
                     }
                     found.clear();
                 }
             }
-            if (r != null)
-            {
+            if (r != null) {
                 //检测Points是否已满，且配方依然要对points进行增加，是则return
                 if (BlockStorage.getLocationInfo(b.getLocation(), POINTS_KEY).equals(String.valueOf(getPointsMax())) && r.getPoints() > 0) {
                     return;
@@ -559,7 +539,7 @@ public abstract class AbstractPointsMachine extends SlimefunItem {
                     return;
                 }
                 for (Map.Entry<Integer, Integer> entry : found.entrySet()) {
-                    BlockStorage.getInventory(b).replaceExistingItem(entry.getKey(), InvUtils.decreaseItem(BlockStorage.getInventory(b).getItemInSlot(entry.getKey()), entry.getValue()));
+                    BlockStorage.getInventory(b).consumeItem(entry.getKey(), entry.getValue());
                 }
                 processing.put(b, r);
                 progress.put(b, r.getTicks());

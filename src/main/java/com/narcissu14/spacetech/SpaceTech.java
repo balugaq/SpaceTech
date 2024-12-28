@@ -5,9 +5,12 @@ import com.narcissu14.spacetech.listener.ItemListener;
 import com.narcissu14.spacetech.listener.SpaceWorldListener;
 import com.narcissu14.spacetech.setup.STItemSetup;
 import com.narcissu14.spacetech.setup.config.STConfig;
+import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import org.bukkit.Bukkit;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.jar.JarFile;
@@ -16,7 +19,7 @@ import java.util.zip.ZipEntry;
 /**
  * @author Narcissu14
  */
-public final class SpaceTech extends JavaPlugin {
+public final class SpaceTech extends JavaPlugin implements SlimefunAddon {
     private static SpaceTech instance;
 
     private STConfig config;
@@ -131,5 +134,17 @@ public final class SpaceTech extends JavaPlugin {
 
     public STConfig getConfigData() {
         return config;
+    }
+
+    @NotNull
+    @Override
+    public JavaPlugin getJavaPlugin() {
+        return this;
+    }
+
+    @Nullable
+    @Override
+    public String getBugTrackerURL() {
+        return null;
     }
 }

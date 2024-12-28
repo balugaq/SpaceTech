@@ -3,12 +3,12 @@ package com.narcissu14.spacetech.objects.blocks;
 import com.narcissu14.spacetech.SpaceTech;
 import com.narcissu14.spacetech.container.PointMachineRecipe;
 import com.narcissu14.spacetech.objects.STItems;
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -29,11 +29,11 @@ public abstract class BedrockCrackMachine extends AbstractPointsMachine {
     private int pointsMax;
     private String pointsName;
 
-    private final static ItemStack DIG_BUTTON = new CustomItem(new ItemStack(Material.HOPPER), "§a方向: §e下",
+    private final static ItemStack DIG_BUTTON = new CustomItemStack(new ItemStack(Material.HOPPER), "§a方向: §e下",
             "" , "§7当§e挖掘度§7到达最大后", "§7你可以放入§e空电磁拘束单元", "§7开始对基岩进行爆碎", "§7并收集获得基岩粉末", "", "§c§l注意: §7基岩爆碎机只能爆碎其下方的基岩");
 
-    public BedrockCrackMachine(Category category, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
-        super(category, item, name, recipeType, recipe);
+    public BedrockCrackMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
+        super(itemGroup, item, name, recipeType, recipe);
         id = name;
         this.pointsMax = pointsMax;
         this.pointsItem = pointsItem;
@@ -53,7 +53,7 @@ public abstract class BedrockCrackMachine extends AbstractPointsMachine {
 
     @Override
     boolean startTickCheck(Block b, PointMachineRecipe recipe) {
-        if (SlimefunManager.isItemSimiliar(recipe.getInput()[0], STItems.EMPTY_EM_UNIT, true)) {
+        if (SlimefunUtils.isItemSimilar(recipe.getInput()[0], STItems.EMPTY_EM_UNIT, true)) {
             if (!b.getRelative(BlockFace.DOWN).getType().equals(Material.BEDROCK)) {
                 return false;
             }

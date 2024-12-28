@@ -1,8 +1,8 @@
 package com.narcissu14.spacetech.objects.blocks;
 
 import com.narcissu14.spacetech.objects.STItems;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,8 +20,8 @@ public class OxygenChargeMachine extends AbstractPointsMachine {
     private static int POINTS_MAX;
     private static String POINTS_NAME;
 
-    public OxygenChargeMachine(Category category, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
-        super(category, item, name, recipeType, recipe);
+    public OxygenChargeMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
+        super(itemGroup, item, name, recipeType, recipe);
         ID = name;
         POINTS_MAX = pointsMax;
         POINTS_ITEM = pointsItem;

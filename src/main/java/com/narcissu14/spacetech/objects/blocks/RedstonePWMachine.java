@@ -1,15 +1,15 @@
 package com.narcissu14.spacetech.objects.blocks;
 
 import com.narcissu14.spacetech.utils.ActionBarAPI;
+import com.narcissu14.spacetech.utils.SkullUtil;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.CSCoreLibPlugin.general.World.CustomSkull;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunBlockHandler;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.UnregisterReason;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -17,7 +17,11 @@ import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 /**
  * @author Narcissu14
@@ -42,7 +46,7 @@ public class RedstonePWMachine extends SlimefunItem {
 
     static {
         try {
-            PW_BUTTON = new CustomItem(CustomSkull.getItem("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY4ODZkOWM0MGVmN2Y1MGMyMzg4MjQ3OTJjNDFmYmZiNTRmNjY1ZjE1OWJmMWJjYjBiMjdiM2VhZDM3M2IifX19"),
+            PW_BUTTON = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWY4ODZkOWM0MGVmN2Y1MGMyMzg4MjQ3OTJjNDFmYmZiNTRmNjY1ZjE1OWJmMWJjYjBiMjdiM2VhZDM3M2IifX19"),
                     PW_BUTTON_NAME, PW_BUTTON_LORES);
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,8 +60,8 @@ public class RedstonePWMachine extends SlimefunItem {
      * input 当前输入，默认00000(每次确认输入、放置、归零、退出界面)
      * password 匹配密码，默认00000(放置时)
      * */
-    public RedstonePWMachine(Category category, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
-        super(category, item, name, recipeType, recipe);
+    public RedstonePWMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
+        super(itemGroup, item, name, recipeType, recipe);
 
         id = name;
 
@@ -92,34 +96,37 @@ public class RedstonePWMachine extends SlimefunItem {
             }
         };
 
-        registerBlockHandler(name, new SlimefunBlockHandler()
-        {
+        addItemHandler(new BlockPlaceHandler(false) {
 
             @Override
-            public void onPlace(Player player, Block block, SlimefunItem slimefunItem) {
+            public void onPlayerPlace(BlockPlaceEvent blockPlaceEvent) {
+                Block block = blockPlaceEvent.getBlockPlaced();
+                Player player = blockPlaceEvent.getPlayer();
                 BlockStorage.addBlockInfo(block, OWNER_KEY, player.getName());
                 BlockStorage.addBlockInfo(block, PLACE_TIME_KEY, String.valueOf(System.currentTimeMillis()));
                 BlockStorage.addBlockInfo(block, INPUT_KEY, "00000");
                 BlockStorage.addBlockInfo(block, PW_KEY, "00000");
             }
-
+        }, new BlockBreakHandler(false, false) {
             @Override
-            public boolean onBreak(Player player, Block block, SlimefunItem slimefunItem, UnregisterReason unregisterReason) {
+            public void onPlayerBreak(BlockBreakEvent blockBreakEvent, ItemStack itemStack, List<ItemStack> list) {
+                Player player = blockBreakEvent.getPlayer();
+                Block block = blockBreakEvent.getBlock();
                 if (player.isOp()) {
-                    return true;
+                    return;
                 }
                 if (player.getName().equals(BlockStorage.getLocationInfo(block.getLocation(), OWNER_KEY))) {
-                    return true;
+                    return;
                 }
                 ActionBarAPI.sendActionBar(player, "§c§l只有密码机的放置者能够拆除！");
-                return false;
+                blockBreakEvent.setCancelled(true);
             }
         });
     }
 
     private void constructMenu(BlockMenuPreset preset){
         for(int i : PW_BORDER){
-            preset.addItem(i, new CustomItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1), " "),
+            preset.addItem(i, new CustomItemStack(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1), " "),
                     new ChestMenu.MenuClickHandler() {
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
@@ -128,7 +135,7 @@ public class RedstonePWMachine extends SlimefunItem {
                     });
         }
         for(int i : PW_ENTER_BORDER){
-            preset.addItem(i, new CustomItem(new ItemStack(Material.BLUE_STAINED_GLASS_PANE, 1), " "),
+            preset.addItem(i, new CustomItemStack(new ItemStack(Material.BLUE_STAINED_GLASS_PANE, 1), " "),
                     new ChestMenu.MenuClickHandler() {
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
@@ -137,7 +144,7 @@ public class RedstonePWMachine extends SlimefunItem {
                     });
         }
         for(int i : PW_SETTING_BORDER){
-            preset.addItem(i, new CustomItem(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "),
+            preset.addItem(i, new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "),
                     new ChestMenu.MenuClickHandler() {
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
@@ -146,7 +153,7 @@ public class RedstonePWMachine extends SlimefunItem {
                     });
         }
         for(int i : PW_ZERO_BORDER){
-            preset.addItem(i, new CustomItem(new ItemStack(Material.RED_STAINED_GLASS_PANE, 1), " "),
+            preset.addItem(i, new CustomItemStack(new ItemStack(Material.RED_STAINED_GLASS_PANE, 1), " "),
                     new ChestMenu.MenuClickHandler() {
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {

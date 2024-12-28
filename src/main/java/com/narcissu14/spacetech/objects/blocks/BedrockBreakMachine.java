@@ -2,14 +2,15 @@ package com.narcissu14.spacetech.objects.blocks;
 
 import com.narcissu14.spacetech.container.MachineDirection;
 import com.narcissu14.spacetech.objects.STItems;
-import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
+import com.narcissu14.spacetech.utils.SkullUtil;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.CSCoreLibPlugin.general.World.CustomSkull;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;
@@ -30,7 +31,7 @@ public abstract class BedrockBreakMachine extends AbstractPointsMachine {
     private static int POINTS_MAX;
     private static String POINTS_NAME;
 
-    private final static ItemStack DIG_BUTTON = new CustomItem(new ItemStack(Material.HOPPER), "§c§l点击挖掘基岩",
+    private final static ItemStack DIG_BUTTON = new CustomItemStack(new ItemStack(Material.HOPPER), "§c§l点击挖掘基岩",
             "" , "§7当§e挖掘度§7到达最大后可以破穿指定方向的基岩", "§7你可以点击下方的按钮修改破穿的方位", "§7挖掘需要消耗基岩钻头", "", "§c§l注意: §7调整破穿方位会重置挖掘度");
     private final static String DIRECTION_KEY = "break-direction";
 
@@ -38,15 +39,15 @@ public abstract class BedrockBreakMachine extends AbstractPointsMachine {
 
     static {
         try {
-            DIRECTION_BUTTON = new CustomItem(CustomSkull.getItem("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzZkMWZhYmRmM2UzNDI2NzFiZDlmOTVmNjg3ZmUyNjNmNDM5ZGRjMmYxYzllYThmZjE1YjEzZjFlN2U0OGI5In19fQ=="),
+            DIRECTION_BUTTON = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzZkMWZhYmRmM2UzNDI2NzFiZDlmOTVmNjg3ZmUyNjNmNDM5ZGRjMmYxYzllYThmZjE1YjEzZjFlN2U0OGI5In19fQ=="),
                     "§7当前破穿方向: §e下", "", "§a点击修改§e破穿方向", "§7调整挖掘方位会§c重置§7挖掘度");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public BedrockBreakMachine(Category category, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
-        super(category, item, name, recipeType, recipe);
+    public BedrockBreakMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
+        super(itemGroup, item, name, recipeType, recipe);
         ID = name;
         POINTS_MAX = pointsMax;
         POINTS_ITEM = pointsItem;
@@ -104,7 +105,7 @@ public abstract class BedrockBreakMachine extends AbstractPointsMachine {
                     player.sendMessage("§c破穿方向上的方块不是基岩");
                     return false;
                 }
-                if (CSCoreLib.getLib().getProtectionManager().canBuild(player.getUniqueId(), facingBlock)) {
+                if (Slimefun.getProtectionManager().hasPermission(player, facingBlock, Interaction.PLACE_BLOCK)) {
                     //挖基岩
                     facingBlock.setType(Material.AIR);
                     player.playSound(b.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2f, 0.7f);
@@ -163,7 +164,7 @@ public abstract class BedrockBreakMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public void runOnBlockPlace(Player p, Block b, SlimefunItem item) {
+    public void runOnBlockPlace(Player p, Block b) {
         if (BlockStorage.getLocationInfo(b.getLocation(), DIRECTION_KEY) == null) {
             BlockStorage.addBlockInfo(b, DIRECTION_KEY, MachineDirection.DOWN.toString(), false);
         }

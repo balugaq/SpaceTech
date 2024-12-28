@@ -1,9 +1,10 @@
 package com.narcissu14.spacetech.objects.blocks;
 
 import com.narcissu14.spacetech.objects.STItems;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -14,8 +15,8 @@ import org.bukkit.inventory.ItemStack;
 public abstract class UnitItemMachine extends AContainer {
     private final String name;
 
-    public UnitItemMachine(Category category, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
-        super(category, item, name, recipeType, recipe);
+    public UnitItemMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
+        super(itemGroup, new SlimefunItemStack(name, item), recipeType, recipe);
         this.name = name;
     }
 
@@ -31,7 +32,7 @@ public abstract class UnitItemMachine extends AContainer {
 
     @Override
     public void registerDefaultRecipes() {
-        registerRecipe(40, new ItemStack[]{STItems.BEDROCK_EM_UNIT_3}, new ItemStack[]{new ItemStack(Material.BEDROCK), new CustomItem(STItems.EMPTY_EM_UNIT, 3)});
+        registerRecipe(40, new ItemStack[]{STItems.BEDROCK_EM_UNIT_3}, new ItemStack[]{new ItemStack(Material.BEDROCK), new CustomItemStack(STItems.EMPTY_EM_UNIT, 3)});
         registerRecipe(120, new ItemStack[]{new ItemStack(Material.BEDROCK, 3), new ItemStack(Material.DIAMOND_PICKAXE)},
             new ItemStack[]{STItems.BEDROCK_DIAMOND_PICKAXE});
         registerRecipe(80, new ItemStack[]{new ItemStack(Material.BEDROCK, 2), new ItemStack(Material.DIAMOND_SWORD)},

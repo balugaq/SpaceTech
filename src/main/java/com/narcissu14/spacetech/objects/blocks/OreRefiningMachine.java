@@ -1,10 +1,11 @@
 package com.narcissu14.spacetech.objects.blocks;
 
 import com.narcissu14.spacetech.objects.STItems;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
-import me.mrCookieSlime.Slimefun.Objects.Category;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -15,8 +16,8 @@ import org.bukkit.inventory.ItemStack;
 public abstract class OreRefiningMachine extends AContainer {
     private final String name;
 
-    public OreRefiningMachine(Category category, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
-        super(category, item, name, recipeType, recipe);
+    public OreRefiningMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
+        super(itemGroup, new SlimefunItemStack(name, item), recipeType, recipe);
         this.name = name;
     }
 
@@ -32,8 +33,8 @@ public abstract class OreRefiningMachine extends AContainer {
 
     @Override
     public void registerDefaultRecipes() {
-        registerRecipe(20, new ItemStack[]{STItems.COPPER_ORE}, new ItemStack[]{new CustomItem(SlimefunItems.COPPER_INGOT, 2)});
-        registerRecipe(20, new ItemStack[]{STItems.SILVER_ORE}, new ItemStack[]{new CustomItem(SlimefunItems.SILVER_INGOT, 2)});
+        registerRecipe(20, new ItemStack[]{STItems.COPPER_ORE}, new ItemStack[]{new CustomItemStack(SlimefunItems.COPPER_INGOT, 2)});
+        registerRecipe(20, new ItemStack[]{STItems.SILVER_ORE}, new ItemStack[]{new CustomItemStack(SlimefunItems.SILVER_INGOT, 2)});
         registerRecipe(100, new ItemStack[]{STItems.TITANIUM_ORE}, new ItemStack[]{STItems.TITANIUM});
         registerRecipe(100, new ItemStack[]{STItems.NEODYMIUM_ORE}, new ItemStack[]{STItems.NEODYMIUM});
     }

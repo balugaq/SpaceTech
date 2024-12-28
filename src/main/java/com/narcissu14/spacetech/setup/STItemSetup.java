@@ -6,15 +6,19 @@ import com.narcissu14.spacetech.objects.STItems;
 import com.narcissu14.spacetech.objects.blocks.*;
 import com.narcissu14.spacetech.setup.config.STConfig;
 import com.narcissu14.spacetech.utils.ActionBarAPI;
+import com.narcissu14.spacetech.utils.SlimefunItemGroups;
 import com.narcissu14.spacetech.utils.TitleAPI;
+import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.events.ItemUseEvent;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import me.mrCookieSlime.Slimefun.Lists.Categories;
 import me.mrCookieSlime.Slimefun.Lists.NarItems;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.handlers.ItemInteractionHandler;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
@@ -41,61 +45,61 @@ public class STItemSetup {
     @SuppressWarnings("deprecation")
     // 虽然带耐久度的构造函数废弃了,但依旧十分好用
 	public static void setupItems() {
-        new SlimefunItem(Categories.RESOURCES, STItems.COPPER_ORE_NUGGET, "COPPER_ORE_NUGGET", new RecipeType(new CustomItem(Material.IRON_PICKAXE, "§a使用挖掘工具挖取", 0)), new ItemStack[0])
-                .register(true);
+        new SlimefunItem(SlimefunItemGroups.resources, STItems.COPPER_ORE_NUGGET, "COPPER_ORE_NUGGET", new RecipeType(new CustomItemStack(Material.IRON_PICKAXE, "§a使用挖掘工具挖取", 0)), new ItemStack[0])
+                .register(SpaceTech.getInstance());
 
         new SpaceOre(STCategories.ST_MACHINES, STItems.COPPER_ORE, STItems.COPPER_ORE_NUGGET, "COPPER_ORE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 STItems.COPPER_ORE_NUGGET, STItems.COPPER_ORE_NUGGET, STItems.COPPER_ORE_NUGGET,
                 STItems.COPPER_ORE_NUGGET, STItems.COPPER_ORE_NUGGET, STItems.COPPER_ORE_NUGGET,
                 STItems.COPPER_ORE_NUGGET, STItems.COPPER_ORE_NUGGET, STItems.COPPER_ORE_NUGGET
-        }, "100").register(true);
+        }, "100").register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.RESOURCES, STItems.SILVER_ORE_NUGGET, "SILVER_ORE_NUGGET", new RecipeType(new CustomItem(Material.IRON_PICKAXE, "§a使用挖掘工具挖取", 0)), new ItemStack[0])
-                .register(true);
+        new SlimefunItem(SlimefunItemGroups.resources, STItems.SILVER_ORE_NUGGET, "SILVER_ORE_NUGGET", new RecipeType(new CustomItemStack(Material.IRON_PICKAXE, "§a使用挖掘工具挖取", 0)), new ItemStack[0])
+                .register(SpaceTech.getInstance());
 
         new SpaceOre(STCategories.ST_MACHINES, STItems.SILVER_ORE, STItems.SILVER_ORE_NUGGET, "SILVER_ORE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 STItems.SILVER_ORE_NUGGET, STItems.SILVER_ORE_NUGGET, STItems.SILVER_ORE_NUGGET,
                 STItems.SILVER_ORE_NUGGET, STItems.SILVER_ORE_NUGGET, STItems.SILVER_ORE_NUGGET,
                 STItems.SILVER_ORE_NUGGET, STItems.SILVER_ORE_NUGGET, STItems.SILVER_ORE_NUGGET
-        }, "100").register(true);
+        }, "100").register(SpaceTech.getInstance());
 
         //钛
-        new SlimefunItem(Categories.RESOURCES, STItems.TITANIUM_ORE_NUGGET, "TITANIUM_ORE_NUGGET", new RecipeType(new CustomItem(Material.IRON_PICKAXE, "§a使用挖掘工具挖取", 0)), new ItemStack[0])
-                .register(true);
+        new SlimefunItem(SlimefunItemGroups.resources, STItems.TITANIUM_ORE_NUGGET, "TITANIUM_ORE_NUGGET", new RecipeType(new CustomItemStack(Material.IRON_PICKAXE, "§a使用挖掘工具挖取", 0)), new ItemStack[0])
+                .register(SpaceTech.getInstance());
 
         new SpaceOre(STCategories.ST_MACHINES, STItems.TITANIUM_ORE, STItems.TITANIUM_ORE_NUGGET, "TITANIUM_ORE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 STItems.TITANIUM_ORE_NUGGET, STItems.TITANIUM_ORE_NUGGET, STItems.TITANIUM_ORE_NUGGET,
                 STItems.TITANIUM_ORE_NUGGET, STItems.TITANIUM_ORE_NUGGET, STItems.TITANIUM_ORE_NUGGET,
                 STItems.TITANIUM_ORE_NUGGET, STItems.TITANIUM_ORE_NUGGET, STItems.TITANIUM_ORE_NUGGET
-        }, "250").register(true);
+        }, "250").register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.RESOURCES, STItems.TITANIUM, "TITANIUM", new RecipeType(new CustomItem(Material.IRON_PICKAXE, "§a使用挖掘工具挖取", 0)), new ItemStack[0])
-                .register(true);
+        new SlimefunItem(SlimefunItemGroups.resources, STItems.TITANIUM, "TITANIUM", new RecipeType(new CustomItemStack(Material.IRON_PICKAXE, "§a使用挖掘工具挖取", 0)), new ItemStack[0])
+                .register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.MISC, STItems.TITANIUM_PLATE, "TITANIUM_PLATE", RecipeType.COMPRESSOR, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.misc, STItems.TITANIUM_PLATE, "TITANIUM_PLATE", RecipeType.COMPRESSOR, new ItemStack[]{
                 STItems.TITANIUM, STItems.TITANIUM, STItems.TITANIUM,
                 STItems.TITANIUM, null, STItems.TITANIUM,
                 STItems.TITANIUM, STItems.TITANIUM, STItems.TITANIUM
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.MISC, STItems.ALUMINIUM_PLATE, "ALUMINIUM_PLATE", RecipeType.COMPRESSOR, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.misc, STItems.ALUMINIUM_PLATE, "ALUMINIUM_PLATE", RecipeType.COMPRESSOR, new ItemStack[]{
                 SlimefunItems.ALUMINUM_INGOT, SlimefunItems.ALUMINUM_INGOT, SlimefunItems.ALUMINUM_INGOT,
                 SlimefunItems.ALUMINUM_INGOT, null, SlimefunItems.ALUMINUM_INGOT,
                 SlimefunItems.ALUMINUM_INGOT, SlimefunItems.ALUMINUM_INGOT, SlimefunItems.ALUMINUM_INGOT
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
         //钕
-        new SlimefunItem(Categories.RESOURCES, STItems.NEODYMIUM_ORE_NUGGET, "NEODYMIUM_ORE_NUGGET", new RecipeType(new CustomItem(Material.IRON_PICKAXE, "§a使用挖掘工具挖取", 0)), new ItemStack[0])
-                .register(true);
+        new SlimefunItem(SlimefunItemGroups.resources, STItems.NEODYMIUM_ORE_NUGGET, "NEODYMIUM_ORE_NUGGET", new RecipeType(new CustomItemStack(Material.IRON_PICKAXE, "§a使用挖掘工具挖取", 0)), new ItemStack[0])
+                .register(SpaceTech.getInstance());
 
         new SpaceOre(STCategories.ST_MACHINES, STItems.NEODYMIUM_ORE, STItems.NEODYMIUM_ORE_NUGGET, "NEODYMIUM_ORE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 STItems.NEODYMIUM_ORE_NUGGET, STItems.NEODYMIUM_ORE_NUGGET, STItems.NEODYMIUM_ORE_NUGGET,
                 STItems.NEODYMIUM_ORE_NUGGET, STItems.NEODYMIUM_ORE_NUGGET, STItems.NEODYMIUM_ORE_NUGGET,
                 STItems.NEODYMIUM_ORE_NUGGET, STItems.NEODYMIUM_ORE_NUGGET, STItems.NEODYMIUM_ORE_NUGGET
-        }, "250").register(true);
+        }, "250").register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.RESOURCES, STItems.NEODYMIUM, "NEODYMIUM", new RecipeType(new CustomItem(Material.IRON_PICKAXE, "§a使用挖掘工具挖取", 0)), new ItemStack[0])
-                .register(true);
+        new SlimefunItem(SlimefunItemGroups.resources, STItems.NEODYMIUM, "NEODYMIUM", new RecipeType(new CustomItemStack(Material.IRON_PICKAXE, "§a使用挖掘工具挖取", 0)), new ItemStack[0])
+                .register(SpaceTech.getInstance());
 
         //电磁炼矿机-1
         new OreRefiningMachine(STCategories.ST_MACHINES, STItems.ELEC_REFINING_MACHINE_1, "ELEC_REFINING_MACHINE_1", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
@@ -118,68 +122,68 @@ public class STItemSetup {
                 SlimefunItems.STEEL_INGOT, SlimefunItems.STEEL_INGOT, SlimefunItems.STEEL_INGOT,
                 null, new ItemStack(Material.STICK), null,
                 null, new ItemStack(Material.STICK), null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TOOLS, STItems.DAMASCUS_PICKAXE, "DAMASCUS_PICKAXE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tools, STItems.DAMASCUS_PICKAXE, "DAMASCUS_PICKAXE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT,
                 null, STItems.STEEL_PICKAXE, null,
                 null, null, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TOOLS, STItems.HARDENED_METAL_PICKAXE, "HARDENED_METAL_PICKAXE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tools, STItems.HARDENED_METAL_PICKAXE, "HARDENED_METAL_PICKAXE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.HARDENED_METAL_INGOT, SlimefunItems.HARDENED_METAL_INGOT, SlimefunItems.HARDENED_METAL_INGOT,
                 null, STItems.DAMASCUS_PICKAXE, null,
                 null, null, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TOOLS, STItems.REINFORCED_ALLOY_PICKAXE, "REINFORCED_ALLOY_PICKAXE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tools, STItems.REINFORCED_ALLOY_PICKAXE, "REINFORCED_ALLOY_PICKAXE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.REINFORCED_ALLOY_INGOT,
                 null, STItems.HARDENED_METAL_PICKAXE, null,
                 null, null, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TOOLS, STItems.CARBONADO_PICKAXE, "CARBONADO_PICKAXE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tools, STItems.CARBONADO_PICKAXE, "CARBONADO_PICKAXE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.CARBONADO, SlimefunItems.CARBONADO, SlimefunItems.CARBONADO,
                 null, STItems.REINFORCED_ALLOY_PICKAXE, null,
                 null, null, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
         //对原版Slimefun进行适配
-        new SlimefunItem(Categories.TECH_MISC, STItems.SUPER_CIRCUIT_BOARD, "SUPER_CIRCUIT_BOARD", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tech_misc, STItems.SUPER_CIRCUIT_BOARD, "SUPER_CIRCUIT_BOARD", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 STItems.NEODYMIUM, SlimefunItems.ADVANCED_CIRCUIT_BOARD, STItems.NEODYMIUM,
                 SlimefunItems.ADVANCED_CIRCUIT_BOARD, STConfig.originalSlimefun ? SlimefunItems.REINFORCED_PLATE : NarItems.IRIDIUM, SlimefunItems.ADVANCED_CIRCUIT_BOARD,
                 STItems.NEODYMIUM, SlimefunItems.ADVANCED_CIRCUIT_BOARD, STItems.NEODYMIUM
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH_MISC, STItems.EMPTY_UNIT, "EMPTY_UNIT", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tech_misc, STItems.EMPTY_UNIT, "EMPTY_UNIT", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.STEEL_PLATE, STItems.ALUMINIUM_PLATE, SlimefunItems.STEEL_PLATE,
                 STItems.ALUMINIUM_PLATE, SlimefunItems.HARDENED_GLASS, STItems.ALUMINIUM_PLATE,
                 SlimefunItems.STEEL_PLATE, STItems.ALUMINIUM_PLATE, SlimefunItems.STEEL_PLATE
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH, STItems.SPACE_HELMET_1, "SPACE_HELMET_1", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.armor, STItems.SPACE_HELMET_1, "SPACE_HELMET_1", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.STEEL_PLATE, STItems.ALUMINIUM_PLATE, SlimefunItems.STEEL_PLATE,
                 STItems.ALUMINIUM_PLATE, SlimefunItems.WITHER_PROOF_GLASS, STItems.ALUMINIUM_PLATE,
                 SlimefunItems.ZINC_INGOT, STItems.EMPTY_UNIT, SlimefunItems.ZINC_INGOT
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH, STItems.SPACE_HELMET_2, "SPACE_HELMET_2", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.armor, STItems.SPACE_HELMET_2, "SPACE_HELMET_2", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.PLASTIC_SHEET, SlimefunItems.ADVANCED_CIRCUIT_BOARD, SlimefunItems.PLASTIC_SHEET,
                 STItems.ALUMINIUM_PLATE, STItems.SPACE_HELMET_1, STItems.ALUMINIUM_PLATE,
                 SlimefunItems.REINFORCED_ALLOY_INGOT, STItems.EMPTY_UNIT, SlimefunItems.REINFORCED_ALLOY_INGOT
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH, STItems.SPACE_HELMET_3, "SPACE_HELMET_3", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.armor, STItems.SPACE_HELMET_3, "SPACE_HELMET_3", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.PLASTIC_SHEET, STItems.TITANIUM, SlimefunItems.PLASTIC_SHEET,
                 SlimefunItems.REINFORCED_ALLOY_INGOT, STItems.SPACE_HELMET_2, SlimefunItems.REINFORCED_ALLOY_INGOT,
                 SlimefunItems.REINFORCED_PLATE, STItems.EMPTY_UNIT, SlimefunItems.REINFORCED_PLATE
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH, STItems.SPACE_HELMET_4, "SPACE_HELMET_4", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.armor, STItems.SPACE_HELMET_4, "SPACE_HELMET_4", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.PLASTIC_SHEET, STItems.SUPER_CIRCUIT_BOARD, SlimefunItems.PLASTIC_SHEET,
                 STItems.TITANIUM_PLATE, STItems.SPACE_HELMET_3, STItems.TITANIUM_PLATE,
                 SlimefunItems.REINFORCED_PLATE, STItems.EMPTY_UNIT, SlimefunItems.REINFORCED_PLATE
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
         new OxygenChargeMachine(STCategories.ST_MACHINES, STItems.OXYGEN_CHARGE_MACHINE, "OXYGEN_CHARGE_MACHINE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 STItems.ALUMINIUM_PLATE, SlimefunItems.ADVANCED_CIRCUIT_BOARD, STItems.ALUMINIUM_PLATE,
@@ -188,7 +192,7 @@ public class STItemSetup {
         }, new ItemStack(Material.CYAN_STAINED_GLASS_PANE, 1), 10000, "§b氧气:§e ")
                 .registerChargeableBlock(true, 256);
 
-        new SlimefunItem(Categories.TECH_MISC, STItems.UNIT_HYDRAZINE, "UNIT_HYDRAZINE", new RecipeType(STItems.HYDRAZINE_MACHINE), new ItemStack[]{}).register(true);
+        new SlimefunItem(SlimefunItemGroups.tech_misc, STItems.UNIT_HYDRAZINE, "UNIT_HYDRAZINE", new RecipeType(STItems.HYDRAZINE_MACHINE), new ItemStack[]{}).register(SpaceTech.getInstance());
 
         new HydrazineMachine(STCategories.ST_MACHINES, STItems.HYDRAZINE_MACHINE, "HYDRAZINE_MACHINE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.SILVER_INGOT, SlimefunItems.BIO_REACTOR, SlimefunItems.SILVER_INGOT,
@@ -208,17 +212,17 @@ public class STItemSetup {
             }
         }.registerChargeableBlock(true, 128);
 
-        new SlimefunItem(Categories.TECH_MISC, STItems.HARD_AXLE, "HARD_AXLE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tech_misc, STItems.HARD_AXLE, "HARD_AXLE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.CARBONADO, SlimefunItems.REINFORCED_ALLOY_INGOT,
                 SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.CARBONADO, SlimefunItems.REINFORCED_ALLOY_INGOT,
                 SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.CARBONADO, SlimefunItems.REINFORCED_ALLOY_INGOT
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH_MISC, STItems.BEDROCK_DRILL, "BEDROCK_DRILL", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tech_misc, STItems.BEDROCK_DRILL, "BEDROCK_DRILL", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.STEEL_INGOT, SlimefunItems.STEEL_INGOT, SlimefunItems.STEEL_INGOT,
                 null, SlimefunItems.STEEL_INGOT, null,
                 null, null, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
         new BedrockBreakMachine(STCategories.ST_MACHINES, STItems.BEDROCK_BREAK_MACHINE, "BEDROCK_BREAK_MACHINE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.REINFORCED_PLATE, SlimefunItems.REINFORCED_PLATE, SlimefunItems.REINFORCED_PLATE,
@@ -231,18 +235,18 @@ public class STItemSetup {
             }
         }.registerChargeableBlock(true, 1024);
 
-        new SlimefunItem(Categories.TECH, STItems.ITEM_CREATER_CODE_SCANNER, "ITEM_CREATER_CODE_SCANNER", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.armor, STItems.ITEM_CREATER_CODE_SCANNER, "ITEM_CREATER_CODE_SCANNER", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.WITHER_PROOF_GLASS, SlimefunItems.GOLD_24K, SlimefunItems.WITHER_PROOF_GLASS,
                 SlimefunItems.PLASTIC_SHEET, STItems.SUPER_CIRCUIT_BOARD, SlimefunItems.PLASTIC_SHEET,
                 SlimefunItems.GOLD_24K, SlimefunItems.REINFORCED_PLATE, SlimefunItems.GOLD_24K
         }).register(true, new ItemInteractionHandler() {
             @Override
-            public boolean onRightClick(ItemUseEvent itemUseEvent, Player player, ItemStack itemStack) {
-                if (SlimefunManager.isItemSimiliar(itemStack, STItems.ITEM_CREATER_CODE_SCANNER, false)) {
+            public boolean onRightClick(PlayerRightClickEvent itemUseEvent, Player player, ItemStack itemStack) {
+                if (SlimefunUtils.isItemSimilar(itemStack, STItems.ITEM_CREATER_CODE_SCANNER, false)) {
                     if (!player.isSneaking()) {
                         return false;
                     }
-                    Block block = itemUseEvent.getClickedBlock();
+                    Block block = itemUseEvent.getClickedBlock().get();
                     //检查是否为物质制造机
                     if (BlockStorage.check(block, "ITEM_CREATOR")) {
                         //耗电
@@ -273,14 +277,14 @@ public class STItemSetup {
             }
         });
 
-        new SlimefunItem(Categories.TECH, STItems.SPACE_ORE_SCANNER, "SPACE_ORE_SCANNER", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.armor, STItems.SPACE_ORE_SCANNER, "SPACE_ORE_SCANNER", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.ELECTRO_MAGNET, STItems.HARD_AXLE, SlimefunItems.ELECTRO_MAGNET,
                 SlimefunItems.PLASTIC_SHEET, STItems.SUPER_CIRCUIT_BOARD, SlimefunItems.PLASTIC_SHEET,
                 SlimefunItems.PLASTIC_SHEET, STItems.TITANIUM_PLATE, SlimefunItems.PLASTIC_SHEET
         }).register(true, new ItemInteractionHandler() {
             @Override
-            public boolean onRightClick(ItemUseEvent itemUseEvent, Player player, ItemStack itemStack) {
-                if (SlimefunManager.isItemSimiliar(itemStack, STItems.SPACE_ORE_SCANNER, false)) {
+            public boolean onRightClick(PlayerRightClickEvent itemUseEvent, Player player, ItemStack itemStack) {
+                if (SlimefunUtils.isItemSimilar(itemStack, STItems.SPACE_ORE_SCANNER, false)) {
                     if (!STConfig.spaceWorldList.contains(player.getWorld().getName())) {
                         return false;
                     }
@@ -298,7 +302,7 @@ public class STItemSetup {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            Location loc = itemUseEvent.getClickedBlock().getLocation();
+                            Location loc = itemUseEvent.getClickedBlock().get().getLocation();
                             HashMap<Location, String> blocksMap = new HashMap<>();
                             //检测半径4格
                             for (int x = -4; x < 5; x++) {
@@ -314,7 +318,7 @@ public class STItemSetup {
                                             continue;
                                         }
                                         if (STItems.SPACE_ORE_LIST.contains(id)) {
-                                            blocksMap.put(block.getLocation(), SlimefunItem.getByID(id).getItem().getItemMeta().getDisplayName());
+                                            blocksMap.put(block.getLocation(), SlimefunItem.getById(id).getItem().getItemMeta().getDisplayName());
                                         }
                                     }
                                 }
@@ -335,27 +339,27 @@ public class STItemSetup {
             }
         });
 
-        new SlimefunItem(Categories.TECH_MISC, STItems.EM_RESTRAINT_DEVICE, "EM_RESTRAINT_DEVICE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tech_misc, STItems.EM_RESTRAINT_DEVICE, "EM_RESTRAINT_DEVICE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.REINFORCED_PLATE, STItems.NEODYMIUM, SlimefunItems.REINFORCED_PLATE,
                 SlimefunItems.ELECTRO_MAGNET, STItems.EMPTY_UNIT, SlimefunItems.ELECTRO_MAGNET,
                 SlimefunItems.REINFORCED_PLATE, STItems.NEODYMIUM, SlimefunItems.REINFORCED_PLATE
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH_MISC, STItems.EMPTY_EM_UNIT, "EMPTY_EM_UNIT", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tech_misc, STItems.EMPTY_EM_UNIT, "EMPTY_EM_UNIT", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 null, STItems.EMPTY_UNIT, null,
                 STItems.EMPTY_UNIT, STItems.EM_RESTRAINT_DEVICE, STItems.EMPTY_UNIT,
                 null, STItems.EMPTY_UNIT, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH_MISC, STItems.ANTIMATTER_EM_UNIT, "ANTIMATTER_EM_UNIT", new RecipeType(STItems.ANTIMATTER_COLLECT_MACHINE), new ItemStack[]{STItems.EMPTY_EM_UNIT}).register(true);
+        new SlimefunItem(SlimefunItemGroups.tech_misc, STItems.ANTIMATTER_EM_UNIT, "ANTIMATTER_EM_UNIT", new RecipeType(STItems.ANTIMATTER_COLLECT_MACHINE), new ItemStack[]{STItems.EMPTY_EM_UNIT}).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH_MISC, STItems.BEDROCK_EM_UNIT, "BEDROCK_EM_UNIT", new RecipeType(STItems.BEDROCK_CRACK_MACHINE), new ItemStack[]{STItems.EMPTY_EM_UNIT}).register(true);
+        new SlimefunItem(SlimefunItemGroups.tech_misc, STItems.BEDROCK_EM_UNIT, "BEDROCK_EM_UNIT", new RecipeType(STItems.BEDROCK_CRACK_MACHINE), new ItemStack[]{STItems.EMPTY_EM_UNIT}).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH_MISC, STItems.BEDROCK_EM_UNIT_3, "BEDROCK_EM_UNIT_3", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tech_misc, STItems.BEDROCK_EM_UNIT_3, "BEDROCK_EM_UNIT_3", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 null, STItems.BEDROCK_EM_UNIT, null,
                 new ItemStack(Material.STRING), STItems.BEDROCK_EM_UNIT, new ItemStack(Material.STRING),
                 null, STItems.BEDROCK_EM_UNIT, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
         new SlimefunItem(STCategories.ST_MACHINES, STItems.PARTICLE_GENERATOR_1, "PARTICLE_GENERATOR_1", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.LEAD_INGOT, SlimefunItems.ELECTRO_MAGNET, SlimefunItems.LEAD_INGOT,
@@ -425,11 +429,11 @@ public class STItemSetup {
             }
         }.registerChargeableBlock(true, 1024);
 
-        new SlimefunItem(Categories.TECH_MISC, STItems.ANTIMATTER_BEDROCK_DRILL, "ANTIMATTER_BEDROCK_DRILL", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tech_misc, STItems.ANTIMATTER_BEDROCK_DRILL, "ANTIMATTER_BEDROCK_DRILL", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.HARDENED_METAL_INGOT, STItems.ANTIMATTER_EM_UNIT, SlimefunItems.HARDENED_METAL_INGOT,
                 null, STItems.BEDROCK_DRILL, null,
                 null, null, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
         new BedrockCrackMachine(STCategories.ST_MACHINES, STItems.BEDROCK_CRACK_MACHINE, "BEDROCK_CRACK_MACHINE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.REINFORCED_PLATE, STItems.TITANIUM_PLATE, SlimefunItems.REINFORCED_PLATE,
@@ -453,58 +457,58 @@ public class STItemSetup {
             }
         }.registerChargeableBlock(true, 1024);
 
-        new SlimefunItem(Categories.TECH_MISC, STItems.RIG, "RIG", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.tech_misc, STItems.RIG, "RIG", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 null, STItems.HARD_AXLE, null,
                 SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.ELECTRIC_MOTOR, SlimefunItems.REINFORCED_ALLOY_INGOT,
                 SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.REINFORCED_ALLOY_INGOT,
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH, STItems.ORE_RIG_REINFORCED, "ORE_RIG_REINFORCED", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.armor, STItems.ORE_RIG_REINFORCED, "ORE_RIG_REINFORCED", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 null, SlimefunItems.REINFORCED_ALLOY_INGOT, null,
                 SlimefunItems.REINFORCED_ALLOY_INGOT, STItems.TITANIUM, SlimefunItems.REINFORCED_ALLOY_INGOT,
                 null, STItems.RIG, null,
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH, STItems.ORE_RIG_CARBONADO, "ORE_RIG_CARBONADO", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.armor, STItems.ORE_RIG_CARBONADO, "ORE_RIG_CARBONADO", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 null, SlimefunItems.CARBONADO, null,
                 SlimefunItems.CARBONADO, STItems.TITANIUM, SlimefunItems.CARBONADO,
                 null, STItems.ORE_RIG_REINFORCED, null,
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
-        new SlimefunItem(Categories.TECH, STItems.ORE_RIG_TITIANIUM, "ORE_RIG_TITIANIUM", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.armor, STItems.ORE_RIG_TITIANIUM, "ORE_RIG_TITIANIUM", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 null, STItems.TITANIUM, null,
                 STItems.TITANIUM, STItems.TITANIUM, STItems.TITANIUM,
                 null, STItems.ORE_RIG_CARBONADO, null,
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
         new SlimefunItem(Categories.TOOLS, STItems.BEDROCK_DIAMOND_AXE, "BEDROCK_DIAMOND_AXE", RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
                 null, null, null,
                 new ItemStack(Material.BEDROCK, 3), new ItemStack(Material.DIAMOND_AXE), null,
                 null, null, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
         new SlimefunItem(Categories.TOOLS, STItems.BEDROCK_DIAMOND_PICKAXE, "BEDROCK_DIAMOND_PICKAXE", RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
                 null, null, null,
                 new ItemStack(Material.BEDROCK, 3), new ItemStack(Material.DIAMOND_PICKAXE), null,
                 null, null, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
         new SlimefunItem(Categories.TOOLS, STItems.BEDROCK_DIAMOND_SWORD, "BEDROCK_DIAMOND_SWORD", RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
                 null, null, null,
                 new ItemStack(Material.BEDROCK, 2), new ItemStack(Material.DIAMOND_SWORD), null,
                 null, null, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
         new SlimefunItem(Categories.TOOLS, STItems.BEDROCK_DIAMOND_HOE, "BEDROCK_DIAMOND_HOE", RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
                 null, null, null,
                 new ItemStack(Material.BEDROCK, 2), new ItemStack(Material.DIAMOND_HOE), null,
                 null, null, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
 
         new SlimefunItem(Categories.TOOLS, STItems.BEDROCK_DIAMOND_SPADE, "BEDROCK_DIAMOND_SPADE", RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
                 null, null, null,
                 new ItemStack(Material.BEDROCK, 1), new ItemStack(Material.DIAMOND_SHOVEL), null,
                 null, null, null
-        }).register(true);
+        }).register(SpaceTech.getInstance());
     }
 }

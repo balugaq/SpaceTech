@@ -4,8 +4,8 @@ import com.narcissu14.spacetech.SpaceTech;
 import com.narcissu14.spacetech.objects.STItems;
 import com.narcissu14.spacetech.setup.config.STConfig;
 import com.narcissu14.spacetech.utils.ActionBarAPI;
-import me.mrCookieSlime.Slimefun.Events.ResearchUnlockEvent;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
+import io.github.thebusybiscuit.slimefun4.api.events.ResearchUnlockEvent;
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,7 +24,7 @@ public class ItemListener implements Listener {
      **/
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (SlimefunManager.isItemSimiliar(event.getItemInHand(), STItems.ANTIMATTER_COLLECT_MACHINE, true)) {
+        if (SlimefunUtils.isItemSimilar(event.getItemInHand(), STItems.ANTIMATTER_COLLECT_MACHINE, true)) {
             if (!STConfig.spaceWorldList.contains(event.getPlayer().getWorld().getName())) {
                 ActionBarAPI.sendActionBar(event.getPlayer(), "§c§l你只能在太空中放置 §d反物质捕获机");
                 event.setCancelled(true);
@@ -39,7 +39,7 @@ public class ItemListener implements Listener {
             StringBuilder unlockMsg = new StringBuilder("§6☞ §e");
             unlockMsg.append(event.getPlayer().getName());
             unlockMsg.append(" §a解锁了远古工艺研究: §e");
-            unlockMsg.append(event.getResearch().getName());
+            unlockMsg.append(event.getResearch().getName(event.getPlayer()));
             Bukkit.broadcastMessage(unlockMsg.toString());
         }
     }
