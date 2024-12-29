@@ -8,6 +8,7 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChargeUtils;
+import lombok.Getter;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -23,15 +24,16 @@ import java.util.List;
 /**
  * @author Narcissu14
  */
+@Getter
 public class SpaceOre extends AbstractOre {
     private final String breakMsg;
-    private static String DUR_MAX;
+    private final String durMax;
 
     public SpaceOre(ItemGroup itemGroup, ItemStack item, ItemStack oreNugget, String id, RecipeType recipeType, ItemStack[] recipe, String durMax) {
         super(itemGroup, item, id, recipeType, recipe);
 
         breakMsg = item.getItemMeta().getDisplayName() + "§7 挖掘度: §e§l%dur% §7挖掘次数:§c§l ";
-        DUR_MAX = durMax;
+        this.durMax = durMax;
 
         addItemHandler(new BlockPlaceHandler(false) {
             @Override
@@ -106,7 +108,7 @@ public class SpaceOre extends AbstractOre {
     }
 
     private void initBlockInfo(Block block) {
-        BlockStorage.addBlockInfo(block, DURABILITY, DUR_MAX);
+        BlockStorage.addBlockInfo(block, DURABILITY, durMax);
         BlockStorage.addBlockInfo(block, BREAK_TIMES, "0");
     }
 }
