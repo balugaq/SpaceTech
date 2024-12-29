@@ -33,6 +33,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -45,22 +46,13 @@ import java.util.stream.Collectors;
  */
 public class SpaceWorldListener implements Listener {
 
-    private HashSet<Material> noPlaceItemSet = new HashSet<>();
-
     private static final PotionEffect JUMP_EFFECT = new PotionEffect(PotionEffectType.JUMP, 40, 3, false, false);
+    private @NotNull HashSet<Material> noPlaceItemSet = new HashSet<>();
     //private static final PotionEffect NO_OXYGEN_EFFECT = new PotionEffect(PotionEffectType.WITHER, 100, 0, false, false);
-    
-    
-    // 用后缀搜索物品
-    public static Set<Material> filterWithSuffix(String suffix) {
-    	return Arrays.stream(Material.values())
-        		.filter(m -> m.name().endsWith(suffix) 
-        				&& !m.name().startsWith("LEGACY_"))
-        		.collect(Collectors.toSet());
-    }
-    
-    public SpaceWorldListener(SpaceTech plugin) {
-    	// 末影水晶
+
+
+    public SpaceWorldListener(@NotNull SpaceTech plugin) {
+        // 末影水晶
         noPlaceItemSet.add(Material.END_CRYSTAL);
         // 火把
         noPlaceItemSet.add(Material.TORCH);
@@ -186,8 +178,16 @@ public class SpaceWorldListener implements Listener {
         }.runTaskTimer(plugin, 0, 20);
     }
 
+    // 用后缀搜索物品
+    public static @NotNull Set<Material> filterWithSuffix(@NotNull String suffix) {
+        return Arrays.stream(Material.values())
+                .filter(m -> m.name().endsWith(suffix)
+                        && !m.name().startsWith("LEGACY_"))
+                .collect(Collectors.toSet());
+    }
+
     @EventHandler
-    public void onEnderDragonSpawn(CreatureSpawnEvent event) {
+    public void onEnderDragonSpawn(@NotNull CreatureSpawnEvent event) {
         if (event.getEntity() instanceof EnderDragon) {
             if (STConfig.spaceWorldList.contains(event.getEntity().getWorld().getName())) {
                 ((EnderDragon) event.getEntity()).setPhase(EnderDragon.Phase.DYING);
@@ -196,7 +196,7 @@ public class SpaceWorldListener implements Listener {
     }
 
     @EventHandler
-    public void onWorldGen(WorldInitEvent event) {
+    public void onWorldGen(@NotNull WorldInitEvent event) {
         World world = event.getWorld();
         if (world.getGenerator() == null) {
             return;
@@ -213,12 +213,12 @@ public class SpaceWorldListener implements Listener {
             }
         }
     }
-    
+
     /**
      * 宇宙空间中禁止一些物品的放置
      */
     @EventHandler
-    public void onPlaceItem(PlayerInteractEvent event) {
+    public void onPlaceItem(@NotNull PlayerInteractEvent event) {
         if (!STConfig.spaceWorldList.contains(event.getPlayer().getWorld().getName())) {
             return;
         }
@@ -235,7 +235,7 @@ public class SpaceWorldListener implements Listener {
      * 玩家倒出的液体会直接变为对于固体方块
      **/
     @EventHandler
-    public void onBucketEmpty(PlayerBucketEmptyEvent event) {
+    public void onBucketEmpty(@NotNull PlayerBucketEmptyEvent event) {
         if (STConfig.spaceWorldList.contains(event.getPlayer().getWorld().getName())) {
             if (isPlaced(event.getBlockClicked().getRelative(event.getBlockFace()), event.getBucket())) {
                 event.setItemStack(new ItemStack(Material.BUCKET));
@@ -244,7 +244,7 @@ public class SpaceWorldListener implements Listener {
         }
     }
 
-    private boolean isPlaced(Block block, Material material) {
+    private boolean isPlaced(@NotNull Block block, @NotNull Material material) {
         boolean isPlaced = false;
         switch (material) {
             case WATER_BUCKET:
@@ -265,7 +265,7 @@ public class SpaceWorldListener implements Listener {
      * 禁止冰雪融化
      **/
     @EventHandler
-    public void onIceMelt(BlockFormEvent event) {
+    public void onIceMelt(@NotNull BlockFormEvent event) {
         if (STConfig.spaceWorldList.contains(event.getBlock().getWorld().getName())) {
             event.setCancelled(true);
         }
@@ -275,7 +275,7 @@ public class SpaceWorldListener implements Listener {
      * 禁止发射器倒液体、点火
      **/
     @EventHandler
-    public void onDispenseBucket(BlockDispenseEvent event) {
+    public void onDispenseBucket(@NotNull BlockDispenseEvent event) {
         if (STConfig.spaceWorldList.contains(event.getBlock().getWorld().getName())) {
             switch (event.getItem().getType()) {
                 case WATER_BUCKET:
@@ -293,7 +293,7 @@ public class SpaceWorldListener implements Listener {
      * 宇宙空间中禁用鞘翅飞行
      */
     @EventHandler
-    public void onPlayerElytraFly(EntityToggleGlideEvent event) {
+    public void onPlayerElytraFly(@NotNull EntityToggleGlideEvent event) {
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
@@ -310,7 +310,7 @@ public class SpaceWorldListener implements Listener {
      * 玩家在太空中坠落的触发监听
      */
     @EventHandler
-    public void onPlayerFall(PlayerMoveEvent event) {
+    public void onPlayerFall(@NotNull PlayerMoveEvent event) {
         if (STConfig.spaceWorldList.contains(event.getFrom().getWorld().getName())) {
             if (!event.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) {
                 return;
@@ -330,7 +330,7 @@ public class SpaceWorldListener implements Listener {
      * 玩家在太空中坠落的事件
      */
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerSpaceFall(PlayerSpaceFallEvent event) {
+    public void onPlayerSpaceFall(@NotNull PlayerSpaceFallEvent event) {
         if (!event.isCancelled()) {
             Player player = event.getPlayer();
             Vector vector = new Vector(0, -0.12, 0);
@@ -345,7 +345,7 @@ public class SpaceWorldListener implements Listener {
      * 玩家在太空中玩家氧气监测
      */
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerOxygenCheck(SpaceOxygenEvent event) {
+    public void onPlayerOxygenCheck(@NotNull SpaceOxygenEvent event) {
         if (!event.isCancelled()) {
             //检测线程已经检查了世界
             ItemStack item = event.getPlayer().getInventory().getHelmet();

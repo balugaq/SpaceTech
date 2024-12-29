@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +18,19 @@ import java.util.Random;
 /**
  * @author Narcissu14
  */
-public class PlanetPopulator extends BlockPopulator{
-    /**小型星球几率*/
+public class PlanetPopulator extends BlockPopulator {
+    /**
+     * 小型星球几率
+     */
     private static final int CRATER_CHANCE = 10;
     private static final int MIN_CRATER_SIZE = 3;
     private static final int SMALL_CRATER_SIZE = 20;
     private static final int BIG_CRATER_SIZE = 100;
-    /**大型星球几率*/
+    /**
+     * 大型星球几率
+     */
     private static final int BIG_CRATER_CHANCE = 2;
-    private static final List<Material> PLANET_BLOCKS;
+    private static final @NotNull List<Material> PLANET_BLOCKS;
 
     static {
         PLANET_BLOCKS = new ArrayList<>();
@@ -39,7 +44,7 @@ public class PlanetPopulator extends BlockPopulator{
     }
 
     @Override
-    public void populate(World world, Random random, Chunk source) {
+    public void populate(@NotNull World world, @NotNull Random random, @NotNull Chunk source) {
         if (random.nextInt(100) <= CRATER_CHANCE) {
             int radius;
             if (random.nextInt(100) <= BIG_CRATER_CHANCE) {
@@ -82,8 +87,8 @@ public class PlanetPopulator extends BlockPopulator{
 
             if (enoughSize) {
                 //星核高级矿物数量
-                int coreOreAmount = (((int)(Math.pow(coreRadius, 3) - Math.pow(5, 3))) >> 5) + 4;
-                for (int i = 0;i < coreOreAmount;i++) {
+                int coreOreAmount = (((int) (Math.pow(coreRadius, 3) - Math.pow(5, 3))) >> 5) + 4;
+                for (int i = 0; i < coreOreAmount; i++) {
                     //随机星核内位置并生成高价值矿物
                     Vector v = ramdomOreLoc(center, coreRadius - 1, 0);
                     Block block = v.toLocation(world).getBlock();
@@ -92,8 +97,8 @@ public class PlanetPopulator extends BlockPopulator{
             }
 
             //星球普通矿物数量
-            int normalOreAmount = ((int)(Math.pow(radius, 3) - Math.pow(coreRadius, 3))) >> 7;
-            for (int i = 0;i < normalOreAmount;i++) {
+            int normalOreAmount = ((int) (Math.pow(radius, 3) - Math.pow(coreRadius, 3))) >> 7;
+            for (int i = 0; i < normalOreAmount; i++) {
                 //随机在星球内且在星核外位置，并生成常规矿物
                 Vector v = ramdomOreLoc(center, radius, coreRadius);
                 Block block = v.toLocation(world).getBlock();
@@ -106,7 +111,7 @@ public class PlanetPopulator extends BlockPopulator{
     /**
      * 随机取球体或空心球体内的一个坐标位置(不包含空心部分)
      */
-    private Vector ramdomOreLoc(Vector center, int radius, int minRandomRadius) {
+    private @NotNull Vector ramdomOreLoc(@NotNull Vector center, int radius, int minRandomRadius) {
         Random random = new Random();
         double randomRadius = random.nextInt(radius - minRandomRadius) + minRandomRadius;
         //倾斜角

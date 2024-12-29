@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class OxygenChargeMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public String getInventoryTitle() {
+    public @NotNull String getInventoryTitle() {
         return "§b电力充氧机";
     }
 
@@ -53,7 +54,7 @@ public class OxygenChargeMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public String getMachineIdentifier() {
+    public @NotNull String getMachineIdentifier() {
         return ID;
     }
 
@@ -78,17 +79,17 @@ public class OxygenChargeMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public boolean isChargeableItem(ItemStack input) {
+    public boolean isChargeableItem(@NotNull ItemStack input) {
         return STItems.isOxygenEquip(input) && getItemPoints(input) < POINTS_MAX;
     }
 
     @Override
-    public int getItemPoints(ItemStack input) {
+    public int getItemPoints(@NotNull ItemStack input) {
         return STItems.getOxygenValue(input.getItemMeta().getLore());
     }
 
     @Override
-    public ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd) {
+    public @NotNull ItemStack modifyItemPoints(@NotNull ItemStack input, int points, boolean isAdd) {
         ItemStack item = input.clone();
         ItemMeta meta = item.getItemMeta();
         List<String> lores = meta.getLore();

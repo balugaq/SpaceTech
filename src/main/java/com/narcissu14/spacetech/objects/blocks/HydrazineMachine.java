@@ -8,6 +8,8 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Narcissu14
@@ -27,7 +29,7 @@ public class HydrazineMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public String getInventoryTitle() {
+    public @NotNull String getInventoryTitle() {
         return "§5§l联氨合成机";
     }
 
@@ -49,7 +51,7 @@ public class HydrazineMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public String getMachineIdentifier() {
+    public @NotNull String getMachineIdentifier() {
         return id;
     }
 
@@ -84,7 +86,7 @@ public class HydrazineMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd) {
+    public @Nullable ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd) {
         return null;
     }
 

@@ -7,17 +7,18 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Narcissu14
  */
 public class CustomPotionItem extends ItemStack {
 
-    public CustomPotionItem(PotionEffectType potionEffectType) {
+    public CustomPotionItem(@NotNull PotionEffectType potionEffectType) {
         this(potionEffectType, false);
     }
 
-    public CustomPotionItem(PotionEffectType potionEffectType, boolean glow) {
+    public CustomPotionItem(@NotNull PotionEffectType potionEffectType, boolean glow) {
         super(new ItemStack(Material.POTION));
         PotionMeta pMeta = (PotionMeta) this.getItemMeta();
         pMeta.addCustomEffect(new PotionEffect(potionEffectType, 1, 1), false);

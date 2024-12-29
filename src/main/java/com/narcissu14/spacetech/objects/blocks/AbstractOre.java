@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Narcissu14
@@ -17,20 +18,20 @@ public abstract class AbstractOre extends SlimefunItem {
     final String DURABILITY = "durability";
     final String BREAK_TIMES = "break-times";
 
-    public AbstractOre(ItemGroup itemGroup, ItemStack item, String id, RecipeType recipeType, ItemStack[] recipe) {
+    public AbstractOre(@NotNull ItemGroup itemGroup, @NotNull ItemStack item, @NotNull String id, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
         super(itemGroup, item, id, recipeType, recipe);
     }
 
-    void damageItem(Player player){
+    void damageItem(@NotNull Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null || !item.hasItemMeta()) {
             return;
         }
         ItemMeta meta = item.getItemMeta();
         if (!(meta instanceof Damageable)) {
-        	return;
+            return;
         }
-        Damageable damage = (Damageable)meta;
+        Damageable damage = (Damageable) meta;
         if (item.getType().toString().endsWith("_PICKAXE")) {
             short dur = (short) (damage.getDamage() + 1);
             if (dur >= item.getType().getMaxDurability()) {
@@ -43,7 +44,7 @@ public abstract class AbstractOre extends SlimefunItem {
         }
     }
 
-    int getBreakAmount(Player player) {
+    int getBreakAmount(@NotNull Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null) {
             return 1;

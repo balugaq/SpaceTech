@@ -1,6 +1,7 @@
 package com.narcissu14.spacetech.setup.config;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
@@ -12,12 +13,12 @@ public class STConfig extends AbstractConfig {
     public static List<String> spaceWorldList;
     public static boolean originalSlimefun;
 
-    public STConfig(File configFile) {
+    public STConfig(@NotNull File configFile) {
         super(configFile);
     }
 
     @Override
-    public void initOptions(YamlConfiguration config) {
+    public void initOptions(@NotNull YamlConfiguration config) {
         spaceWorldList = config.getStringList("SpaceWorld.SpaceWorldList");
         originalSlimefun = config.getBoolean("OriginalSlimefun");
     }

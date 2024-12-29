@@ -2,15 +2,13 @@ package com.narcissu14.spacetech.objects.blocks;
 
 import com.narcissu14.spacetech.utils.ActionBarAPI;
 import com.narcissu14.spacetech.utils.SkullUtil;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
@@ -20,6 +18,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class RedstonePWMachine extends SlimefunItem {
     private static final String INPUT_KEY = "input";
     private static final String PW_KEY = "password";
 
-    private static ItemStack PW_BUTTON = null;
+    private static @Nullable ItemStack PW_BUTTON = null;
     private static String id;
 
     static {
@@ -59,29 +59,24 @@ public class RedstonePWMachine extends SlimefunItem {
      * place-time 方块放置的时间，用于检查是否afk等等
      * input 当前输入，默认00000(每次确认输入、放置、归零、退出界面)
      * password 匹配密码，默认00000(放置时)
-     * */
-    public RedstonePWMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
+     */
+    public RedstonePWMachine(@NotNull ItemGroup itemGroup, @NotNull ItemStack item, @NotNull String name, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
         super(itemGroup, item, name, recipeType, recipe);
 
         id = name;
 
-        new BlockMenuPreset(name, getInventoryTitle())
-        {
+        new BlockMenuPreset(name, getInventoryTitle()) {
             @Override
-            public void init()
-            {
+            public void init() {
                 RedstonePWMachine.this.constructMenu(this);
             }
 
             @Override
-            public void newInstance(BlockMenu menu, Block block) {
-                menu.addMenuOpeningHandler(new MenuOpeningHandler() {
-                    @Override
-                    public void onOpen(Player player) {
-                        //重置输入
-                        BlockStorage.addBlockInfo(block, INPUT_KEY, "00000");
+            public void newInstance(@NotNull BlockMenu menu, @NotNull Block block) {
+                menu.addMenuOpeningHandler(player -> {
+                    //重置输入
+                    StorageCacheUtils.setData(block.getLocation(), INPUT_KEY, "00000");
 
-                    }
                 });
             }
 
@@ -99,13 +94,13 @@ public class RedstonePWMachine extends SlimefunItem {
         addItemHandler(new BlockPlaceHandler(false) {
 
             @Override
-            public void onPlayerPlace(BlockPlaceEvent blockPlaceEvent) {
-                Block block = blockPlaceEvent.getBlockPlaced();
+            public void onPlayerPlace(@NotNull BlockPlaceEvent blockPlaceEvent) {
+                Block b = blockPlaceEvent.getBlockPlaced();
                 Player player = blockPlaceEvent.getPlayer();
-                BlockStorage.addBlockInfo(block, OWNER_KEY, player.getName());
-                BlockStorage.addBlockInfo(block, PLACE_TIME_KEY, String.valueOf(System.currentTimeMillis()));
-                BlockStorage.addBlockInfo(block, INPUT_KEY, "00000");
-                BlockStorage.addBlockInfo(block, PW_KEY, "00000");
+                StorageCacheUtils.setData(b.getLocation(), OWNER_KEY, player.getName());
+                StorageCacheUtils.setData(b.getLocation(), PLACE_TIME_KEY, String.valueOf(System.currentTimeMillis()));
+                StorageCacheUtils.setData(b.getLocation(), INPUT_KEY, "00000");
+                StorageCacheUtils.setData(b.getLocation(), PW_KEY, "00000");
             }
         }, new BlockBreakHandler(false, false) {
             @Override
@@ -115,7 +110,7 @@ public class RedstonePWMachine extends SlimefunItem {
                 if (player.isOp()) {
                     return;
                 }
-                if (player.getName().equals(BlockStorage.getLocationInfo(block.getLocation(), OWNER_KEY))) {
+                if (player.getName().equals(StorageCacheUtils.getData(block.getLocation(), OWNER_KEY))) {
                     return;
                 }
                 ActionBarAPI.sendActionBar(player, "§c§l只有密码机的放置者能够拆除！");
@@ -124,51 +119,26 @@ public class RedstonePWMachine extends SlimefunItem {
         });
     }
 
-    private void constructMenu(BlockMenuPreset preset){
-        for(int i : PW_BORDER){
+    private void constructMenu(@NotNull BlockMenuPreset preset) {
+        for (int i : PW_BORDER) {
             preset.addItem(i, new CustomItemStack(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1), " "),
-                    new ChestMenu.MenuClickHandler() {
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                            return false;
-                        }
-                    });
+                    (player, i1, itemStack, clickAction) -> false);
         }
-        for(int i : PW_ENTER_BORDER){
+        for (int i : PW_ENTER_BORDER) {
             preset.addItem(i, new CustomItemStack(new ItemStack(Material.BLUE_STAINED_GLASS_PANE, 1), " "),
-                    new ChestMenu.MenuClickHandler() {
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                            return false;
-                        }
-                    });
+                    (player, i12, itemStack, clickAction) -> false);
         }
-        for(int i : PW_SETTING_BORDER){
+        for (int i : PW_SETTING_BORDER) {
             preset.addItem(i, new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "),
-                    new ChestMenu.MenuClickHandler() {
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                            return false;
-                        }
-                    });
+                    (player, i13, itemStack, clickAction) -> false);
         }
-        for(int i : PW_ZERO_BORDER){
+        for (int i : PW_ZERO_BORDER) {
             preset.addItem(i, new CustomItemStack(new ItemStack(Material.RED_STAINED_GLASS_PANE, 1), " "),
-                    new ChestMenu.MenuClickHandler() {
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                            return false;
-                        }
-                    });
+                    (player, i14, itemStack, clickAction) -> false);
         }
-        for(int i : PW_BUTTON_SLOT){
+        for (int i : PW_BUTTON_SLOT) {
             preset.addItem(i, PW_BUTTON,
-                    new ChestMenu.MenuClickHandler() {
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack item, ClickAction clickAction) {
-                            return false;
-                        }
-                    });
+                    (player, i15, item, clickAction) -> false);
         }
     }
 
@@ -177,7 +147,7 @@ public class RedstonePWMachine extends SlimefunItem {
         return id;
     }
 
-    public String getInventoryTitle() {
+    public @NotNull String getInventoryTitle() {
         return "§l红石密码机";
     }
 

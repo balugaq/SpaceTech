@@ -1,8 +1,9 @@
 package com.narcissu14.spacetech.utils;
 
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -11,6 +12,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
 import org.bukkit.block.data.Directional;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Random;
@@ -19,25 +22,26 @@ import java.util.Random;
  * @author Narcissu14
  */
 public class GeneratorUtils {
-    private static final BlockFace[] BLOCK_FACES = { BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.NORTH_WEST };
+    private static final BlockFace[] BLOCK_FACES = {BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.NORTH_WEST};
 
     /**
      * 随机生成列表中的一个特殊头颅方块
-     * @param block 生成的方块位置
+     *
+     * @param block    生成的方块位置
      * @param itemList 生成的头颅物品列表，从中随机选取生成
      */
-    public static void spawnSkullBlock(Block block, List<ItemStack> itemList) {
+    public static void spawnSkullBlock(@NotNull Block block, @NotNull List<ItemStack> itemList) {
         int num = new Random().nextInt(itemList.size());
         spawnSkullBlock(block, itemList.get(num));
     }
 
     /**
      * 生成一个特殊的头颅方块
+     *
      * @param block 生成的方块位置
-     * @param item 生成的头颅物品
+     * @param item  生成的头颅物品
      */
-    public static void spawnSkullBlock(Block block, ItemStack item)
-    {
+    public static void spawnSkullBlock(@NotNull Block block, ItemStack item) {
         block.setType(Material.PLAYER_HEAD);
         //如果设置了方块材质但类型仍为空气，则当前位置超高
         if (block.getType().equals(Material.AIR)) {
@@ -49,22 +53,23 @@ public class GeneratorUtils {
         data.setFacing(BLOCK_FACES[new Random().nextInt(BLOCK_FACES.length)]);
         //意义不明 s.setRawData((byte)1);
         s.update();
-        try
-        {
+        try {
             PlayerHead.setSkin(s.getBlock(), PlayerSkin.fromHashCode(SkullUtil.getHash(item)), false);
-        }
-        catch (Exception e1)
-        {
+        } catch (Exception e1) {
             e1.printStackTrace();
         }
-        BlockStorage.store(block, item);
+        SlimefunItem sfitem = SlimefunItem.getByItem(item);
+        if (sfitem != null) {
+            Slimefun.getDatabaseManager().getBlockDataController().createBlock(block.getLocation(), sfitem.getId());
+        }
     }
 
     /**
      * 寻找太空世界中的安全位置
+     *
      * @param world 目标世界
      */
-    public static Location getSaveLocation(World world, int radius, int maxFindTimes) {
+    public static Location getSaveLocation(@Nullable World world, int radius, int maxFindTimes) {
         if (world == null) {
             return null;
         }

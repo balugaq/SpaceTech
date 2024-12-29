@@ -5,11 +5,11 @@ import com.narcissu14.spacetech.objects.STItems;
 import com.narcissu14.spacetech.setup.config.STConfig;
 import com.narcissu14.spacetech.utils.GeneratorUtils;
 import com.narcissu14.spacetech.utils.TitleAPI;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,19 +21,20 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Narcissu14
  * 额外重写内部的GUI，新增一个消耗点数发射GPS标记点的功能按钮
  */
 public abstract class SpaceGPSMarkMachine extends AbstractPointsMachine {
+    private final static ItemStack LAUNCH_BUTTON = new CustomItemStack(new ItemStack(Material.FIREWORK_ROCKET), "§c§l发射太空GPS标记点",
+            "", "§7发射后，你可以通过GPS装置传送前往太空标记点", "§7当§d联氨§7充满后才可以发射", "", "§c§l注意: §7前往太空之前，请带好GPS传送装置", "§7否则你将无法从太空§e返回");
     private String id;
     private ItemStack pointsItem;
     private int pointsMax;
     private String pointsName;
-
-    private final static ItemStack LAUNCH_BUTTON = new CustomItemStack(new ItemStack(Material.FIREWORK_ROCKET), "§c§l发射太空GPS标记点",
-            "" , "§7发射后，你可以通过GPS装置传送前往太空标记点", "§7当§d联氨§7充满后才可以发射", "", "§c§l注意: §7前往太空之前，请带好GPS传送装置", "§7否则你将无法从太空§e返回");
 
     public SpaceGPSMarkMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
         super(itemGroup, item, name, recipeType, recipe);
@@ -54,7 +55,7 @@ public abstract class SpaceGPSMarkMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public String getMachineIdentifier() {
+    public @NotNull String getMachineIdentifier() {
         return id;
     }
 
@@ -64,7 +65,7 @@ public abstract class SpaceGPSMarkMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public String getInventoryTitle() {
+    public @NotNull String getInventoryTitle() {
         return "&6&l太空GPS发射机";
     }
 
@@ -79,12 +80,12 @@ public abstract class SpaceGPSMarkMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public void addExtraMenuHandler(BlockMenu menu, Block b) {
+    public void addExtraMenuHandler(@NotNull BlockMenu menu, @NotNull Block b) {
         menu.replaceExistingItem(4, LAUNCH_BUTTON);
         menu.addMenuClickHandler(4, (p, s, i, a) -> {
             //发射标记
-            if (BlockStorage.getLocationInfo(b.getLocation(), POINTS_KEY).equals(String.valueOf(pointsMax))) {
-                BlockStorage.addBlockInfo(b, POINTS_KEY, "0");
+            if (StorageCacheUtils.getData(b.getLocation(), POINTS_KEY).equals(String.valueOf(pointsMax))) {
+                StorageCacheUtils.setData(b.getLocation(), POINTS_KEY, "0");
                 p.closeInventory();
                 TitleAPI.sendTitle(p, 1, 3, 1, "§6§l发射", "§e等待远方的消息吧！");
                 p.playSound(b.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1f, 1.5f);
@@ -134,7 +135,7 @@ public abstract class SpaceGPSMarkMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd) {
+    public @Nullable ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd) {
         return null;
     }
 }

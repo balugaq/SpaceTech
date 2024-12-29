@@ -8,25 +8,26 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Narcissu14
  */
 public abstract class UnitItemMachine extends AContainer {
-    private final String name;
+    private final @NotNull String name;
 
-    public UnitItemMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
+    public UnitItemMachine(@NotNull ItemGroup itemGroup, @NotNull ItemStack item, @NotNull String name, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
         super(itemGroup, new SlimefunItemStack(name, item), recipeType, recipe);
         this.name = name;
     }
 
     @Override
-    public String getInventoryTitle() {
+    public @NotNull String getInventoryTitle() {
         return "§9单元物质加工机";
     }
 
     @Override
-    public ItemStack getProgressBar() {
+    public @NotNull ItemStack getProgressBar() {
         return new ItemStack(Material.FLINT_AND_STEEL);
     }
 
@@ -34,7 +35,7 @@ public abstract class UnitItemMachine extends AContainer {
     public void registerDefaultRecipes() {
         registerRecipe(40, new ItemStack[]{STItems.BEDROCK_EM_UNIT_3}, new ItemStack[]{new ItemStack(Material.BEDROCK), new CustomItemStack(STItems.EMPTY_EM_UNIT, 3)});
         registerRecipe(120, new ItemStack[]{new ItemStack(Material.BEDROCK, 3), new ItemStack(Material.DIAMOND_PICKAXE)},
-            new ItemStack[]{STItems.BEDROCK_DIAMOND_PICKAXE});
+                new ItemStack[]{STItems.BEDROCK_DIAMOND_PICKAXE});
         registerRecipe(80, new ItemStack[]{new ItemStack(Material.BEDROCK, 2), new ItemStack(Material.DIAMOND_SWORD)},
                 new ItemStack[]{STItems.BEDROCK_DIAMOND_SWORD});
         registerRecipe(80, new ItemStack[]{new ItemStack(Material.BEDROCK, 2), new ItemStack(Material.DIAMOND_HOE)},
@@ -51,7 +52,7 @@ public abstract class UnitItemMachine extends AContainer {
     }
 
     @Override
-    public String getMachineIdentifier() {
+    public @NotNull String getMachineIdentifier() {
         return name;
     }
 }

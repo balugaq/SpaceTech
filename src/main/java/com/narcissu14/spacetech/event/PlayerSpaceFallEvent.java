@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Narcissu14
@@ -23,6 +24,10 @@ public class PlayerSpaceFallEvent extends Event implements Cancellable {
         this.player = player;
     }
 
+    public static @NotNull HandlerList getHandlerList() {
+        return handlers;
+    }
+
     @Override
     public boolean isCancelled() {
         return cancelled;
@@ -34,11 +39,7 @@ public class PlayerSpaceFallEvent extends Event implements Cancellable {
     }
 
     @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
 

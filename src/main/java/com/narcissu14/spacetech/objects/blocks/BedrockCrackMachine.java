@@ -19,18 +19,19 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Narcissu14
  */
 public abstract class BedrockCrackMachine extends AbstractPointsMachine {
+    private final static ItemStack DIG_BUTTON = new CustomItemStack(new ItemStack(Material.HOPPER), "§a方向: §e下",
+            "", "§7当§e挖掘度§7到达最大后", "§7你可以放入§e空电磁拘束单元", "§7开始对基岩进行爆碎", "§7并收集获得基岩粉末", "", "§c§l注意: §7基岩爆碎机只能爆碎其下方的基岩");
     private String id;
     private ItemStack pointsItem;
     private int pointsMax;
     private String pointsName;
-
-    private final static ItemStack DIG_BUTTON = new CustomItemStack(new ItemStack(Material.HOPPER), "§a方向: §e下",
-            "" , "§7当§e挖掘度§7到达最大后", "§7你可以放入§e空电磁拘束单元", "§7开始对基岩进行爆碎", "§7并收集获得基岩粉末", "", "§c§l注意: §7基岩爆碎机只能爆碎其下方的基岩");
 
     public BedrockCrackMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
         super(itemGroup, item, name, recipeType, recipe);
@@ -41,7 +42,7 @@ public abstract class BedrockCrackMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public String getInventoryTitle() {
+    public @NotNull String getInventoryTitle() {
         return "§6§l基岩爆碎机";
     }
 
@@ -52,7 +53,7 @@ public abstract class BedrockCrackMachine extends AbstractPointsMachine {
     }
 
     @Override
-    boolean startTickCheck(Block b, PointMachineRecipe recipe) {
+    boolean startTickCheck(@NotNull Block b, @NotNull PointMachineRecipe recipe) {
         if (SlimefunUtils.isItemSimilar(recipe.getInput()[0], STItems.EMPTY_EM_UNIT, true)) {
             if (!b.getRelative(BlockFace.DOWN).getType().equals(Material.BEDROCK)) {
                 return false;
@@ -77,7 +78,7 @@ public abstract class BedrockCrackMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public String getMachineIdentifier() {
+    public @NotNull String getMachineIdentifier() {
         return id;
     }
 
@@ -97,7 +98,7 @@ public abstract class BedrockCrackMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public void addExtraMenuHandler(BlockMenu menu, Block b) {
+    public void addExtraMenuHandler(@NotNull BlockMenu menu, Block b) {
         menu.replaceExistingItem(4, DIG_BUTTON);
         menu.addMenuClickHandler(4, new ChestMenu.MenuClickHandler() {
             @Override
@@ -118,7 +119,7 @@ public abstract class BedrockCrackMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd) {
+    public @Nullable ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd) {
         return null;
     }
 }

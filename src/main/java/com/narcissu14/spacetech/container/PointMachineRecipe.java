@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * @author Narcissu14
  * WARNING: 每次获取配方结果前，请务必判断配方类型
- *          这里暂时为了更高的效率，不做安全性处理
+ * 这里暂时为了更高的效率，不做安全性处理
  */
 public class PointMachineRecipe {
 
@@ -65,12 +65,12 @@ public class PointMachineRecipe {
         this.valueMax = valueMax;
     }
 
-    public void setTicks(int ticks) {
-        this.ticks = ticks;
-    }
-
     public int getTicks() {
         return ticks;
+    }
+
+    public void setTicks(int ticks) {
+        this.ticks = ticks;
     }
 
     public ItemStack[] getInput() {

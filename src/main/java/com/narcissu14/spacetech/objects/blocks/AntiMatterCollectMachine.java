@@ -8,6 +8,8 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Narcissu14
@@ -18,7 +20,7 @@ public abstract class AntiMatterCollectMachine extends AbstractPointsMachine {
     private int pointsMax;
     private String pointsName;
 
-    public AntiMatterCollectMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
+    public AntiMatterCollectMachine(@NotNull ItemGroup itemGroup, @NotNull ItemStack item, @NotNull String name, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
         super(itemGroup, item, name, recipeType, recipe);
         id = name;
         this.pointsMax = pointsMax;
@@ -27,7 +29,7 @@ public abstract class AntiMatterCollectMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public String getInventoryTitle() {
+    public @NotNull String getInventoryTitle() {
         return "§d§l反物质捕获机";
     }
 
@@ -43,7 +45,7 @@ public abstract class AntiMatterCollectMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public String getMachineIdentifier() {
+    public @NotNull String getMachineIdentifier() {
         return id;
     }
 
@@ -78,7 +80,7 @@ public abstract class AntiMatterCollectMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd) {
+    public @Nullable ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd) {
         return null;
     }
 }

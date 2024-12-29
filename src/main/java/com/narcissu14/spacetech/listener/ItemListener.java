@@ -10,12 +10,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Narcissu14
  */
 public class ItemListener implements Listener {
-    public ItemListener(SpaceTech plugin) {
+    public ItemListener(@NotNull SpaceTech plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
@@ -23,7 +24,7 @@ public class ItemListener implements Listener {
      * 限制或禁止物品放置的监听
      **/
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
+    public void onBlockPlace(@NotNull BlockPlaceEvent event) {
         if (SlimefunUtils.isItemSimilar(event.getItemInHand(), STItems.ANTIMATTER_COLLECT_MACHINE, true)) {
             if (!STConfig.spaceWorldList.contains(event.getPlayer().getWorld().getName())) {
                 ActionBarAPI.sendActionBar(event.getPlayer(), "§c§l你只能在太空中放置 §d反物质捕获机");
@@ -34,7 +35,7 @@ public class ItemListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerUnlockNew(ResearchUnlockEvent event) {
+    public void onPlayerUnlockNew(@NotNull ResearchUnlockEvent event) {
         if (!event.getPlayer().hasPermission("slimefun.*")) {
             StringBuilder unlockMsg = new StringBuilder("§6☞ §e");
             unlockMsg.append(event.getPlayer().getName());

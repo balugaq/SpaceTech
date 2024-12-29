@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,19 +22,19 @@ public class SpaceGenerator extends ChunkGenerator {
     }
 
     @Override
-    public Location getFixedSpawnLocation(World world, Random random) {
+    public Location getFixedSpawnLocation(@NotNull World world, Random random) {
         world.getBlockAt(0, 59, 0).setType(Material.BEDROCK);
 
         return new Location(world, 0, 60, 0);
     }
 
     @Override
-    public List<BlockPopulator> getDefaultPopulators(World world) {
+    public @NotNull List<BlockPopulator> getDefaultPopulators(World world) {
         return Collections.singletonList(new PlanetPopulator());
     }
 
     @Override
-    public ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
+    public @NotNull ChunkData generateChunkData(@NotNull World world, Random random, int x, int z, BiomeGrid biome) {
         ChunkData chunkData = Bukkit.createChunkData(world);
 
         return chunkData;

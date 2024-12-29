@@ -4,6 +4,7 @@ import com.narcissu14.spacetech.container.PointMachineRecipe;
 import com.narcissu14.spacetech.setup.config.STConfig;
 import com.narcissu14.spacetech.utils.ChargeableBlock;
 import com.narcissu14.spacetech.utils.MachineHelper;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
@@ -14,14 +15,12 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
@@ -36,6 +35,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,17 +55,17 @@ public abstract class AbstractPointsMachine extends AContainer {
     private static final int[] BORDER = {27, 30, 31, 32, 35, 36, 39, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
     private static final int[] INPUT_SIGN = {28, 29};
     private static final int[] OUTPUT_SIGN = {33, 34};
-    public static Map<Block, PointMachineRecipe> processing = new HashMap<Block, PointMachineRecipe>();
-    public static Map<Block, Integer> progress = new HashMap<Block, Integer>();
-    protected static Map<Block, ItemStack> charginItems = new HashMap<Block, ItemStack>();
-    private static ItemStack NO_POINTS_ITEM = new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1);
-    protected List<PointMachineRecipe> recipes = new ArrayList<PointMachineRecipe>();
+    public static @NotNull Map<Block, PointMachineRecipe> processing = new HashMap<Block, PointMachineRecipe>();
+    public static @NotNull Map<Block, Integer> progress = new HashMap<Block, Integer>();
+    protected static @NotNull Map<Block, ItemStack> charginItems = new HashMap<Block, ItemStack>();
+    private static @NotNull ItemStack NO_POINTS_ITEM = new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1);
+    protected @NotNull List<PointMachineRecipe> recipes = new ArrayList<PointMachineRecipe>();
 
-    public AbstractPointsMachine(ItemGroup itemGroup, ItemStack itemStack, String id, RecipeType recipeType, ItemStack[] recipe) {
+    public AbstractPointsMachine(@NotNull ItemGroup itemGroup, @NotNull ItemStack itemStack, @NotNull String id, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
         this(itemGroup, new SlimefunItemStack(id, itemStack), recipeType, recipe);
     }
 
-    public AbstractPointsMachine(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+    public AbstractPointsMachine(@NotNull ItemGroup itemGroup, @NotNull SlimefunItemStack item, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
         super(itemGroup, item, recipeType, recipe);
         String name = this.getItemName();
 
@@ -80,13 +81,13 @@ public abstract class AbstractPointsMachine extends AContainer {
             }
 
             @Override
-            public boolean canOpen(Block b, Player p) {
+            public boolean canOpen(@NotNull Block b, @NotNull Player p) {
                 boolean perm = p.hasPermission("slimefun.inventory.bypass") || Slimefun.getProtectionManager().hasPermission(p, b, Interaction.INTERACT_BLOCK);
                 return perm && (STConfig.originalSlimefun || AbstractPointsMachine.this.canUse(p, true));
             }
 
             @Override
-            public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
+            public int[] getSlotsAccessedByItemTransport(@NotNull ItemTransportFlow flow) {
                 if (flow.equals(ItemTransportFlow.INSERT)) {
                     return AbstractPointsMachine.this.getInputSlots();
                 }
@@ -95,12 +96,12 @@ public abstract class AbstractPointsMachine extends AContainer {
         };
         addItemHandler(new BlockPlaceHandler(false) {
             @Override
-            public void onPlayerPlace(BlockPlaceEvent e) {
+            public void onPlayerPlace(@NotNull BlockPlaceEvent e) {
                 Player p = e.getPlayer();
                 Block b = e.getBlockPlaced();
                 runOnBlockPlace(p, b);
-                if (BlockStorage.getLocationInfo(b.getLocation(), POINTS_KEY) == null) {
-                    BlockStorage.addBlockInfo(b, POINTS_KEY, "0", false);
+                if (StorageCacheUtils.getData(b.getLocation(), POINTS_KEY) == null) {
+                    StorageCacheUtils.setData(b.getLocation(), POINTS_KEY, "0");
                 }
             }
         }, new BlockBreakHandler(false, false) {
@@ -108,7 +109,7 @@ public abstract class AbstractPointsMachine extends AContainer {
             @Override
             public void onPlayerBreak(BlockBreakEvent e, ItemStack tool, List<ItemStack> drops) {
                 Block b = e.getBlock();
-                BlockMenu inv = BlockStorage.getInventory(b);
+                BlockMenu inv = StorageCacheUtils.getMenu(b.getLocation());
                 if (inv != null) {
                     for (int slot : AbstractPointsMachine.this.getInputSlots()) {
                         if (inv.getItemInSlot(slot) != null) {
@@ -134,7 +135,7 @@ public abstract class AbstractPointsMachine extends AContainer {
         registerDefaultRecipes();
     }
 
-    public void constructMenu(BlockMenuPreset preset) {
+    public void constructMenu(@NotNull BlockMenuPreset preset) {
         for (int i : POINTS_BORDER) {
             preset.addItem(i, new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "),
                     new ChestMenu.MenuClickHandler() {
@@ -188,7 +189,7 @@ public abstract class AbstractPointsMachine extends AContainer {
                 }
 
                 @Override
-                public boolean onClick(InventoryClickEvent event, Player player, int slot, ItemStack item, ClickAction action) {
+                public boolean onClick(InventoryClickEvent event, Player player, int slot, @Nullable ItemStack item, ClickAction action) {
                     return (item == null) || (item.getType() == null) || (item.getType() == Material.AIR);
                 }
             });
@@ -212,7 +213,7 @@ public abstract class AbstractPointsMachine extends AContainer {
         return new int[]{42, 43};
     }
 
-    public abstract String getInventoryTitle();
+    public abstract @NotNull String getInventoryTitle();
 
     public abstract void registerDefaultRecipes();
 
@@ -220,7 +221,7 @@ public abstract class AbstractPointsMachine extends AContainer {
 
     public abstract int getLevel();
 
-    public abstract String getMachineIdentifier();
+    public abstract @NotNull String getMachineIdentifier();
 
     public abstract ItemStack getPointsItem();
 
@@ -267,9 +268,9 @@ public abstract class AbstractPointsMachine extends AContainer {
      * WARNING: 为了效率此处没有检测是否为可充点物品
      * 请在每次使用前确保物品为可充点物品
      */
-    public abstract ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd);
+    public abstract @Nullable ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd);
 
-    public ItemStack getProgressBar() {
+    public @NotNull ItemStack getProgressBar() {
         return new ItemStack(Material.FLINT_AND_STEEL);
     }
 
@@ -281,7 +282,7 @@ public abstract class AbstractPointsMachine extends AContainer {
         return getProcessing(b) != null;
     }
 
-    public void registerRecipe(PointMachineRecipe recipe) {
+    public void registerRecipe(@NotNull PointMachineRecipe recipe) {
         recipe.setTicks(recipe.getTicks());
         this.recipes.add(recipe);
     }
@@ -306,25 +307,25 @@ public abstract class AbstractPointsMachine extends AContainer {
         return this.recipes;
     }
 
-    private Inventory inject(Block b) {
-        int size = BlockStorage.getInventory(b).toInventory().getSize();
+    private @NotNull Inventory inject(@NotNull Block b) {
+        int size = StorageCacheUtils.getMenu(b.getLocation()).toInventory().getSize();
         Inventory inv = Bukkit.createInventory(null, size);
         for (int i = 0; i < size; i++) {
             inv.setItem(i, new CustomItemStack(Material.COMMAND_BLOCK, " &4ALL YOUR PLACEHOLDERS ARE BELONG TO US"));
         }
         for (int slot : getOutputSlots()) {
-            inv.setItem(slot, BlockStorage.getInventory(b).getItemInSlot(slot));
+            inv.setItem(slot, StorageCacheUtils.getMenu(b.getLocation()).getItemInSlot(slot));
         }
         return inv;
     }
 
-    protected boolean fits(Block b, ItemStack[] items) {
+    protected boolean fits(@NotNull Block b, ItemStack[] items) {
         return inject(b).addItem(items).isEmpty();
     }
 
-    protected void pushMainItems(Block b, PointMachineRecipe recipe) {
+    protected void pushMainItems(@NotNull Block b, @NotNull PointMachineRecipe recipe) {
         //旧point值
-        int nowValue = Integer.parseInt(BlockStorage.getLocationInfo(b.getLocation(), POINTS_KEY));
+        int nowValue = Integer.parseInt(StorageCacheUtils.getData(b.getLocation(), POINTS_KEY));
         //新point值
         int newValue = recipe.getPoints() + nowValue;
         if (newValue > getPointsMax()) {
@@ -339,7 +340,7 @@ public abstract class AbstractPointsMachine extends AContainer {
                     Inventory inv = inject(b);
                     inv.addItem(recipe.getOutput());
                     for (int slot : getOutputSlots()) {
-                        BlockStorage.getInventory(b).replaceExistingItem(slot, inv.getItem(slot));
+                        StorageCacheUtils.getMenu(b.getLocation()).replaceExistingItem(slot, inv.getItem(slot));
                     }
                 }
             }
@@ -359,42 +360,42 @@ public abstract class AbstractPointsMachine extends AContainer {
 
             boolean canOutput = false;
             for (int slot : getOutputSlots()) {
-                if (BlockStorage.getInventory(b).getItemInSlot(slot) == null) {
+                if (StorageCacheUtils.getMenu(b.getLocation()).getItemInSlot(slot) == null) {
                     Inventory inv = inject(b);
                     inv.addItem(outItem);
-                    BlockStorage.getInventory(b).replaceExistingItem(slot, outItem);
+                    StorageCacheUtils.getMenu(b.getLocation()).replaceExistingItem(slot, outItem);
                     canOutput = true;
                     charginItems.remove(b);
                     break;
                 }
             }
             if (!canOutput) {
-                BlockStorage.getInventory(b).replaceExistingItem(getOutputSlots()[getOutputSlots().length - 1], outItem);
+                StorageCacheUtils.getMenu(b.getLocation()).replaceExistingItem(getOutputSlots()[getOutputSlots().length - 1], outItem);
                 charginItems.remove(b);
             }
 
         }
         //增减point值
-        BlockStorage.addBlockInfo(b, POINTS_KEY, String.valueOf(newValue), false);
+        StorageCacheUtils.setData(b.getLocation(), POINTS_KEY, String.valueOf(newValue));
         //处理GUI显示
         placePointsBar(nowValue, newValue, b);
     }
 
-    private void placePointsBar(int nowValue, int newValue, Block b) {
+    private void placePointsBar(int nowValue, int newValue, @NotNull Block b) {
         for (int i : POINTS_INFO) {
             if (newValue != 0 && (i - POINTS_INFO[0]) * getPointsMax() / 7 <= nowValue) {
-                BlockStorage.getInventory(b).replaceExistingItem(i, new CustomItemStack(getPointsItem(), getPointsName() + newValue + "§7/§e" + getPointsMax()));
+                StorageCacheUtils.getMenu(b.getLocation()).replaceExistingItem(i, new CustomItemStack(getPointsItem(), getPointsName() + newValue + "§7/§e" + getPointsMax()));
             } else {
-                BlockStorage.getInventory(b).replaceExistingItem(i, new CustomItemStack(NO_POINTS_ITEM, getPointsName() + newValue + "§7/§e" + getPointsMax()));
+                StorageCacheUtils.getMenu(b.getLocation()).replaceExistingItem(i, new CustomItemStack(NO_POINTS_ITEM, getPointsName() + newValue + "§7/§e" + getPointsMax()));
             }
         }
     }
 
     @Override
-    public void register(SlimefunAddon addon) {
+    public void register(@NotNull SlimefunAddon addon) {
         addItemHandler(new BlockTicker() {
             @Override
-            public void tick(Block b, SlimefunItem sf, Config data) {
+            public void tick(@NotNull Block b, SlimefunItem sf, Config data) {
                 AbstractPointsMachine.this.tick(b);
             }
 
@@ -410,7 +411,7 @@ public abstract class AbstractPointsMachine extends AContainer {
         super.register(addon);
     }
 
-    protected void tick(Block b) {
+    protected void tick(@NotNull Block b) {
         ItemMeta im;
         if (isProcessing(b)) {
             int timeleft = progress.get(b);
@@ -422,12 +423,13 @@ public abstract class AbstractPointsMachine extends AContainer {
                 }
                 im.setDisplayName(" ");
                 List<String> lore = new ArrayList<String>();
-                lore.add(ChestMenuUtils.getProgressBar(timeleft, processing.get(b).getTicks()));
+                lore.add(MachineHelper.getProgress(timeleft, processing.get(b).getTicks()));
                 lore.add("");
+                lore.add(MachineHelper.getTimeLeft(timeleft / 2));
                 im.setLore(lore);
                 item.setItemMeta(im);
 
-                BlockStorage.getInventory(b).replaceExistingItem(40, item);
+                StorageCacheUtils.getMenu(b.getLocation()).replaceExistingItem(40, item);
                 if (ChargeableBlock.isChargeable(b)) {
                     if (ChargeableBlock.getCharge(b) < getEnergyConsumption()) {
                         return;
@@ -438,7 +440,7 @@ public abstract class AbstractPointsMachine extends AContainer {
                     progress.put(b, timeleft - 1);
                 }
             } else {
-                BlockStorage.getInventory(b).replaceExistingItem(40, new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "));
+                StorageCacheUtils.getMenu(b.getLocation()).replaceExistingItem(40, new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "));
                 if (!startTickCheck(b, processing.get(b))) {
                     return;
                 }
@@ -456,7 +458,7 @@ public abstract class AbstractPointsMachine extends AContainer {
             for (PointMachineRecipe recipe : this.recipes) {
                 //判断是否有足够扣除的点数
                 if (!recipe.getCheckType().equals(PointMachineRecipe.PointCheckType.NO_CHECK)) {
-                    int value = Integer.valueOf(BlockStorage.getLocationInfo(b.getLocation(), POINTS_KEY));
+                    int value = Integer.valueOf(StorageCacheUtils.getData(b.getLocation(), POINTS_KEY));
                     switch (recipe.getCheckType()) {
                         case BIG_THAN:
                             if (!(value > recipe.getCondition())) {
@@ -491,7 +493,7 @@ public abstract class AbstractPointsMachine extends AContainer {
                 if (recipe.getType().equals(PointMachineRecipe.RecipeResultType.ITEM)) {
                     for (ItemStack input : recipe.getInput()) {
                         for (int slot : getInputSlots()) {
-                            if (SlimefunUtils.isItemSimilar(BlockStorage.getInventory(b).getItemInSlot(slot), input, true)) {
+                            if (SlimefunUtils.isItemSimilar(StorageCacheUtils.getMenu(b.getLocation()).getItemInSlot(slot), input, true)) {
                                 if (input != null) {
                                     found.put(slot, input.getAmount());
                                 }
@@ -508,7 +510,7 @@ public abstract class AbstractPointsMachine extends AContainer {
                     //检查输出槽是否有空位
                     boolean hasEmptyOutSlot = false;
                     for (int outSlot : getOutputSlots()) {
-                        if (BlockStorage.getInventory(b).getItemInSlot(outSlot) == null) {
+                        if (StorageCacheUtils.getMenu(b.getLocation()).getItemInSlot(outSlot) == null) {
                             hasEmptyOutSlot = true;
                             break;
                         }
@@ -519,7 +521,7 @@ public abstract class AbstractPointsMachine extends AContainer {
                     ItemStack realInput = null;
                     for (ItemStack input : recipe.getInput()) {
                         for (int slot : getInputSlots()) {
-                            if (SlimefunUtils.isItemSimilar(BlockStorage.getInventory(b).getItemInSlot(slot), input, false)) {
+                            if (SlimefunUtils.isItemSimilar(StorageCacheUtils.getMenu(b.getLocation()).getItemInSlot(slot), input, false)) {
                                 if (input != null) {
                                     found.put(slot, input.getAmount());
                                     realInput = input;
@@ -539,14 +541,14 @@ public abstract class AbstractPointsMachine extends AContainer {
             }
             if (r != null) {
                 //检测Points是否已满，且配方依然要对points进行增加，是则return
-                if (BlockStorage.getLocationInfo(b.getLocation(), POINTS_KEY).equals(String.valueOf(getPointsMax())) && r.getPoints() > 0) {
+                if (StorageCacheUtils.getData(b.getLocation(), POINTS_KEY).equals(String.valueOf(getPointsMax())) && r.getPoints() > 0) {
                     return;
                 }
                 if (r.getOutput() != null && !fits(b, r.getOutput())) {
                     return;
                 }
                 for (Map.Entry<Integer, Integer> entry : found.entrySet()) {
-                    BlockStorage.getInventory(b).consumeItem(entry.getKey(), entry.getValue());
+                    StorageCacheUtils.getMenu(b.getLocation()).consumeItem(entry.getKey(), entry.getValue());
                 }
                 processing.put(b, r);
                 progress.put(b, r.getTicks());

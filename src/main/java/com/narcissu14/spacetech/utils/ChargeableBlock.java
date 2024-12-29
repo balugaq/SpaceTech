@@ -5,10 +5,12 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.core.attributes.EnergyNetComponent;
 import lombok.experimental.UtilityClass;
 import org.bukkit.block.Block;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 public class ChargeableBlock {
-    public static boolean isChargeable(Block block) {
+    public static boolean isChargeable(@NotNull Block block) {
         SlimefunItem item = getSfItem(block);
         if (item instanceof EnergyNetComponent) {
             EnergyNetComponent component = (EnergyNetComponent) item;
@@ -18,11 +20,11 @@ public class ChargeableBlock {
         }
     }
 
-    public static SlimefunItem getSfItem(Block block) {
+    public static @Nullable SlimefunItem getSfItem(@NotNull Block block) {
         return StorageCacheUtils.getSfItem(block.getLocation());
     }
 
-    public static int getCharge(Block block) {
+    public static int getCharge(@NotNull Block block) {
         SlimefunItem item = getSfItem(block);
         if (item instanceof EnergyNetComponent) {
             EnergyNetComponent component = (EnergyNetComponent) item;
@@ -32,7 +34,7 @@ public class ChargeableBlock {
         }
     }
 
-    public static void setCharge(Block block, int charge) {
+    public static void setCharge(@NotNull Block block, int charge) {
         SlimefunItem item = getSfItem(block);
         if (item instanceof EnergyNetComponent) {
             EnergyNetComponent component = (EnergyNetComponent) item;
@@ -40,7 +42,7 @@ public class ChargeableBlock {
         }
     }
 
-    public static void addCharge(Block block, int charge) {
+    public static void addCharge(@NotNull Block block, int charge) {
         if (charge < 0) {
             removeCharge(block, -charge);
             return;
@@ -53,7 +55,7 @@ public class ChargeableBlock {
         }
     }
 
-    public static void removeCharge(Block block, int charge) {
+    public static void removeCharge(@NotNull Block block, int charge) {
         if (charge < 0) {
             addCharge(block, -charge);
             return;

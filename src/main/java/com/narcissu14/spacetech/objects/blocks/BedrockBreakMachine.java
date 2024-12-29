@@ -3,14 +3,12 @@ package com.narcissu14.spacetech.objects.blocks;
 import com.narcissu14.spacetech.container.MachineDirection;
 import com.narcissu14.spacetech.objects.STItems;
 import com.narcissu14.spacetech.utils.SkullUtil;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -20,20 +18,20 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Narcissu14
  */
 public abstract class BedrockBreakMachine extends AbstractPointsMachine {
+    private final static ItemStack DIG_BUTTON = new CustomItemStack(new ItemStack(Material.HOPPER), "§c§l点击挖掘基岩",
+            "", "§7当§e挖掘度§7到达最大后可以破穿指定方向的基岩", "§7你可以点击下方的按钮修改破穿的方位", "§7挖掘需要消耗基岩钻头", "", "§c§l注意: §7调整破穿方位会重置挖掘度");
+    private final static String DIRECTION_KEY = "break-direction";
     private static String ID;
     private static ItemStack POINTS_ITEM;
     private static int POINTS_MAX;
     private static String POINTS_NAME;
-
-    private final static ItemStack DIG_BUTTON = new CustomItemStack(new ItemStack(Material.HOPPER), "§c§l点击挖掘基岩",
-            "" , "§7当§e挖掘度§7到达最大后可以破穿指定方向的基岩", "§7你可以点击下方的按钮修改破穿的方位", "§7挖掘需要消耗基岩钻头", "", "§c§l注意: §7调整破穿方位会重置挖掘度");
-    private final static String DIRECTION_KEY = "break-direction";
-
     private static ItemStack DIRECTION_BUTTON;
 
     static {
@@ -54,7 +52,7 @@ public abstract class BedrockBreakMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public String getInventoryTitle() {
+    public @NotNull String getInventoryTitle() {
         return "&9基岩破穿器";
     }
 
@@ -69,7 +67,7 @@ public abstract class BedrockBreakMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public String getMachineIdentifier() {
+    public @NotNull String getMachineIdentifier() {
         return ID;
     }
 
@@ -89,83 +87,77 @@ public abstract class BedrockBreakMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public void addExtraMenuHandler(BlockMenu menu, Block b) {
+    public void addExtraMenuHandler(@NotNull BlockMenu menu, @NotNull Block b) {
         menu.replaceExistingItem(4, DIG_BUTTON);
-        menu.addMenuClickHandler(4, new ChestMenu.MenuClickHandler() {
-            @Override
-            public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                //判断能挖掘后进行挖掘
-                if (Integer.parseInt(BlockStorage.getLocationInfo(b.getLocation(), POINTS_KEY)) < POINTS_MAX) {
-                    player.sendMessage("§c挖掘度不足，现在还无法破穿基岩");
-                    return false;
-                }
-                Block facingBlock = b.getRelative(BlockFace.valueOf(BlockStorage.getLocationInfo(b.getLocation(), DIRECTION_KEY)));
-                if (!facingBlock.getType().equals(Material.BEDROCK)) {
-                    player.sendMessage("§c破穿方向上的方块不是基岩");
-                    return false;
-                }
-                if (Slimefun.getProtectionManager().hasPermission(player, facingBlock, Interaction.PLACE_BLOCK)) {
-                    //挖基岩
-                    facingBlock.setType(Material.AIR);
-                    player.playSound(b.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2f, 0.7f);
-                    player.spawnParticle(Particle.EXPLOSION_NORMAL, b.getLocation(), 10);
-                    BlockStorage.addBlockInfo(b, POINTS_KEY, "0", false);
-                } else {
-                    player.sendMessage("§c你没有权限破坏那个方向上的基岩！");
-                }
+        menu.addMenuClickHandler(4, (player, i, itemStack, clickAction) -> {
+            //判断能挖掘后进行挖掘
+            if (Integer.parseInt(StorageCacheUtils.getData(b.getLocation(), POINTS_KEY)) < POINTS_MAX) {
+                player.sendMessage("§c挖掘度不足，现在还无法破穿基岩");
                 return false;
             }
+            Block facingBlock = b.getRelative(BlockFace.valueOf(StorageCacheUtils.getData(b.getLocation(), DIRECTION_KEY)));
+            if (!facingBlock.getType().equals(Material.BEDROCK)) {
+                player.sendMessage("§c破穿方向上的方块不是基岩");
+                return false;
+            }
+            if (Slimefun.getProtectionManager().hasPermission(player, facingBlock, Interaction.PLACE_BLOCK)) {
+                //挖基岩
+                facingBlock.setType(Material.AIR);
+                player.playSound(b.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2f, 0.7f);
+                player.spawnParticle(Particle.EXPLOSION_NORMAL, b.getLocation(), 10);
+                StorageCacheUtils.setData(b.getLocation(), POINTS_KEY, "0");
+            } else {
+                player.sendMessage("§c你没有权限破坏那个方向上的基岩！");
+            }
+            return false;
         });
         menu.replaceExistingItem(22, DIRECTION_BUTTON);
-        menu.addMenuClickHandler(22, new ChestMenu.MenuClickHandler() {
-            @Override
-            public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                //点击调整方位
-                ItemStack newButton = DIRECTION_BUTTON.clone();
-                ItemMeta meta = newButton.getItemMeta();
-                switch (MachineDirection.getByName(BlockStorage.getLocationInfo(b.getLocation(), DIRECTION_KEY))) {
-                    case DOWN:
-                        BlockStorage.addBlockInfo(b, DIRECTION_KEY, MachineDirection.UP.toString(), false);
-                        meta.setDisplayName("§7当前破穿方向: §e上");
-                        newButton.setItemMeta(meta);
-                        break;
-                    case UP:
-                        BlockStorage.addBlockInfo(b, DIRECTION_KEY, MachineDirection.NORTH.toString(), false);
-                        meta.setDisplayName("§7当前破穿方向: §e北");
-                        newButton.setItemMeta(meta);
-                        break;
-                    case NORTH:
-                        BlockStorage.addBlockInfo(b, DIRECTION_KEY, MachineDirection.EAST.toString(), false);
-                        meta.setDisplayName("§7当前破穿方向: §e东");
-                        newButton.setItemMeta(meta);
-                        break;
-                    case EAST:
-                        BlockStorage.addBlockInfo(b, DIRECTION_KEY, MachineDirection.SOUTH.toString(), false);
-                        meta.setDisplayName("§7当前破穿方向: §e南");
-                        newButton.setItemMeta(meta);
-                        break;
-                    case SOUTH:
-                        BlockStorage.addBlockInfo(b, DIRECTION_KEY, MachineDirection.WEST.toString(), false);
-                        meta.setDisplayName("§7当前破穿方向: §e西");
-                        newButton.setItemMeta(meta);
-                        break;
-                    case WEST:
-                    default:
-                        BlockStorage.addBlockInfo(b, DIRECTION_KEY, MachineDirection.DOWN.toString(), false);
-                        //因为是默认下方，所以此处无需再修改名称
-                        break;
-                }
-                BlockStorage.addBlockInfo(b, POINTS_KEY, "0", false);
-                menu.replaceExistingItem(22, newButton);
-                return false;
+        menu.addMenuClickHandler(22, (player, i, itemStack, clickAction) -> {
+            //点击调整方位
+            ItemStack newButton = DIRECTION_BUTTON.clone();
+            ItemMeta meta = newButton.getItemMeta();
+            switch (MachineDirection.getByName(StorageCacheUtils.getData(b.getLocation(), DIRECTION_KEY))) {
+                case DOWN:
+                    StorageCacheUtils.setData(b.getLocation(), DIRECTION_KEY, MachineDirection.UP.toString());
+                    meta.setDisplayName("§7当前破穿方向: §e上");
+                    newButton.setItemMeta(meta);
+                    break;
+                case UP:
+                    StorageCacheUtils.setData(b.getLocation(), DIRECTION_KEY, MachineDirection.NORTH.toString());
+                    meta.setDisplayName("§7当前破穿方向: §e北");
+                    newButton.setItemMeta(meta);
+                    break;
+                case NORTH:
+                    StorageCacheUtils.setData(b.getLocation(), DIRECTION_KEY, MachineDirection.EAST.toString());
+                    meta.setDisplayName("§7当前破穿方向: §e东");
+                    newButton.setItemMeta(meta);
+                    break;
+                case EAST:
+                    StorageCacheUtils.setData(b.getLocation(), DIRECTION_KEY, MachineDirection.SOUTH.toString());
+                    meta.setDisplayName("§7当前破穿方向: §e南");
+                    newButton.setItemMeta(meta);
+                    break;
+                case SOUTH:
+                    StorageCacheUtils.setData(b.getLocation(), DIRECTION_KEY, MachineDirection.WEST.toString());
+                    meta.setDisplayName("§7当前破穿方向: §e西");
+                    newButton.setItemMeta(meta);
+                    break;
+                case WEST:
+                default:
+                    StorageCacheUtils.setData(b.getLocation(), DIRECTION_KEY, MachineDirection.DOWN.toString());
+                    //因为是默认下方，所以此处无需再修改名称
+                    break;
             }
+            StorageCacheUtils.setData(b.getLocation(), POINTS_KEY, "0");
+            menu.replaceExistingItem(22, newButton);
+            return false;
         });
     }
 
     @Override
-    public void runOnBlockPlace(Player p, Block b) {
-        if (BlockStorage.getLocationInfo(b.getLocation(), DIRECTION_KEY) == null) {
-            BlockStorage.addBlockInfo(b, DIRECTION_KEY, MachineDirection.DOWN.toString(), false);
+    public void runOnBlockPlace(Player p, @NotNull Block b) {
+        if (StorageCacheUtils.getData(b.getLocation(), DIRECTION_KEY) == null) {
+            StorageCacheUtils.setData(b.getLocation(), DIRECTION_KEY, MachineDirection.DOWN.toString());
         }
     }
 
@@ -180,7 +172,7 @@ public abstract class BedrockBreakMachine extends AbstractPointsMachine {
     }
 
     @Override
-    public ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd) {
+    public @Nullable ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd) {
         return null;
     }
 }

@@ -1,6 +1,7 @@
 package com.narcissu14.spacetech.setup.config;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
@@ -11,7 +12,7 @@ public abstract class AbstractConfig {
     File file;
     YamlConfiguration config;
 
-    public AbstractConfig(File configFile) {
+    public AbstractConfig(@NotNull File configFile) {
         this.file = configFile;
         YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         this.config = config;

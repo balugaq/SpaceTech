@@ -9,25 +9,26 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Narcissu14
  */
 public abstract class OreRefiningMachine extends AContainer {
-    private final String name;
+    private final @NotNull String name;
 
-    public OreRefiningMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
+    public OreRefiningMachine(@NotNull ItemGroup itemGroup, @NotNull ItemStack item, @NotNull String name, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
         super(itemGroup, new SlimefunItemStack(name, item), recipeType, recipe);
         this.name = name;
     }
 
     @Override
-    public String getInventoryTitle() {
+    public @NotNull String getInventoryTitle() {
         return "§b电磁炼矿机";
     }
 
     @Override
-    public ItemStack getProgressBar() {
+    public @NotNull ItemStack getProgressBar() {
         return new ItemStack(Material.FLINT_AND_STEEL);
     }
 
@@ -40,9 +41,10 @@ public abstract class OreRefiningMachine extends AContainer {
     }
 
     @Override
-    public String getMachineIdentifier() {
+    public @NotNull String getMachineIdentifier() {
         return name;
     }
+
     public abstract int getCapacity();
 
     public abstract int getEnergyConsumption();
