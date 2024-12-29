@@ -1,5 +1,7 @@
 package com.narcissu14.spacetech.objects;
 
+import com.narcissu14.spacetech.setup.NarItemSetup;
+import com.narcissu14.spacetech.setup.NarItems;
 import com.narcissu14.spacetech.utils.CustomPotionItem;
 import com.narcissu14.spacetech.utils.ItemUtils;
 import com.narcissu14.spacetech.utils.SkullUtil;
@@ -103,6 +105,7 @@ public class STItems {
 
     static {
         try {
+            NarItemSetup.setupItems();
             ItemMeta emUnitMeta = EMPTY_EM_UNIT.getItemMeta();
             emUnitMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             EMPTY_EM_UNIT.setItemMeta(emUnitMeta);
