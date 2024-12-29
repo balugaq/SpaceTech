@@ -1,5 +1,6 @@
 package com.narcissu14.spacetech.container;
 
+import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -9,15 +10,21 @@ import org.bukkit.inventory.ItemStack;
  */
 public class PointMachineRecipe {
 
+    @Getter
+    private final ItemStack[] input;
+    @Getter
+    private final int points;
+    @Getter
+    private final RecipeResultType type;
+    private final PointCheckType check;
+    @Getter
+    private final int condition;
+    @Getter
     private int ticks;
-    private ItemStack[] input;
-    private int points;
-    private RecipeResultType type;
-
-    private PointCheckType check;
-    private int condition;
-
+    //输出
+    @Getter
     private ItemStack[] output;
+    @Getter
     private int valueMax;
 
     //TODO 需要对扣除点数的配方进行点数判断
@@ -65,41 +72,12 @@ public class PointMachineRecipe {
         this.valueMax = valueMax;
     }
 
-    public int getTicks() {
-        return ticks;
-    }
-
     public void setTicks(int ticks) {
         this.ticks = ticks;
     }
 
-    public ItemStack[] getInput() {
-        return this.input;
-    }
-
-    public int getPoints() {
-        return this.points;
-    }
-
-    public RecipeResultType getType() {
-        return type;
-    }
-
     public PointCheckType getCheckType() {
         return check;
-    }
-
-    public int getCondition() {
-        return condition;
-    }
-
-    //输出
-    public ItemStack[] getOutput() {
-        return this.output;
-    }
-
-    public int getValueMax() {
-        return valueMax;
     }
 
     public enum RecipeResultType {

@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 public class SpaceWorldListener implements Listener {
 
     private static final PotionEffect JUMP_EFFECT = new PotionEffect(PotionEffectType.JUMP, 40, 3, false, false);
-    private @NotNull HashSet<Material> noPlaceItemSet = new HashSet<>();
+    private final @NotNull HashSet<Material> noPlaceItemSet = new HashSet<>();
     //private static final PotionEffect NO_OXYGEN_EFFECT = new PotionEffect(PotionEffectType.WITHER, 100, 0, false, false);
 
 
@@ -226,7 +226,6 @@ public class SpaceWorldListener implements Listener {
             Material mat = event.getItem().getType();
             if (noPlaceItemSet.contains(mat)) {
                 event.setCancelled(true);
-                return;
             }
         }
     }

@@ -22,21 +22,20 @@ public class SpaceGenerator extends ChunkGenerator {
     }
 
     @Override
-    public Location getFixedSpawnLocation(@NotNull World world, Random random) {
+    public Location getFixedSpawnLocation(@NotNull World world, @NotNull Random random) {
         world.getBlockAt(0, 59, 0).setType(Material.BEDROCK);
 
         return new Location(world, 0, 60, 0);
     }
 
     @Override
-    public @NotNull List<BlockPopulator> getDefaultPopulators(World world) {
+    public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
         return Collections.singletonList(new PlanetPopulator());
     }
 
     @Override
-    public @NotNull ChunkData generateChunkData(@NotNull World world, Random random, int x, int z, BiomeGrid biome) {
-        ChunkData chunkData = Bukkit.createChunkData(world);
+    public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
 
-        return chunkData;
+        return Bukkit.createChunkData(world);
     }
 }

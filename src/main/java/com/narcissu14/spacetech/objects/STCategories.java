@@ -5,14 +5,13 @@ import com.narcissu14.spacetech.utils.SkullUtil;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import org.bukkit.NamespacedKey;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Narcissu14
  */
 public class STCategories {
-    public static @Nullable ItemGroup ST_MACHINES = null;
-    public static @Nullable ItemGroup QUANTUM_MACHINES = null;
+    public static ItemGroup ST_MACHINES = null;
+    public static ItemGroup QUANTUM_MACHINES = null;
 
     static {
         try {

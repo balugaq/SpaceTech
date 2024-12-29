@@ -68,7 +68,7 @@ public class NarItemSetup {
         }).register(SpaceTech.getInstance());
         (new SlimefunItem(SlimefunItemGroups.misc, new SlimefunItemStack("SPACETECH_UU", NarItems.UU), new RecipeType(new NamespacedKey(SpaceTech.getInstance(), "uu_item_creator"), NarItems.UU_MACHINE), new ItemStack[]{null, null, null, null, new CustomItemStack(Material.GHAST_TEAR, "§e通过元物质分离机收集"), null, null, null, null
         })).register(SpaceTech.getInstance());
-        (new SlimefunItem(SlimefunItemGroups.resources, new SlimefunItemStack("SPACETECH_IRIDIUM", NarItems.IRIDIUM), new RecipeType(new NamespacedKey(SpaceTech.getInstance(), "uu_item_creator"), NarItems.ITEM_CREATOR), new ItemStack[]{null, null, null, null, new CustomItemStack(NarItems.ITEM_CREATOR, "&d物质制造机", new String[]{"", "§e通过物质制造机制作"}), null, null, null, null
+        (new SlimefunItem(SlimefunItemGroups.resources, new SlimefunItemStack("SPACETECH_IRIDIUM", NarItems.IRIDIUM), new RecipeType(new NamespacedKey(SpaceTech.getInstance(), "uu_item_creator"), NarItems.ITEM_CREATOR), new ItemStack[]{null, null, null, null, new CustomItemStack(NarItems.ITEM_CREATOR, "&d物质制造机", "", "§e通过物质制造机制作"), null, null, null, null
         })).register(SpaceTech.getInstance());
         (new CreatorMachine(STCategories.QUANTUM_MACHINES, NarItems.ITEM_CREATOR, "ITEM_CREATOR", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{NarItems.UU, SlimefunItems.CARBONADO, NarItems.UU, SlimefunItems.NETHER_ICE_COOLANT_CELL, SlimefunItems.ANDROID_MEMORY_CORE, SlimefunItems.CARBONADO_EDGED_CAPACITOR, SlimefunItems.WITHER_PROOF_GLASS, SlimefunItems.GOLD_24K_BLOCK, SlimefunItems.WITHER_PROOF_GLASS}) {
             public @NotNull String getInventoryTitle() {

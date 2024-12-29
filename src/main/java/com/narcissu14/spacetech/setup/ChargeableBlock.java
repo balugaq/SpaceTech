@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class ChargeableBlock {
-    public static @NotNull Map<String, Integer> max_charges = new HashMap<>();
-    public static @NotNull Set<String> capacitors = new HashSet<>();
+    public static final @NotNull Map<String, Integer> max_charges = new HashMap<>();
+    public static final @NotNull Set<String> capacitors = new HashSet<>();
 
     public static boolean isChargeable(@NotNull Block b) {
         return isChargeable(b.getLocation());
@@ -27,7 +27,7 @@ public class ChargeableBlock {
 
     public static int getDefaultCapacity(@NotNull Location l) {
         String id = StorageCacheUtils.getSfItem(l).getId();
-        return (id == null) ? 0 : max_charges.get(id);
+        return max_charges.get(id);
     }
 
     public static int getCharge(@NotNull Block b) {

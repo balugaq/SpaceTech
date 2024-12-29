@@ -81,7 +81,7 @@ public class RedstonePWMachine extends SlimefunItem {
             }
 
             @Override
-            public boolean canOpen(Block block, Player player) {
+            public boolean canOpen(@NotNull Block block, @NotNull Player player) {
                 return false;
             }
 
@@ -104,7 +104,7 @@ public class RedstonePWMachine extends SlimefunItem {
             }
         }, new BlockBreakHandler(false, false) {
             @Override
-            public void onPlayerBreak(BlockBreakEvent blockBreakEvent, ItemStack itemStack, List<ItemStack> list) {
+            public void onPlayerBreak(@NotNull BlockBreakEvent blockBreakEvent, @NotNull ItemStack itemStack, @NotNull List<ItemStack> list) {
                 Player player = blockBreakEvent.getPlayer();
                 Block block = blockBreakEvent.getBlock();
                 if (player.isOp()) {

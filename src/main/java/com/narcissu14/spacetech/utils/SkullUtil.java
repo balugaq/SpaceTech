@@ -21,7 +21,7 @@ public class SkullUtil {
                     String path = t.getPath();
                     String[] parts = path.split("/");
                     return parts[parts.length - 1];
-                } catch (Throwable t) {
+                } catch (Throwable ignored) {
                 }
             }
         }

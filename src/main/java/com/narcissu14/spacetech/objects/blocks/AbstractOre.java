@@ -24,7 +24,7 @@ public abstract class AbstractOre extends SlimefunItem {
 
     void damageItem(@NotNull Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null || !item.hasItemMeta()) {
+        if (!item.hasItemMeta()) {
             return;
         }
         ItemMeta meta = item.getItemMeta();
@@ -46,9 +46,6 @@ public abstract class AbstractOre extends SlimefunItem {
 
     int getBreakAmount(@NotNull Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null) {
-            return 1;
-        }
         return STItems.getToolBreakAmount(item);
     }
 }

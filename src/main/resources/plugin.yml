@@ -1,8 +1,8 @@
 name: SpaceTech
 version: ${project.version}
 main: com.narcissu14.spacetech.SpaceTech
-depend: [Slimefun]
-authors: [Narcissu14, balugaq]
+depend: [ Slimefun ]
+authors: [ Narcissu14, balugaq ]
 description: Slimefun太空科技扩展
 api-version: 1.20
 website: plugin.narcissu14.com

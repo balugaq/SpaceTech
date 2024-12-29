@@ -42,14 +42,14 @@ import java.util.Map;
 import java.util.Random;
 
 public abstract class CreatorMachine extends AContainer {
+    public static final @NotNull Map<Block, MachineRecipe> processing = new HashMap<>();
+    public static final @NotNull Map<Block, Integer> progress = new HashMap<>();
     private static final int[] codeBorder = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 23, 24, 25, 26};
     private static final int[] code = new int[]{10, 11, 12, 13, 14, 15, 16};
     private static final int[] border = new int[]{27, 30, 31, 32, 35, 36, 39, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
     private static final int[] inputSign = new int[]{28, 29};
     private static final int[] outputSign = new int[]{33, 34};
-    public static @NotNull Map<Block, MachineRecipe> processing = new HashMap<>();
-    public static @NotNull Map<Block, Integer> progress = new HashMap<>();
-    protected @NotNull List<MachineRecipe> recipes = new ArrayList<>();
+    protected final @NotNull List<MachineRecipe> recipes = new ArrayList<>();
 
     public CreatorMachine(@NotNull ItemGroup category, @NotNull ItemStack item, @NotNull String name, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
         super(category, new SlimefunItemStack(name, item), recipeType, recipe);

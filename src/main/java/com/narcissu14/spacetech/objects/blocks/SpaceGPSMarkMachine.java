@@ -31,10 +31,10 @@ import org.jetbrains.annotations.Nullable;
 public abstract class SpaceGPSMarkMachine extends AbstractPointsMachine {
     private final static ItemStack LAUNCH_BUTTON = new CustomItemStack(new ItemStack(Material.FIREWORK_ROCKET), "§c§l发射太空GPS标记点",
             "", "§7发射后，你可以通过GPS装置传送前往太空标记点", "§7当§d联氨§7充满后才可以发射", "", "§c§l注意: §7前往太空之前，请带好GPS传送装置", "§7否则你将无法从太空§e返回");
-    private String id;
-    private ItemStack pointsItem;
-    private int pointsMax;
-    private String pointsName;
+    private final String id;
+    private final ItemStack pointsItem;
+    private final int pointsMax;
+    private final String pointsName;
 
     public SpaceGPSMarkMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
         super(itemGroup, item, name, recipeType, recipe);

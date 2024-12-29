@@ -6,6 +6,7 @@ import com.narcissu14.spacetech.listener.SpaceWorldListener;
 import com.narcissu14.spacetech.setup.STItemSetup;
 import com.narcissu14.spacetech.setup.config.STConfig;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +26,7 @@ import java.util.zip.ZipEntry;
  */
 public final class SpaceTech extends JavaPlugin implements SlimefunAddon {
     public static boolean IS_VERSION_13;
+    @Getter
     private static SpaceTech instance;
 
     static {
@@ -38,10 +40,6 @@ public final class SpaceTech extends JavaPlugin implements SlimefunAddon {
     }
 
     private STConfig config;
-
-    public static SpaceTech getInstance() {
-        return instance;
-    }
 
     @Override
 
@@ -73,7 +71,7 @@ public final class SpaceTech extends JavaPlugin implements SlimefunAddon {
     }
 
     @Override
-    public @NotNull ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
+    public @NotNull ChunkGenerator getDefaultWorldGenerator(@NotNull String worldName, String id) {
         return new SpaceGenerator();
     }
 
@@ -112,17 +110,17 @@ public final class SpaceTech extends JavaPlugin implements SlimefunAddon {
                     if (input != null) {
                         input.close();
                     }
-                } catch (IOException localIOException5) {
+                } catch (IOException ignored) {
                 }
                 try {
                     if (output != null) {
                         output.close();
                     }
-                } catch (IOException localIOException6) {
+                } catch (IOException ignored) {
                 }
             }
             file.close();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 

@@ -38,15 +38,15 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class UUMachine extends AContainer {
+    public static final @NotNull Map<Block, UURecipe> processing = new HashMap<>();
+    public static final @NotNull Map<Block, Integer> progress = new HashMap<>();
     private static final int[] uuBorder = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
     private static final int[] uuInfo = new int[]{10, 11, 12, 13, 14, 15, 16};
     private static final int[] border = new int[]{27, 30, 31, 32, 35, 36, 39, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
     private static final int[] inputSign = new int[]{28, 29};
     private static final int[] outputSign = new int[]{33, 34};
     private static final ItemStack uuItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (short) 10);
-    public static @NotNull Map<Block, UURecipe> processing = new HashMap<>();
-    public static @NotNull Map<Block, Integer> progress = new HashMap<>();
-    protected @NotNull List<UURecipe> recipes = new ArrayList<>();
+    protected final @NotNull List<UURecipe> recipes = new ArrayList<>();
 
     public UUMachine(@NotNull ItemGroup category, @NotNull ItemStack item, @NotNull String name, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
         super(category, new SlimefunItemStack(name, item), recipeType, recipe);

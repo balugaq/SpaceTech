@@ -1,5 +1,6 @@
 package com.narcissu14.spacetech.event;
 
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -12,9 +13,10 @@ import org.jetbrains.annotations.NotNull;
 public class SpaceOxygenEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
+    @Getter
+    private final Player player;
     private boolean cancelled = false;
-
-    private Player player;
+    @Getter
     private int oxygen;
 
     public SpaceOxygenEvent(Player player, int oxygen) {
@@ -41,20 +43,8 @@ public class SpaceOxygenEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
-    public int getOxygen() {
-        return oxygen;
-    }
-
     public void setOxygen(int oxygen) {
-        if (oxygen > 0) {
-            this.oxygen = oxygen;
-        } else {
-            this.oxygen = 0;
-        }
+        this.oxygen = Math.max(oxygen, 0);
     }
 
     public void addOxygen(int oxygen) {

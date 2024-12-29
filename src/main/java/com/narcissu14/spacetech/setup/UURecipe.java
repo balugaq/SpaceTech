@@ -3,12 +3,13 @@ package com.narcissu14.spacetech.setup;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 
+@Getter
 public class UURecipe {
     @Getter
-    int ticks;
-    @Getter
+    final
     ItemStack[] input;
-    int uu;
+    final int uu;
+    int ticks;
 
 
     public UURecipe(int seconds, ItemStack[] input, int uuAmount) {

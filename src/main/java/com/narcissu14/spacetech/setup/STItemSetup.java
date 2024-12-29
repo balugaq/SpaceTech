@@ -258,6 +258,9 @@ public class STItemSetup {
                         itemUseEvent.cancel();
                         return;
                     }
+                    if (!itemUseEvent.getClickedBlock().isPresent()) {
+                        return;
+                    }
                     Block block = itemUseEvent.getClickedBlock().get();
                     //检查是否为物质制造机
                     SlimefunItem item = StorageCacheUtils.getSfItem(block.getLocation());
@@ -322,6 +325,9 @@ public class STItemSetup {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
+                            if (!itemUseEvent.getClickedBlock().isPresent()) {
+                                return;
+                            }
                             Location loc = itemUseEvent.getClickedBlock().get().getLocation();
                             HashMap<Location, String> blocksMap = new HashMap<>();
                             //检测半径4格
@@ -467,7 +473,7 @@ public class STItemSetup {
                 SlimefunItems.CARBONADO, STItems.TITANIUM, SlimefunItems.CARBONADO,
                 null, STItems.ORE_RIG_REINFORCED, null,
         }).register(SpaceTech.getInstance());
-        new SlimefunItem(SlimefunItemGroups.armor, new SlimefunItemStack("SPACETECH_ORE_RIG_TITIANIUM", STItems.ORE_RIG_TITIANIUM), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SlimefunItem(SlimefunItemGroups.armor, new SlimefunItemStack("SPACETECH_ORE_RIG_TITIANIUM", STItems.ORE_RIG_TITANIUM), RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 null, STItems.TITANIUM, null,
                 STItems.TITANIUM, STItems.TITANIUM, STItems.TITANIUM,
                 null, STItems.ORE_RIG_CARBONADO, null,

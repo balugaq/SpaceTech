@@ -28,10 +28,10 @@ import org.jetbrains.annotations.Nullable;
 public abstract class BedrockCrackMachine extends AbstractPointsMachine {
     private final static ItemStack DIG_BUTTON = new CustomItemStack(new ItemStack(Material.HOPPER), "§a方向: §e下",
             "", "§7当§e挖掘度§7到达最大后", "§7你可以放入§e空电磁拘束单元", "§7开始对基岩进行爆碎", "§7并收集获得基岩粉末", "", "§c§l注意: §7基岩爆碎机只能爆碎其下方的基岩");
-    private String id;
-    private ItemStack pointsItem;
-    private int pointsMax;
-    private String pointsName;
+    private final String id;
+    private final ItemStack pointsItem;
+    private final int pointsMax;
+    private final String pointsName;
 
     public BedrockCrackMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
         super(itemGroup, item, name, recipeType, recipe);

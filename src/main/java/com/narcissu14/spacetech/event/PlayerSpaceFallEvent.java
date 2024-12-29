@@ -1,5 +1,6 @@
 package com.narcissu14.spacetech.event;
 
+import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -13,10 +14,13 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerSpaceFallEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
+    @Getter
+    private final Location from;
+    @Getter
+    private final Location to;
+    @Getter
+    private final Player player;
     private boolean cancelled = false;
-    private Location from;
-    private Location to;
-    private Player player;
 
     public PlayerSpaceFallEvent(Player player, Location from, Location to) {
         this.from = from;
@@ -43,15 +47,4 @@ public class PlayerSpaceFallEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public Location getFrom() {
-        return from;
-    }
-
-    public Location getTo() {
-        return to;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
 }

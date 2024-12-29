@@ -15,10 +15,10 @@ import org.jetbrains.annotations.Nullable;
  * @author Narcissu14
  */
 public class HydrazineMachine extends AbstractPointsMachine {
-    private String id;
-    private ItemStack pointsItem;
-    private int pointsMax;
-    private String pointsName;
+    private final String id;
+    private final ItemStack pointsItem;
+    private final int pointsMax;
+    private final String pointsName;
 
     public HydrazineMachine(ItemGroup itemGroup, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe, ItemStack pointsItem, int pointsMax, String pointName) {
         super(itemGroup, item, name, recipeType, recipe);

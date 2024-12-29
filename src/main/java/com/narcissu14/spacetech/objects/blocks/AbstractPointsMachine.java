@@ -49,17 +49,17 @@ import java.util.Map;
  * 输入的原材料可以变为点数，也能直接产出产品或是消耗点数后产出产品
  */
 public abstract class AbstractPointsMachine extends AContainer {
+    public static final @NotNull Map<Block, PointMachineRecipe> processing = new HashMap<Block, PointMachineRecipe>();
+    public static final @NotNull Map<Block, Integer> progress = new HashMap<Block, Integer>();
+    protected static final @NotNull Map<Block, ItemStack> charginItems = new HashMap<Block, ItemStack>();
     static final String POINTS_KEY = "machine-points";
     private static final int[] POINTS_BORDER = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
     private static final int[] POINTS_INFO = {10, 11, 12, 13, 14, 15, 16};
     private static final int[] BORDER = {27, 30, 31, 32, 35, 36, 39, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53};
     private static final int[] INPUT_SIGN = {28, 29};
     private static final int[] OUTPUT_SIGN = {33, 34};
-    public static @NotNull Map<Block, PointMachineRecipe> processing = new HashMap<Block, PointMachineRecipe>();
-    public static @NotNull Map<Block, Integer> progress = new HashMap<Block, Integer>();
-    protected static @NotNull Map<Block, ItemStack> charginItems = new HashMap<Block, ItemStack>();
-    private static @NotNull ItemStack NO_POINTS_ITEM = new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1);
-    protected @NotNull List<PointMachineRecipe> recipes = new ArrayList<PointMachineRecipe>();
+    private static final @NotNull ItemStack NO_POINTS_ITEM = new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1);
+    protected final @NotNull List<PointMachineRecipe> recipes = new ArrayList<PointMachineRecipe>();
 
     public AbstractPointsMachine(@NotNull ItemGroup itemGroup, @NotNull ItemStack itemStack, @NotNull String id, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
         this(itemGroup, new SlimefunItemStack(id, itemStack), recipeType, recipe);
@@ -76,7 +76,7 @@ public abstract class AbstractPointsMachine extends AContainer {
             }
 
             @Override
-            public void newInstance(BlockMenu menu, Block b) {
+            public void newInstance(@NotNull BlockMenu menu, @NotNull Block b) {
                 addExtraMenuHandler(menu, b);
             }
 
@@ -107,7 +107,7 @@ public abstract class AbstractPointsMachine extends AContainer {
         }, new BlockBreakHandler(false, false) {
 
             @Override
-            public void onPlayerBreak(BlockBreakEvent e, ItemStack tool, List<ItemStack> drops) {
+            public void onPlayerBreak(@NotNull BlockBreakEvent e, @NotNull ItemStack tool, @NotNull List<ItemStack> drops) {
                 Block b = e.getBlock();
                 BlockMenu inv = StorageCacheUtils.getMenu(b.getLocation());
                 if (inv != null) {
@@ -129,7 +129,6 @@ public abstract class AbstractPointsMachine extends AContainer {
                     b.getWorld().dropItemNaturally(b.getLocation(), dropItem);
                 }
                 AbstractPointsMachine.charginItems.remove(b);
-                return;
             }
         });
         registerDefaultRecipes();
@@ -190,7 +189,9 @@ public abstract class AbstractPointsMachine extends AContainer {
 
                 @Override
                 public boolean onClick(InventoryClickEvent event, Player player, int slot, @Nullable ItemStack item, ClickAction action) {
-                    return (item == null) || (item.getType() == null) || (item.getType() == Material.AIR);
+                    if ((item == null)) return true;
+                    item.getType();
+                    return item.getType() == Material.AIR;
                 }
             });
         }
@@ -462,27 +463,27 @@ public abstract class AbstractPointsMachine extends AContainer {
                     switch (recipe.getCheckType()) {
                         case BIG_THAN:
                             if (!(value > recipe.getCondition())) {
-                                continue recipeCheck;
+                                continue;
                             }
                             break;
                         case SMALL_THAN:
                             if (!(value < recipe.getCondition())) {
-                                continue recipeCheck;
+                                continue;
                             }
                             break;
                         case BIG_THAN_OR_EQUAL:
                             if (!(value >= recipe.getCondition())) {
-                                continue recipeCheck;
+                                continue;
                             }
                             break;
                         case SMALL_THAN_OR_EQUAL:
                             if (!(value <= recipe.getCondition())) {
-                                continue recipeCheck;
+                                continue;
                             }
                             break;
                         case EQUAL:
                             if (value != recipe.getCondition()) {
-                                continue recipeCheck;
+                                continue;
                             }
                             break;
                         default:

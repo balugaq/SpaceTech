@@ -14,7 +14,7 @@ public class MachineHelper {
         if (durability == 0) {
             return 0;
         }
-        return (int) (durability * (1 - (double) timeLeft / totalTime));
+        return (short) (durability * (1 - (double) timeLeft / totalTime));
     }
 
     public static @NotNull String getTimeLeft(int seconds) {
@@ -53,7 +53,7 @@ public class MachineHelper {
             progress.append(":");
         }
 
-        progress.append(" - " + percentage + "%");
+        progress.append(" - ").append(percentage).append("%");
         return ChatColor.translateAlternateColorCodes('&', progress.toString());
     }
 
@@ -78,7 +78,7 @@ public class MachineHelper {
             progress.append(":");
         }
 
-        progress.append(" - " + percentage + "%");
+        progress.append(" - ").append(percentage).append("%");
         return ChatColor.translateAlternateColorCodes('&', progress.toString());
     }
 

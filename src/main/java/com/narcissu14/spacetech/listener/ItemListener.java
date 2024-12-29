@@ -37,11 +37,10 @@ public class ItemListener implements Listener {
     @EventHandler
     public void onPlayerUnlockNew(@NotNull ResearchUnlockEvent event) {
         if (!event.getPlayer().hasPermission("slimefun.*")) {
-            StringBuilder unlockMsg = new StringBuilder("§6☞ §e");
-            unlockMsg.append(event.getPlayer().getName());
-            unlockMsg.append(" §a解锁了远古工艺研究: §e");
-            unlockMsg.append(event.getResearch().getName(event.getPlayer()));
-            Bukkit.broadcastMessage(unlockMsg.toString());
+            String unlockMsg = "§6☞ §e" + event.getPlayer().getName() +
+                    " §a解锁了远古工艺研究: §e" +
+                    event.getResearch().getName(event.getPlayer());
+            Bukkit.broadcastMessage(unlockMsg);
         }
     }
 }

@@ -44,7 +44,7 @@ public class SpaceOre extends AbstractOre {
             }
         }, new BlockBreakHandler(false, false) {
             @Override
-            public void onPlayerBreak(BlockBreakEvent blockBreakEvent, ItemStack itemStack, List<ItemStack> list) {
+            public void onPlayerBreak(@NotNull BlockBreakEvent blockBreakEvent, @NotNull ItemStack itemStack, @NotNull List<ItemStack> list) {
                 Player player = blockBreakEvent.getPlayer();
                 if (player.getGameMode().equals(GameMode.CREATIVE)) {
                     return;
@@ -65,7 +65,7 @@ public class SpaceOre extends AbstractOre {
                 if (dur <= 0 && breakTimes > 0) {
                     //按破坏次数计算应掉落的物资，2次及以内掉落完整矿物，20次以上不掉落
                     int result = 9 - ((breakTimes - 1) >> 1);
-                    block.getWorld().dropItemNaturally(block.getLocation(), new CustomItemStack(oreNugget, result > 0 ? result : 0));
+                    block.getWorld().dropItemNaturally(block.getLocation(), new CustomItemStack(oreNugget, Math.max(result, 0)));
                     //不掉落本体方块
                     Slimefun.getDatabaseManager().getBlockDataController().removeBlock(block.getLocation());
                     block.setType(Material.AIR);
@@ -82,7 +82,6 @@ public class SpaceOre extends AbstractOre {
                     damageItem(player);
                 }
                 blockBreakEvent.setCancelled(true);
-                return;
             }
         });
     }
@@ -92,9 +91,6 @@ public class SpaceOre extends AbstractOre {
      */
     private boolean checkEMiningTool(@NotNull Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null) {
-            return false;
-        }
         if (STItems.isEMiningTools(item)) {
             float charge = ItemEnergy.getStoredEnergy(item);
             float cost = 2F;
