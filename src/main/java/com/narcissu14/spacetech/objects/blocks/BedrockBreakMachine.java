@@ -1,5 +1,6 @@
 package com.narcissu14.spacetech.objects.blocks;
 
+import com.narcissu14.spacetech.SpaceTech;
 import com.narcissu14.spacetech.container.MachineDirection;
 import com.narcissu14.spacetech.objects.STItems;
 import com.narcissu14.spacetech.utils.SkullUtil;
@@ -100,7 +101,7 @@ public abstract class BedrockBreakMachine extends AbstractPointsMachine {
                 player.sendMessage("§c破穿方向上的方块不是基岩");
                 return false;
             }
-            if (Slimefun.getProtectionManager().hasPermission(player, facingBlock, Interaction.PLACE_BLOCK)) {
+            if (Slimefun.getProtectionManager().hasPermission(player, facingBlock, Interaction.BREAK_BLOCK)) {
                 //挖基岩
                 facingBlock.setType(Material.AIR);
                 player.playSound(b.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2f, 0.7f);

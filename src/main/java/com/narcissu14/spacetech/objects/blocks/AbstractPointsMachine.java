@@ -1,5 +1,6 @@
 package com.narcissu14.spacetech.objects.blocks;
 
+import com.narcissu14.spacetech.SpaceTech;
 import com.narcissu14.spacetech.container.PointMachineRecipe;
 import com.narcissu14.spacetech.setup.config.STConfig;
 import com.narcissu14.spacetech.utils.ChargeableBlock;
@@ -69,7 +70,7 @@ public abstract class AbstractPointsMachine extends AContainer {
         super(itemGroup, item, recipeType, recipe);
         String name = this.getItemName();
 
-        new BlockMenuPreset(name, getInventoryTitle()) {
+        new BlockMenuPreset(getId(), getInventoryTitle()) {
             @Override
             public void init() {
                 AbstractPointsMachine.this.constructMenu(this);
@@ -137,48 +138,23 @@ public abstract class AbstractPointsMachine extends AContainer {
     public void constructMenu(@NotNull BlockMenuPreset preset) {
         for (int i : POINTS_BORDER) {
             preset.addItem(i, new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "),
-                    new ChestMenu.MenuClickHandler() {
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                            return false;
-                        }
-                    });
+                    (player, i1, itemStack, clickAction) -> false);
         }
         for (int i : BORDER) {
             preset.addItem(i, new CustomItemStack(new ItemStack(Material.ORANGE_STAINED_GLASS_PANE, 1), " "),
-                    new ChestMenu.MenuClickHandler() {
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                            return false;
-                        }
-                    });
+                    (player, i12, itemStack, clickAction) -> false);
         }
         for (int i : OUTPUT_SIGN) {
             preset.addItem(i, new CustomItemStack(new ItemStack(Material.BLUE_STAINED_GLASS_PANE, 1), "§b输出槽"),
-                    new ChestMenu.MenuClickHandler() {
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                            return false;
-                        }
-                    });
+                    (player, i13, itemStack, clickAction) -> false);
         }
         for (int i : INPUT_SIGN) {
             preset.addItem(i, new CustomItemStack(new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1), "§e输入槽"),
-                    new ChestMenu.MenuClickHandler() {
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                            return false;
-                        }
-                    });
+                    (player, i14, itemStack, clickAction) -> false);
         }
         //进度显示
         preset.addItem(40, new CustomItemStack(new ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1), " "),
-                new ChestMenu.MenuClickHandler() {
-                    @Override
-                    public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                        return false;
-                    }
-                });
+                (player, i, itemStack, clickAction) -> false);
         //禁止随意将物品放入输出槽
         for (int i : getOutputSlots()) {
             preset.addMenuClickHandler(i, new ChestMenu.AdvancedMenuClickHandler() {
@@ -197,12 +173,7 @@ public abstract class AbstractPointsMachine extends AContainer {
         }
         //POINT量信息
         for (int i : POINTS_INFO) {
-            preset.addItem(i, new CustomItemStack(NO_POINTS_ITEM, " "), new ChestMenu.MenuClickHandler() {
-                @Override
-                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                    return false;
-                }
-            });
+            preset.addItem(i, new CustomItemStack(NO_POINTS_ITEM, " "), (player, i15, itemStack, clickAction) -> false);
         }
     }
 
@@ -453,7 +424,7 @@ public abstract class AbstractPointsMachine extends AContainer {
         } else {
             //如果没有在进行生产流程
             PointMachineRecipe r = null;
-            Map<Integer, Integer> found = new HashMap<Integer, Integer>();
+            Map<Integer, Integer> found = new HashMap<>();
 
             recipeCheck:
             for (PointMachineRecipe recipe : this.recipes) {
@@ -488,6 +459,11 @@ public abstract class AbstractPointsMachine extends AContainer {
                             break;
                         default:
                             break;
+                    }
+                } else if (recipe.getPoints() < 0) {
+                    int nowValue = Integer.parseInt(StorageCacheUtils.getData(b.getLocation(), POINTS_KEY));
+                    if (nowValue == 0) {
+                        continue;
                     }
                 }
                 //判断为哪种配方形式后再行处理

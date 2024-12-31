@@ -207,7 +207,7 @@ public class SpaceWorldListener implements Listener {
                 world.setGameRule(GameRule.DO_FIRE_TICK, false);
                 world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
                 // java版本没有 falldamage 这条gamerule, 使用插件手动取消跌落伤害
-                //world.setGameRuleValue("falldamage", "false");
+                world.setGameRuleValue("falldamage", "false");
                 world.setTime(17000);
                 break;
             }

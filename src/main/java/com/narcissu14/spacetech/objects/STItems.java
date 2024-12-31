@@ -1,14 +1,15 @@
 package com.narcissu14.spacetech.objects;
 
 import com.narcissu14.spacetech.setup.NarItemSetup;
-import com.narcissu14.spacetech.setup.NarItems;
 import com.narcissu14.spacetech.utils.CustomPotionItem;
 import com.narcissu14.spacetech.utils.ItemUtils;
 import com.narcissu14.spacetech.utils.SkullUtil;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -37,43 +38,43 @@ public class STItems {
      * 特殊矿物ID表
      */
     public final static List<String> SPACE_ORE_LIST = new ArrayList<>();
-    public static final @NotNull ItemStack COPPER_ORE_NUGGET = new CustomItemStack(new ItemStack(Material.GOLD_NUGGET), "§e铜矿粒", "", "§7小块的铜矿石碎片", "§7一定量的碎片可以拼成一整块硬铜矿");
-    public static final @NotNull ItemStack SILVER_ORE_NUGGET = new CustomItemStack(new ItemStack(Material.LIGHT_GRAY_DYE, 1), "§e银矿粒", "", "§7小块的银矿石碎片", "§7一定量的碎片可以拼成一整块灰银矿");
-    public static final ItemStack TITANIUM_ORE_NUGGET;
-    public static final @NotNull ItemStack TITANIUM_PLATE = new CustomItemStack(new ItemStack(Material.PAPER), "§d钛板", "", "§7使用钛金属制成的高强度板材");
-    public static final @NotNull ItemStack NEODYMIUM_ORE_NUGGET = new CustomItemStack(new ItemStack(Material.CYAN_DYE, 1), "§d钕矿粒", "", "§7小块的钕矿碎片", "§7一定量的碎片可以拼成一整块钕矿");
-    public static final @NotNull ItemStack ALUMINIUM_PLATE = new CustomItemStack(new ItemStack(Material.PAPER), "§b铝板", "", "§7延展性优秀的轻质金属板材");
+    public static final @NotNull SlimefunItemStack COPPER_ORE_NUGGET = new SlimefunItemStack("SPACETECH_COPPER_ORE_NUGGET", new CustomItemStack(new ItemStack(Material.GOLD_NUGGET), "§e铜矿粒", "", "§7小块的铜矿石碎片", "§7一定量的碎片可以拼成一整块硬铜矿"));
+    public static final @NotNull SlimefunItemStack SILVER_ORE_NUGGET = new SlimefunItemStack("SPACETECH_SILVER_ORE_NUGGET", new CustomItemStack(new ItemStack(Material.LIGHT_GRAY_DYE, 1), "§e银矿粒", "", "§7小块的银矿石碎片", "§7一定量的碎片可以拼成一整块灰银矿"));
+    public static final SlimefunItemStack TITANIUM_ORE_NUGGET;
+    public static final @NotNull SlimefunItemStack TITANIUM_PLATE = new SlimefunItemStack("SPACETECH_TITANIUM_PLATE", new CustomItemStack(new ItemStack(Material.PAPER), "§d钛板", "", "§7使用钛金属制成的高强度板材"));
+    public static final @NotNull SlimefunItemStack NEODYMIUM_ORE_NUGGET = new SlimefunItemStack("SPACETECH_NEODYMIUM_ORE_NUGGET", new CustomItemStack(new ItemStack(Material.CYAN_DYE, 1), "§d钕矿粒", "", "§7小块的钕矿碎片", "§7一定量的碎片可以拼成一整块钕矿"));
+    public static final @NotNull SlimefunItemStack ALUMINIUM_PLATE = new SlimefunItemStack("SPACETECH_ALUMINIUM_PLATE", new CustomItemStack(new ItemStack(Material.PAPER), "§b铝板", "", "§7延展性优秀的轻质金属板材"));
     // 虽然带耐久度的构造函数废弃了,但依旧十分好用
-    public static final @NotNull ItemStack STEEL_PICKAXE = new CustomItemStack(Material.IRON_PICKAXE, "§a钢制镐", "", "§7特制的矿镐", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 7", "DURABILITY-1");
-    public static final @NotNull ItemStack DAMASCUS_PICKAXE = new CustomItemStack(Material.IRON_PICKAXE, "§a水纹钢镐", "", "§7特制的矿镐", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 9", "DURABILITY-2");
-    public static final @NotNull ItemStack HARDENED_METAL_PICKAXE = new CustomItemStack(Material.IRON_PICKAXE, "§a精钢镐", "", "§7特制的矿镐", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 11", "DURABILITY-3");
-    public static final @NotNull ItemStack REINFORCED_ALLOY_PICKAXE = new CustomItemStack(Material.IRON_PICKAXE, "§a强化合金镐", "", "§7特制的矿镐", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 14", "DURABILITY-5");
-    public static final @NotNull ItemStack CARBONADO_PICKAXE = new CustomItemStack(Material.DIAMOND_PICKAXE, "§a黑钻镐", "", "§7特制的矿镐", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 20", "DURABILITY-2");
-    public static final @NotNull ItemStack EMPTY_UNIT = new CustomItemStack(new ItemStack(Material.GLASS_BOTTLE), "§9空单元", "", "§7一个标准化物质存储单元", "§7用于承载一些物质", "§7或是作为一些物品的部件");
-    public static final @NotNull ItemStack SUPER_CIRCUIT_BOARD = new CustomItemStack(new ItemStack(Material.DETECTOR_RAIL), "§d超级电路板", "", "§7使用最尖端材料制作的电路板", "§7用于制造一些高科技产品");
-    public static final @NotNull ItemStack UNIT_HYDRAZINE = new CustomItemStack(new CustomPotionItem(PotionEffectType.HEALTH_BOOST), "§9联氨单元", "", "§7一个单元的联氨", "§7联氨多用作于太空发射的燃料");
-    public static final @NotNull ItemStack HARD_AXLE = new CustomItemStack(new ItemStack(Material.BLAZE_ROD), "§e高强度转轴", "", "§7兼具硬度与韧度的转轴", "§7可用于加工制造");
-    public static final @NotNull ItemStack BEDROCK_DRILL = new CustomItemStack(new ItemStack(Material.HOPPER), "§9基岩钻头", "", "§7放入基岩破穿器使用", "§7可以用来破穿基岩");
-    public static final @NotNull ItemStack ITEM_CREATER_CODE_SCANNER = new CustomItemStack(new ItemStack(Material.CLOCK), "§9物质编码解译器", "", "&c&o&8\u21E8 &e\u26A1 &70 / 2048 J", "", "§eShift + 右键 §7物质制造机使用", "§7可以为你解译出首两位的编码");
-    public static final @NotNull ItemStack EM_RESTRAINT_DEVICE = new CustomItemStack(new ItemStack(Material.COMPARATOR), "§e电磁拘束装置", "", "§7用于制造一些高科技产品", "§7可以通过电磁效应捕获、固定物质");
-    public static final @NotNull ItemStack EMPTY_EM_UNIT = new CustomItemStack(Material.GLASS_BOTTLE, "§e空电磁拘束单元", "", "§7通过电磁技术", "§7这个单元可以储存一些不稳定物质", "DURABILITY-1");
-    public static final @NotNull ItemStack ANTIMATTER_EM_UNIT = new CustomItemStack(new CustomPotionItem(PotionEffectType.GLOWING, true), "§e反物质单元", "", "§7通过电磁拘束技术贮存反物质避免碰撞湮灭");
-    public static final @NotNull ItemStack BEDROCK_EM_UNIT = new CustomItemStack(new CustomPotionItem(PotionEffectType.FAST_DIGGING, true), "§e基岩粉末单元", "", "§7基岩粉末一旦接触普通物质", "§7就会极快地分解消散", "§7但利用电磁拘束技术", "§7现在基岩粉末能够被保存了");
-    public static final @NotNull ItemStack BEDROCK_EM_UNIT_3 = new CustomItemStack(new CustomPotionItem(PotionEffectType.FAST_DIGGING, true), "§e基岩粉末单元 §8*3", "", "§7基岩粉末一旦接触普通物质", "§7就会极快地分解消散", "§7但利用电磁拘束技术", "§7现在基岩粉末能够被保存了");
-    public static final @NotNull ItemStack SPACE_ORE_SCANNER = new CustomItemStack(new ItemStack(Material.COMPASS), "§e太空矿物测距仪", "", "&c&o&8\u21E8 &e\u26A1 &70 / 256 J", "§7能够检测某个方块周围§a5§7格范围中的太空矿物", "§eShift + 右键 §7方块使用");
-    public static final @NotNull ItemStack PARTICLE_GENERATOR_1 = new CustomItemStack(new ItemStack(Material.PURPLE_STAINED_GLASS, 1), "§e高能粒子发电机", "", "§7只能在太空中使用", "§7利用太空中的高能粒子发电", "&8\u21E8 &e\u26A1 &7128 J 缓存", "&8\u21E8 &e\u26A1 &732 J/s");
-    public static final @NotNull ItemStack PARTICLE_GENERATOR_2 = new CustomItemStack(new ItemStack(Material.PURPLE_STAINED_GLASS, 1), "§6强化型高能粒子发电机", "", "§7只能在太空中使用", "§7利用太空中的高能粒子发电", "&8\u21E8 &e\u26A1 &7256 J 缓存", "&8\u21E8 &e\u26A1 &764 J/s");
-    public static final @NotNull ItemStack PARTICLE_GENERATOR_3 = new CustomItemStack(new ItemStack(Material.PURPLE_STAINED_GLASS, 1), "§c超级高能粒子发电机", "", "§7只能在太空中使用", "§7利用太空中的高能粒子发电", "&8\u21E8 &e\u26A1 &7512 J 缓存", "&8\u21E8 &e\u26A1 &7128 J/s");
-    public static final @NotNull ItemStack ANTIMATTER_BEDROCK_DRILL = new CustomItemStack(new ItemStack(Material.HOPPER), "§9反物质爆破钻头", "", "§7放入基岩爆碎机使用", "§7可以用来爆碎基岩获取基岩粉末");
-    public static final @NotNull ItemStack RIG = new CustomItemStack(new ItemStack(Material.TRIPWIRE_HOOK), "§9钻机", "", "§7用于合成矿钻");
-    public static final @NotNull ItemStack ORE_RIG_REINFORCED = ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.GOLDEN_PICKAXE), "§e强化合金钻机", "", "&c&o&8\u21E8 &e\u26A1 &70 / 256 J", "", "§7特制的矿钻", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 30"), true);
-    public static final @NotNull ItemStack ORE_RIG_CARBONADO = ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.GOLDEN_PICKAXE), "§e黑钻石钻机", "", "&c&o&8\u21E8 &e\u26A1 &70 / 512 J", "", "§7特制的矿钻", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 40"), true);
-    public static final @NotNull ItemStack ORE_RIG_TITANIUM = ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.GOLDEN_PICKAXE), "§e钛合金钻机", "", "&c&o&8\u21E8 &e\u26A1 &70 / 1024 J", "", "§7特制的矿钻", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 50"), true);
-    public static final @NotNull ItemStack BEDROCK_DIAMOND_PICKAXE = ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.DIAMOND_PICKAXE), "§d基岩镐§7(§b钻石外形§7)", "", "§7坚不可摧的基岩矿镐", "§7外部装饰成了钻石镐的样子"), true);
-    public static final @NotNull ItemStack BEDROCK_DIAMOND_SWORD = ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.DIAMOND_SWORD), "§d基岩剑§7(§b钻石外形§7)", "", "§7坚不可摧的基岩剑", "§7外部装饰成了钻石剑的样子"), true);
-    public static final @NotNull ItemStack BEDROCK_DIAMOND_SPADE = ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.DIAMOND_SHOVEL), "§d基岩铲§7(§b钻石外形§7)", "", "§7坚不可摧的基岩铲", "§7外部装饰成了钻石铲的样子"), true);
-    public static final @NotNull ItemStack BEDROCK_DIAMOND_AXE = ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.DIAMOND_AXE), "§d基岩斧§7(§b钻石外形§7)", "", "§7坚不可摧的基岩斧", "§7外部装饰成了钻石斧的样子"), true);
-    public static final @NotNull ItemStack BEDROCK_DIAMOND_HOE = ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.DIAMOND_HOE), "§d基岩锄§7(§b钻石外形§7)", "", "§7坚不可摧的基岩锄", "§7外部装饰成了钻石锄的样子"), true);
+    public static final @NotNull SlimefunItemStack STEEL_PICKAXE = new SlimefunItemStack("SPACETECH_STEEL_PICKAXE", addEnchantment(new CustomItemStack(Material.IRON_PICKAXE, "§a钢制镐", "", "§7特制的矿镐", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 7"), Enchantment.DURABILITY,1));
+    public static final @NotNull SlimefunItemStack DAMASCUS_PICKAXE = new SlimefunItemStack("SPACETECH_DAMASCUS_PICKAXE", addEnchantment(new CustomItemStack(Material.IRON_PICKAXE, "§a水纹钢镐", "", "§7特制的矿镐", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 9"), Enchantment.DURABILITY,2));
+    public static final @NotNull SlimefunItemStack HARDENED_METAL_PICKAXE = new SlimefunItemStack("SPACETECH_HARDENED_METAL_PICKAXE", addEnchantment(new CustomItemStack(Material.IRON_PICKAXE, "§a精钢镐", "", "§7特制的矿镐", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 11"), Enchantment.DURABILITY,3));
+    public static final @NotNull SlimefunItemStack REINFORCED_ALLOY_PICKAXE = new SlimefunItemStack("SPACETECH_REINFORCED_ALLOY_PICKAXE", addEnchantment(new CustomItemStack(Material.IRON_PICKAXE, "§a强化合金镐", "", "§7特制的矿镐", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 14"), Enchantment.DURABILITY,5));
+    public static final @NotNull SlimefunItemStack CARBONADO_PICKAXE = new SlimefunItemStack("SPACETECH_CARBONADO_PICKAXE", addEnchantment(new CustomItemStack(Material.DIAMOND_PICKAXE, "§a黑钻镐", "", "§7特制的矿镐", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 20"), Enchantment.DURABILITY, 2));
+    public static final @NotNull SlimefunItemStack EMPTY_UNIT = new SlimefunItemStack("SPACETECH_EMPTY_UNIT", new CustomItemStack(new ItemStack(Material.GLASS_BOTTLE), "§9空单元", "", "§7一个标准化物质存储单元", "§7用于承载一些物质", "§7或是作为一些物品的部件"));
+    public static final @NotNull SlimefunItemStack SUPER_CIRCUIT_BOARD = new SlimefunItemStack("SPACETECH_SUPER_CIRCUIT_BOARD", new CustomItemStack(new ItemStack(Material.DETECTOR_RAIL), "§d超级电路板", "", "§7使用最尖端材料制作的电路板", "§7用于制造一些高科技产品"));
+    public static final @NotNull SlimefunItemStack UNIT_HYDRAZINE = new SlimefunItemStack("SPACETECH_UNIT_HYDRAZINE", new CustomItemStack(new CustomPotionItem(PotionEffectType.HEALTH_BOOST), "§9联氨单元", "", "§7一个单元的联氨", "§7联氨多用作于太空发射的燃料"));
+    public static final @NotNull SlimefunItemStack HARD_AXLE = new SlimefunItemStack("SPACETECH_HARD_AXLE", new CustomItemStack(new ItemStack(Material.BLAZE_ROD), "§e高强度转轴", "", "§7兼具硬度与韧度的转轴", "§7可用于加工制造"));
+    public static final @NotNull SlimefunItemStack BEDROCK_DRILL = new SlimefunItemStack("SPACETECH_BEDROCK_DRILL", new CustomItemStack(new ItemStack(Material.HOPPER), "§9基岩钻头", "", "§7放入基岩破穿器使用", "§7可以用来破穿基岩"));
+    public static final @NotNull SlimefunItemStack ITEM_CREATER_CODE_SCANNER = new SlimefunItemStack("SPACETECH_ITEM_CREATER_CODE_SCANNER", new CustomItemStack(new ItemStack(Material.CLOCK), "§9物质编码解译器", "", "&c&o&8\u21E8 &e\u26A1 &70 / 2048 J", "", "§eShift + 右键 §7物质制造机使用", "§7可以为你解译出首两位的编码"));
+    public static final @NotNull SlimefunItemStack EM_RESTRAINT_DEVICE = new SlimefunItemStack("SPACETECH_EM_RESTRAINT_DEVICE", new CustomItemStack(new ItemStack(Material.COMPARATOR), "§e电磁拘束装置", "", "§7用于制造一些高科技产品", "§7可以通过电磁效应捕获、固定物质"));
+    public static final @NotNull SlimefunItemStack EMPTY_EM_UNIT = new SlimefunItemStack("SPACETECH_EMPTY_EM_UNIT", new CustomItemStack(Material.GLASS_BOTTLE, "§e空电磁拘束单元", "", "§7通过电磁技术", "§7这个单元可以储存一些不稳定物质", "DURABILITY-1"));
+    public static final @NotNull SlimefunItemStack ANTIMATTER_EM_UNIT = new SlimefunItemStack("SPACETECH_ANTIMATTER_EM_UNIT", new CustomItemStack(new CustomPotionItem(PotionEffectType.GLOWING, true), "§e反物质单元", "", "§7通过电磁拘束技术贮存反物质避免碰撞湮灭"));
+    public static final @NotNull SlimefunItemStack BEDROCK_EM_UNIT = new SlimefunItemStack("SPACETECH_BEDROCK_EM_UNIT", new CustomItemStack(new CustomPotionItem(PotionEffectType.FAST_DIGGING, true), "§e基岩粉末单元", "", "§7基岩粉末一旦接触普通物质", "§7就会极快地分解消散", "§7但利用电磁拘束技术", "§7现在基岩粉末能够被保存了"));
+    public static final @NotNull SlimefunItemStack BEDROCK_EM_UNIT_3 = new SlimefunItemStack("SPACETECH_BEDROCK_EM_UNIT_3", new CustomItemStack(new CustomPotionItem(PotionEffectType.FAST_DIGGING, true), "§e基岩粉末单元 §8*3", "", "§7基岩粉末一旦接触普通物质", "§7就会极快地分解消散", "§7但利用电磁拘束技术", "§7现在基岩粉末能够被保存了"));
+    public static final @NotNull SlimefunItemStack SPACE_ORE_SCANNER = new SlimefunItemStack("SPACETECH_SPACE_ORE_SCANNER", new CustomItemStack(new ItemStack(Material.COMPASS), "§e太空矿物测距仪", "", "&c&o&8\u21E8 &e\u26A1 &70 / 256 J", "§7能够检测某个方块周围§a5§7格范围中的太空矿物", "§eShift + 右键 §7方块使用"));
+    public static final @NotNull SlimefunItemStack PARTICLE_GENERATOR_1 = new SlimefunItemStack("SPACETECH_PARTICLE_GENERATOR_1", new CustomItemStack(new ItemStack(Material.PURPLE_STAINED_GLASS, 1), "§e高能粒子发电机", "", "§7只能在太空中使用", "§7利用太空中的高能粒子发电", "&8\u21E8 &e\u26A1 &7128 J 缓存", "&8\u21E8 &e\u26A1 &732 J/s"));
+    public static final @NotNull SlimefunItemStack PARTICLE_GENERATOR_2 = new SlimefunItemStack("SPACETECH_PARTICLE_GENERATOR_2", new CustomItemStack(new ItemStack(Material.PURPLE_STAINED_GLASS, 1), "§6强化型高能粒子发电机", "", "§7只能在太空中使用", "§7利用太空中的高能粒子发电", "&8\u21E8 &e\u26A1 &7256 J 缓存", "&8\u21E8 &e\u26A1 &764 J/s"));
+    public static final @NotNull SlimefunItemStack PARTICLE_GENERATOR_3 = new SlimefunItemStack("SPACETECH_PARTICLE_GENERATOR_3", new CustomItemStack(new ItemStack(Material.PURPLE_STAINED_GLASS, 1), "§c超级高能粒子发电机", "", "§7只能在太空中使用", "§7利用太空中的高能粒子发电", "&8\u21E8 &e\u26A1 &7512 J 缓存", "&8\u21E8 &e\u26A1 &7128 J/s"));
+    public static final @NotNull SlimefunItemStack ANTIMATTER_BEDROCK_DRILL = new SlimefunItemStack("SPACETECH_ANTIMATTER_BEDROCK_DRILL", new CustomItemStack(new ItemStack(Material.HOPPER), "§9反物质爆破钻头", "", "§7放入基岩爆碎机使用", "§7可以用来爆碎基岩获取基岩粉末"));
+    public static final @NotNull SlimefunItemStack RIG = new SlimefunItemStack("SPACETECH_RIG", new CustomItemStack(new ItemStack(Material.TRIPWIRE_HOOK), "§9钻机", "", "§7用于合成矿钻"));
+    public static final @NotNull SlimefunItemStack ORE_RIG_REINFORCED = new SlimefunItemStack("SPACETECH_ORE_RIG_REINFORCED", ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.GOLDEN_PICKAXE), "§e强化合金钻机", "", "&c&o&8\u21E8 &e\u26A1 &70 / 256 J", "", "§7特制的矿钻", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 30"), true));
+    public static final @NotNull SlimefunItemStack ORE_RIG_CARBONADO = new SlimefunItemStack("SPACETECH_ORE_RIG_CARBONADO", ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.GOLDEN_PICKAXE), "§e黑钻石钻机", "", "&c&o&8\u21E8 &e\u26A1 &70 / 512 J", "", "§7特制的矿钻", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 40"), true));
+    public static final @NotNull SlimefunItemStack ORE_RIG_TITANIUM = new SlimefunItemStack("SPACETECH_ORE_RIG_TITIANIUM", ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.GOLDEN_PICKAXE), "§e钛合金钻机", "", "&c&o&8\u21E8 &e\u26A1 &70 / 1024 J", "", "§7特制的矿钻", "§7用于挖掘一些特殊矿物", "§7挖普通的方块并没有加成", "§e挖掘能力:§6 50"), true));
+    public static final @NotNull SlimefunItemStack BEDROCK_DIAMOND_PICKAXE = new SlimefunItemStack("SPACETECH_BEDROCK_DIAMOND_PICKAXE", ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.DIAMOND_PICKAXE), "§d基岩镐§7(§b钻石外形§7)", "", "§7坚不可摧的基岩矿镐", "§7外部装饰成了钻石镐的样子"), true));
+    public static final @NotNull SlimefunItemStack BEDROCK_DIAMOND_SWORD = new SlimefunItemStack("SPACETECH_BEDROCK_DIAMOND_SWORD", ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.DIAMOND_SWORD), "§d基岩剑§7(§b钻石外形§7)", "", "§7坚不可摧的基岩剑", "§7外部装饰成了钻石剑的样子"), true));
+    public static final @NotNull SlimefunItemStack BEDROCK_DIAMOND_SPADE = new SlimefunItemStack("SPACETECH_BEDROCK_DIAMOND_SPADE", ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.DIAMOND_SHOVEL), "§d基岩铲§7(§b钻石外形§7)", "", "§7坚不可摧的基岩铲", "§7外部装饰成了钻石铲的样子"), true));
+    public static final @NotNull SlimefunItemStack BEDROCK_DIAMOND_AXE = new SlimefunItemStack("SPACETECH_BEDROCK_DIAMOND_AXE", ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.DIAMOND_AXE), "§d基岩斧§7(§b钻石外形§7)", "", "§7坚不可摧的基岩斧", "§7外部装饰成了钻石斧的样子"), true));
+    public static final @NotNull SlimefunItemStack BEDROCK_DIAMOND_HOE = new SlimefunItemStack("SPACETECH_BEDROCK_DIAMOND_HOE", ItemUtils.setUnbreakable(new CustomItemStack(new ItemStack(Material.DIAMOND_HOE), "§d基岩锄§7(§b钻石外形§7)", "", "§7坚不可摧的基岩锄", "§7外部装饰成了钻石锄的样子"), true));
     private final static String OXYGEN_LORE = "§8\u21E8 §b\uA562§7 ";
     /**
      * 特殊的挖矿工具，及其每次的挖掘度
@@ -86,14 +87,14 @@ public class STItems {
     public static ItemStack COPPER_ORE = null;
     public static ItemStack SILVER_ORE = null;
     public static ItemStack TITANIUM_ORE = null;
-    public static ItemStack TITANIUM = null;
+    public static SlimefunItemStack TITANIUM = null;
     public static ItemStack NEODYMIUM_ORE = null;
-    public static ItemStack NEODYMIUM = null;
+    public static SlimefunItemStack NEODYMIUM = null;
     public static ItemStack ELEC_REFINING_MACHINE_1 = null;
-    public static ItemStack SPACE_HELMET_1 = null;
-    public static ItemStack SPACE_HELMET_2 = null;
-    public static ItemStack SPACE_HELMET_3 = null;
-    public static ItemStack SPACE_HELMET_4 = null;
+    public static SlimefunItemStack SPACE_HELMET_1 = null;
+    public static SlimefunItemStack SPACE_HELMET_2 = null;
+    public static SlimefunItemStack SPACE_HELMET_3 = null;
+    public static SlimefunItemStack SPACE_HELMET_4 = null;
     public static ItemStack OXYGEN_CHARGE_MACHINE = null;
     public static ItemStack HYDRAZINE_MACHINE = null;
     public static ItemStack SPACE_GPS_MARK_MACHINE = null;
@@ -116,22 +117,22 @@ public class STItems {
                     "&f灰银矿", "", "§7一块表面呈灰色的银矿石", "§7普通的稿子挖掘起来非常艰难", "§7挖掘次数过多获得的矿石量会减少");
             TITANIUM_ORE = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjg2ZjhkYjY1MDgzM2M1MmE2NzAzZWVmN2U2YzcwYTIzNjczNGJmOWQxMzJjODU1ZGU0ZTZmOTllNGE5MjAifX19"),
                     "&d金红石矿", "", "§7矿脉闪耀着金红色光芒的矿石", "§7可以用于提炼钛", "§7挖掘起来极度艰难", "§7挖掘次数过多获得的矿石量会减少");
-            TITANIUM = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzU5MmVjOWFhOTgwYzY4NTQ4ZDhiMzk2ZjYxZGY5ZGY1MTZkMDRiZmMyNjdjMzQ4NGQ1ZjJkYzg2OTkxZSJ9fX0="),
-                    "&d钛", "", "§7一种极富实用价值的金属", "§7许多高精设备的制造都需要使用到它");
+            TITANIUM = new SlimefunItemStack("SPACETECH_TITANIUM", new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzU5MmVjOWFhOTgwYzY4NTQ4ZDhiMzk2ZjYxZGY5ZGY1MTZkMDRiZmMyNjdjMzQ4NGQ1ZjJkYzg2OTkxZSJ9fX0="),
+                    "&d钛", "", "§7一种极富实用价值的金属", "§7许多高精设备的制造都需要使用到它"));
             NEODYMIUM_ORE = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTg0YmU0YTQ1OGRjNjkyOTljYjIwOTFkYmJiMTYwMTY3ZGYyNTE2N2Q0ZTQwZDI0ODg1OGE1YjgxYWRhMyJ9fX0="),
                     "&d钕矿", "", "§7一种稀土金属矿石", "§7可以用于提炼钕", "§7挖掘起来极度艰难", "§7挖掘次数过多获得的矿石量会减少");
-            NEODYMIUM = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGRhNzcwYjY4NzRmYWJkMjhhNzM0NTI2YzU3MzlmMGNkNmI2YTk1NDhjYjlkZGI1NmZiMmRjMjVmODQ5NWMxIn19fQ=="),
-                    "&d钕", "", "§7一种稀有的金属", "§7可以制作出高磁性的物品");
+            NEODYMIUM = new SlimefunItemStack("SPACETECH_NEODYMIUM", new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGRhNzcwYjY4NzRmYWJkMjhhNzM0NTI2YzU3MzlmMGNkNmI2YTk1NDhjYjlkZGI1NmZiMmRjMjVmODQ5NWMxIn19fQ=="),
+                    "&d钕", "", "§7一种稀有的金属", "§7可以制作出高磁性的物品"));
             ELEC_REFINING_MACHINE_1 = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTVmNzc0MTAxMGUyZDJmZTUxYzMwNDI0NDkxZmMyNWVkNWM0ODE0N2RjYTY5NDVjYWNhYWNhMjQ0NjQxIn19fQ=="),
                     "&b电磁炼矿机&7-&eI", "", "§7利用电磁精炼矿石的机器", "§7许多高级的矿产需要用这个机器炼出", "&8\u21E8 &e\u26A1 &7512 J 缓存", "&8\u21E8 &e\u26A1 &764 J/s");
-            SPACE_HELMET_1 = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2U4YWFkNjczMTU3YzkyMzE3YTg4YjFmODZmNTI3MWYxY2Q3Mzk3ZDdmYzhlYzMyODFmNzMzZjc1MTYzNCJ9fX0="),
-                    "&b太空盔&8-&eI", "", "§8> 氧气装备", "§7能够在无氧环境中供氧", "§7保障你的生命安全", OXYGEN_LORE + "0", "§8\u21E8 §9\uA563§7 600");
-            SPACE_HELMET_2 = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2U4YWFkNjczMTU3YzkyMzE3YTg4YjFmODZmNTI3MWYxY2Q3Mzk3ZDdmYzhlYzMyODFmNzMzZjc1MTYzNCJ9fX0="),
-                    "&b太空盔&8-&eII", "", "§8> 氧气装备", "§7能够在无氧环境中供氧", "§7保障你的生命安全", OXYGEN_LORE + "0", "§8\u21E8 §9\uA563§7 1200");
-            SPACE_HELMET_3 = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2U4YWFkNjczMTU3YzkyMzE3YTg4YjFmODZmNTI3MWYxY2Q3Mzk3ZDdmYzhlYzMyODFmNzMzZjc1MTYzNCJ9fX0="),
-                    "&b太空盔&8-&eIII", "", "§8> 氧气装备", "§7能够在无氧环境中供氧", "§7保障你的生命安全", OXYGEN_LORE + "0", "§8\u21E8 §9\uA563§7 2400");
-            SPACE_HELMET_4 = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2U4YWFkNjczMTU3YzkyMzE3YTg4YjFmODZmNTI3MWYxY2Q3Mzk3ZDdmYzhlYzMyODFmNzMzZjc1MTYzNCJ9fX0="),
-                    "&b太空盔&8-&eIV", "", "§8> 氧气装备", "§7能够在无氧环境中供氧", "§7保障你的生命安全", OXYGEN_LORE + "0", "§8\u21E8 §9\uA563§7 4000");
+            SPACE_HELMET_1 = new SlimefunItemStack("SPACETECH_SPACE_HELMET_1", new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2U4YWFkNjczMTU3YzkyMzE3YTg4YjFmODZmNTI3MWYxY2Q3Mzk3ZDdmYzhlYzMyODFmNzMzZjc1MTYzNCJ9fX0="),
+                    "&b太空盔&8-&eI", "", "§8> 氧气装备", "§7能够在无氧环境中供氧", "§7保障你的生命安全", OXYGEN_LORE + "0", "§8\u21E8 §9\uA563§7 600"));
+            SPACE_HELMET_2 = new SlimefunItemStack("SPACETECH_SPACE_HELMET_2", new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2U4YWFkNjczMTU3YzkyMzE3YTg4YjFmODZmNTI3MWYxY2Q3Mzk3ZDdmYzhlYzMyODFmNzMzZjc1MTYzNCJ9fX0="),
+                    "&b太空盔&8-&eII", "", "§8> 氧气装备", "§7能够在无氧环境中供氧", "§7保障你的生命安全", OXYGEN_LORE + "0", "§8\u21E8 §9\uA563§7 1200"));
+            SPACE_HELMET_3 = new SlimefunItemStack("SPACETECH_SPACE_HELMET_3", new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2U4YWFkNjczMTU3YzkyMzE3YTg4YjFmODZmNTI3MWYxY2Q3Mzk3ZDdmYzhlYzMyODFmNzMzZjc1MTYzNCJ9fX0="),
+                    "&b太空盔&8-&eIII", "", "§8> 氧气装备", "§7能够在无氧环境中供氧", "§7保障你的生命安全", OXYGEN_LORE + "0", "§8\u21E8 §9\uA563§7 2400"));
+            SPACE_HELMET_4 = new SlimefunItemStack("SPACETECH_SPACE_HELMET_4", new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2U4YWFkNjczMTU3YzkyMzE3YTg4YjFmODZmNTI3MWYxY2Q3Mzk3ZDdmYzhlYzMyODFmNzMzZjc1MTYzNCJ9fX0="),
+                    "&b太空盔&8-&eIV", "", "§8> 氧气装备", "§7能够在无氧环境中供氧", "§7保障你的生命安全", OXYGEN_LORE + "0", "§8\u21E8 §9\uA563§7 4000"));
             OXYGEN_CHARGE_MACHINE = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmIyYWJkNjY5MzlmNGNiNzI1N2E4OGNmNTJmYmM2ZmRjZWVjMTQzM2VjMmE2ZWYxNmQ2MmUzNGY2MjM4NzgxIn19fQ=="),
                     "&b电力充氧机", "", "§7通过电解水生产氧气", "§7生产出的氧气可供储氧设备进行充氧", "&8\u21E8 &e\u26A1 &7256 J 缓存", "&8\u21E8 &e\u26A1 &732 J/s");
             HYDRAZINE_MACHINE = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWJiNTU1NjBjNjk1ZDk3NmIzNDZlMTg4ZDNkZjJiY2Q4YzVhYTMyYjkzMzE0MWE5NzE1YzQyZjY0Y2I2Y2VlIn19fQ=="),
@@ -146,14 +147,14 @@ public class STItems {
             ANTIMATTER_GENERATOR = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDlmNDgwNjBhOTZjZGVhZTNjYjQxNzNkMjRmNTQzMTcwNGIyYjEyNDQ4ZDk1ZjMxZDcxY2JlNGE3YjhkZWIifX19"),
                     "&d反物质发电机", "", "§7利用正反物质的湮灭能量发电", "§7能够产出巨量的电力", "§b需要冷却", "&8\u21E8 &e\u26A1 &765536 J 缓存", "&8\u21E8 &e\u26A1 &71536 J/s");
             BEDROCK_CRACK_MACHINE = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzE2ZmRkZWMzZWRhNGFlZDhmYTJkZWJhZjQ3NjllYzdjNmYzYTdmYzdiMzRkNTUxZDE2MmZlNGE3NjZkIn19fQ=="),
-                    "&d基岩爆碎机", "", "§7利用基岩钻头配合反物质制造基岩扬尘", "§7收集到的基岩粉末可存储到电磁拘束单元中", "&8\u21E8 &e\u26A1 &72048 J 缓存", "&8\u21E8 &e\u26A1 &7256 J/s");
+                    "&d基岩爆碎机", "", "§7利用反物质爆破钻头制造&e「基岩扬尘」", "§7再输入电磁拘束单元收集&e「基岩扬尘」", "§7以获取&e「瓶装基岩」", "&8\u21E8 &e\u26A1 &72048 J 缓存", "&8\u21E8 &e\u26A1 &7256 J/s");
             UNIT_ITEM_CRAFTER = new CustomItemStack(SkullUtil.getByBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWZjMDVhZjBlODhjNmZiMTBiNGM4YzhiODFiN2FhNjU4ZTY0NjQ5NzI0Y2I3M2JiOWJiMGYyNWYyOGJkIn19fQ=="),
                     "&a单元物质加工机", "", "§7可以将一些存储在单元中的物质加工为方块", "&8\u21E8 &e\u26A1 &71024 J 缓存", "&8\u21E8 &e\u26A1 &7128 J/s");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        TITANIUM_ORE_NUGGET = new CustomItemStack(new ItemStack(Material.RED_DYE, 1), "§d金红石矿粒", "", "§7小块的金红石矿碎片", "§7一定量的碎片可以拼成一整块金红石矿");
+        TITANIUM_ORE_NUGGET = new SlimefunItemStack("SPACETECH_TITANIUM_ORE_NUGGET",new CustomItemStack(new ItemStack(Material.RED_DYE, 1), "§d金红石矿粒", "", "§7小块的金红石矿碎片", "§7一定量的碎片可以拼成一整块金红石矿"));
 
         //普通太空矿物
         NORMAL_SPACE_ORE.add(COPPER_ORE);
@@ -255,7 +256,7 @@ public class STItems {
      */
     public static int getOxygenValue(@NotNull List<String> lores) {
         String oxygenLore = lores.get(lores.size() - 2).replace(OXYGEN_LORE, "");
-        return Integer.valueOf(oxygenLore);
+        return Integer.parseInt(oxygenLore);
     }
 
     /**
@@ -268,12 +269,17 @@ public class STItems {
         int newAmount = oxygen;
         if (isAdd) {
             String oxygenLore = lores.get(lores.size() - 2).replace(OXYGEN_LORE, "");
-            int value = Integer.valueOf(oxygenLore);
+            int value = Integer.parseInt(oxygenLore);
             newAmount = value + oxygen;
             if (newAmount < 0) {
                 newAmount = 0;
             }
         }
         return OXYGEN_LORE + newAmount;
+    }
+
+    public static @NotNull ItemStack addEnchantment(@NotNull ItemStack item, @NotNull Enchantment enchantment, int level) {
+        item.addUnsafeEnchantment(enchantment, level);
+        return item;
     }
 }

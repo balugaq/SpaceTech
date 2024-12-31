@@ -51,8 +51,8 @@ public abstract class CreatorMachine extends AContainer {
     private static final int[] outputSign = new int[]{33, 34};
     protected final @NotNull List<MachineRecipe> recipes = new ArrayList<>();
 
-    public CreatorMachine(@NotNull ItemGroup category, @NotNull ItemStack item, @NotNull String name, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
-        super(category, new SlimefunItemStack(name, item), recipeType, recipe);
+    public CreatorMachine(@NotNull ItemGroup category, @NotNull SlimefunItemStack item, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
+        super(category, item, recipeType, recipe);
         addItemHandler(new BlockBreakHandler(false, false) {
             @Override
             public void onPlayerBreak(@NotNull BlockBreakEvent blockBreakEvent, @NotNull ItemStack itemStack, @NotNull List<ItemStack> list) {
@@ -75,7 +75,7 @@ public abstract class CreatorMachine extends AContainer {
             }
         });
         registerDefaultRecipes();
-        new BlockMenuPreset(name, getItemName()) {
+        new BlockMenuPreset(getId(), getItemName()) {
             public void init() {
                 CreatorMachine.this.constructMenu(this);
             }

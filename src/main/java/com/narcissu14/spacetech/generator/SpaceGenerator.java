@@ -35,7 +35,6 @@ public class SpaceGenerator extends ChunkGenerator {
 
     @Override
     public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int x, int z, @NotNull BiomeGrid biome) {
-
         return Bukkit.createChunkData(world);
     }
 }

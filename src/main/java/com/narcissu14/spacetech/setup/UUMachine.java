@@ -48,9 +48,10 @@ public abstract class UUMachine extends AContainer {
     private static final ItemStack uuItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (short) 10);
     protected final @NotNull List<UURecipe> recipes = new ArrayList<>();
 
-    public UUMachine(@NotNull ItemGroup category, @NotNull ItemStack item, @NotNull String name, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
-        super(category, new SlimefunItemStack(name, item), recipeType, recipe);
-        new BlockMenuPreset(name, getInventoryTitle()) {
+    public UUMachine(@NotNull ItemGroup category, @NotNull SlimefunItemStack item, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
+        super(category, item, recipeType, recipe);
+        setProcessingSpeed(1);
+        new BlockMenuPreset(getId(), getInventoryTitle()) {
             public void init() {
                 UUMachine.this.constructMenu(this);
             }

@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
 import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.Rotatable;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,14 +49,12 @@ public class GeneratorUtils {
             return;
         }
         Skull s = (Skull) block.getState();
-        //1.14 使用BlockData代替Rotation
-        Directional data = (Directional) block.getBlockData();
-        data.setFacing(BLOCK_FACES[new Random().nextInt(BLOCK_FACES.length)]);
-        //意义不明 s.setRawData((byte)1);
+        Rotatable data = (Rotatable) block.getBlockData();
+        data.setRotation(BLOCK_FACES[new Random().nextInt(BLOCK_FACES.length)]);
         s.update();
         try {
             PlayerHead.setSkin(s.getBlock(), PlayerSkin.fromHashCode(SkullUtil.getHash(item)), false);
-        } catch (Exception e1) {
+        } catch (Throwable e1) {
             e1.printStackTrace();
         }
         SlimefunItem sfitem = SlimefunItem.getByItem(item);

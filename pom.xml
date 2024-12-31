@@ -6,7 +6,7 @@
 
     <groupId>com.narcissu14</groupId>
     <artifactId>SpaceTech</artifactId>
-    <version>3</version>
+    <version>8</version>
     <packaging>jar</packaging>
 
     <name>SpaceTech</name>

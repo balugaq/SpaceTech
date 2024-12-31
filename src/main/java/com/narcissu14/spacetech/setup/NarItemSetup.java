@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class NarItemSetup {
     public static void setupItems() {
-        (new UUMachine(STCategories.QUANTUM_MACHINES, NarItems.UU_MACHINE, "UU_MACHINE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{SlimefunItems.PLASTIC_SHEET, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.PLASTIC_SHEET, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.ADVANCED_CIRCUIT_BOARD, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.WITHER_PROOF_GLASS, SlimefunItems.CARBONADO_EDGED_CAPACITOR, SlimefunItems.WITHER_PROOF_GLASS}) {
+        (new UUMachine(STCategories.QUANTUM_MACHINES, NarItems.UU_MACHINE, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{SlimefunItems.PLASTIC_SHEET, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.PLASTIC_SHEET, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.ADVANCED_CIRCUIT_BOARD, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.WITHER_PROOF_GLASS, SlimefunItems.CARBONADO_EDGED_CAPACITOR, SlimefunItems.WITHER_PROOF_GLASS}) {
             public int getUUFull() {
                 return 100000;
             }
@@ -66,11 +66,11 @@ public class NarItemSetup {
                 return 12800;
             }
         }).register(SpaceTech.getInstance());
-        (new SlimefunItem(SlimefunItemGroups.misc, new SlimefunItemStack("SPACETECH_UU", NarItems.UU), new RecipeType(new NamespacedKey(SpaceTech.getInstance(), "uu_item_creator"), NarItems.UU_MACHINE), new ItemStack[]{null, null, null, null, new CustomItemStack(Material.GHAST_TEAR, "§e通过元物质分离机收集"), null, null, null, null
+        (new SlimefunItem(SlimefunItemGroups.misc, NarItems.UU, new RecipeType(new NamespacedKey(SpaceTech.getInstance(), "uu_item_creator"), NarItems.UU_MACHINE), new ItemStack[]{null, null, null, null, new CustomItemStack(Material.GHAST_TEAR, "§e通过元物质分离机收集"), null, null, null, null
         })).register(SpaceTech.getInstance());
-        (new SlimefunItem(SlimefunItemGroups.resources, new SlimefunItemStack("SPACETECH_IRIDIUM", NarItems.IRIDIUM), new RecipeType(new NamespacedKey(SpaceTech.getInstance(), "uu_item_creator"), NarItems.ITEM_CREATOR), new ItemStack[]{null, null, null, null, new CustomItemStack(NarItems.ITEM_CREATOR, "&d物质制造机", "", "§e通过物质制造机制作"), null, null, null, null
+        (new SlimefunItem(SlimefunItemGroups.resources, NarItems.IRIDIUM, new RecipeType(new NamespacedKey(SpaceTech.getInstance(), "uu_item_creator"), NarItems.ITEM_CREATOR), new ItemStack[]{null, null, null, null, new CustomItemStack(NarItems.ITEM_CREATOR, "&d物质制造机", "", "§e通过物质制造机制作"), null, null, null, null
         })).register(SpaceTech.getInstance());
-        (new CreatorMachine(STCategories.QUANTUM_MACHINES, NarItems.ITEM_CREATOR, "ITEM_CREATOR", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{NarItems.UU, SlimefunItems.CARBONADO, NarItems.UU, SlimefunItems.NETHER_ICE_COOLANT_CELL, SlimefunItems.ANDROID_MEMORY_CORE, SlimefunItems.CARBONADO_EDGED_CAPACITOR, SlimefunItems.WITHER_PROOF_GLASS, SlimefunItems.GOLD_24K_BLOCK, SlimefunItems.WITHER_PROOF_GLASS}) {
+        (new CreatorMachine(STCategories.QUANTUM_MACHINES, NarItems.ITEM_CREATOR, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{NarItems.UU, SlimefunItems.CARBONADO, NarItems.UU, SlimefunItems.NETHER_ICE_COOLANT_CELL, SlimefunItems.ANDROID_MEMORY_CORE, SlimefunItems.CARBONADO_EDGED_CAPACITOR, SlimefunItems.WITHER_PROOF_GLASS, SlimefunItems.GOLD_24K_BLOCK, SlimefunItems.WITHER_PROOF_GLASS}) {
             public @NotNull String getInventoryTitle() {
                 return "&d物质制造机";
             }
@@ -95,6 +95,10 @@ public class NarItemSetup {
 
             public int getCapacity() {
                 return 65535;
+            }
+            @Override
+            public int getSpeed() {
+                return 1;
             }
         }).register(SpaceTech.getInstance());
     }
