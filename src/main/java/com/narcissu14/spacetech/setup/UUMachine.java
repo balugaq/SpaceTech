@@ -1,5 +1,8 @@
 package com.narcissu14.spacetech.setup;
 
+import com.narcissu14.spacetech.container.PointMachineRecipe;
+import com.narcissu14.spacetech.objects.STItems;
+import com.narcissu14.spacetech.objects.blocks.AbstractPointsMachine;
 import com.narcissu14.spacetech.utils.MachineHelper;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
@@ -9,6 +12,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
@@ -37,8 +41,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class UUMachine extends AContainer {
-    public static final @NotNull Map<Block, UURecipe> processing = new HashMap<>();
+public class UUMachine extends AbstractPointsMachine {
+    public static final @NotNull Map<Block, PointMachineRecipe> processing = new HashMap<>();
     public static final @NotNull Map<Block, Integer> progress = new HashMap<>();
     private static final int[] uuBorder = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
     private static final int[] uuInfo = new int[]{10, 11, 12, 13, 14, 15, 16};
@@ -46,7 +50,7 @@ public abstract class UUMachine extends AContainer {
     private static final int[] inputSign = new int[]{28, 29};
     private static final int[] outputSign = new int[]{33, 34};
     private static final ItemStack uuItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (short) 10);
-    protected final @NotNull List<UURecipe> recipes = new ArrayList<>();
+    protected final @NotNull List<PointMachineRecipe> recipes = new ArrayList<>();
 
     public UUMachine(@NotNull ItemGroup category, @NotNull SlimefunItemStack item, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
         super(category, item, recipeType, recipe);
@@ -143,7 +147,7 @@ public abstract class UUMachine extends AContainer {
         return new int[]{42, 43};
     }
 
-    public UURecipe getProcessing(Block b) {
+    public PointMachineRecipe getProcessing(Block b) {
         return processing.get(b);
     }
 
@@ -151,16 +155,16 @@ public abstract class UUMachine extends AContainer {
         return (getProcessing(b) != null);
     }
 
-    public void registerRecipe(@NotNull UURecipe recipe) {
+    public void registerRecipe(@NotNull PointMachineRecipe recipe) {
         recipe.setTicks(recipe.getTicks());
         this.recipes.add(recipe);
     }
 
     public void registerRecipe(int seconds, ItemStack[] input, int uuAmount) {
-        registerRecipe(new UURecipe(seconds, input, uuAmount));
+        registerRecipe(new PointMachineRecipe(seconds, input, uuAmount, null));
     }
 
-    public @NotNull List<UURecipe> getUURecipes() {
+    public @NotNull List<PointMachineRecipe> getUURecipes() {
         return this.recipes;
     }
 
@@ -246,14 +250,14 @@ public abstract class UUMachine extends AContainer {
                 }
             } else {
                 StorageCacheUtils.getMenu(b.getLocation()).replaceExistingItem(40, new CustomItemStack(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (short) 15), " "));
-                pushMainItems(b, getOutput(), processing.get(b).getUUAmount());
+                pushMainItems(b, getOutput(), processing.get(b).getPoints());
                 progress.remove(b);
                 processing.remove(b);
             }
         } else {
-            UURecipe r = null;
+            PointMachineRecipe r = null;
             Map<Integer, Integer> found = new HashMap<>();
-            for (UURecipe recipe : this.recipes) {
+            for (PointMachineRecipe recipe : this.recipes) {
                 for (ItemStack input : recipe.getInput()) {
                     for (int slot : getInputSlots()) {
                         if (SlimefunUtils.isItemSimilar(StorageCacheUtils.getMenu(b.getLocation()).getItemInSlot(slot), input, true)) {
@@ -282,19 +286,121 @@ public abstract class UUMachine extends AContainer {
         }
     }
 
-    public abstract int getUUFull();
+    public int getUUFull() {
+        return 100000;
+    }
 
-    public abstract ItemStack[] getOutput();
+    public ItemStack @NotNull [] getOutput() {
+        return new ItemStack[]{STItems.UU};
+    }
 
-    public abstract @NotNull String getInventoryTitle();
+    public @NotNull String getInventoryTitle() {
+        return "§d元物质分离机";
+    }
 
-    public abstract ItemStack getProgressBar();
+    public @NotNull ItemStack getProgressBar() {
+        return new ItemStack(Material.FLINT_AND_STEEL);
+    }
 
-    public abstract void registerDefaultRecipes();
+    public void registerDefaultRecipes() {
+        registerRecipe(5, new ItemStack[]{SlimefunItems.STONE_CHUNK}, 210);
+        registerRecipe(5, new ItemStack[]{new ItemStack(Material.BONE)}, 200);
+        registerRecipe(4, new ItemStack[]{SlimefunItems.WHEAT_FERTILIZER}, 250);
+        registerRecipe(4, new ItemStack[]{SlimefunItems.CARROT_FERTILIZER}, 250);
+        registerRecipe(4, new ItemStack[]{SlimefunItems.POTATO_FERTILIZER}, 250);
+        registerRecipe(4, new ItemStack[]{SlimefunItems.SEEDS_FERTILIZER}, 250);
+        registerRecipe(4, new ItemStack[]{SlimefunItems.BEETROOT_FERTILIZER}, 250);
+        registerRecipe(4, new ItemStack[]{SlimefunItems.MELON_FERTILIZER}, 250);
+        registerRecipe(4, new ItemStack[]{SlimefunItems.APPLE_FERTILIZER}, 250);
+        registerRecipe(4, new ItemStack[]{SlimefunItems.SWEET_BERRIES_FERTILIZER}, 250);
+        registerRecipe(4, new ItemStack[]{SlimefunItems.KELP_FERTILIZER}, 250);
+        registerRecipe(4, new ItemStack[]{SlimefunItems.COCOA_FERTILIZER}, 250);
+        registerRecipe(4, new ItemStack[]{SlimefunItems.SEAGRASS_FERTILIZER}, 250);
+        registerRecipe(3, new ItemStack[]{new ItemStack(Material.DIAMOND)}, 500);
+        registerRecipe(3, new ItemStack[]{new ItemStack(Material.EMERALD)}, 500);
+    }
 
-    public abstract int getEnergyConsumption();
+    public int getEnergyConsumption() {
+        return 400;
+    }
 
-    public abstract int getLevel();
+    public int getLevel() {
+        return 3;
+    }
 
-    public abstract @NotNull String getMachineIdentifier();
+    public @NotNull String getMachineIdentifier() {
+        return getId();
+    }
+
+    @Override
+    public ItemStack getPointsItem() {
+        return new ItemStack(Material.PURPLE_STAINED_GLASS_PANE);
+    }
+
+    @Override
+    public int getPointsMax() {
+        return 100000;
+    }
+
+    @Override
+    public String getPointsName() {
+        return "元物质量";
+    }
+
+    /**
+     * 新增额外的GUI按钮、界面设定
+     *
+     * @param menu
+     * @param b
+     */
+    @Override
+    public void addExtraMenuHandler(BlockMenu menu, Block b) {
+
+    }
+
+    /**
+     * 检测比对物品是否为可消耗点数充点的物品
+     * 如果物品不是可充物品或点数已满，则返回false
+     *
+     * @param input
+     */
+    @Override
+    public boolean isChargeableItem(ItemStack input) {
+        return false;
+    }
+
+    /**
+     * 获取指定物品的点数
+     * WARNING: 为了效率此处没有检测是否为可充点物品
+     * 请在每次使用前确保物品为可充点物品
+     *
+     * @param input
+     */
+    @Override
+    public int getItemPoints(ItemStack input) {
+        return 0;
+    }
+
+    /**
+     * 修改指定物品的点数
+     * WARNING: 为了效率此处没有检测是否为可充点物品
+     * 请在每次使用前确保物品为可充点物品
+     *
+     * @param input
+     * @param points
+     * @param isAdd
+     */
+    @Override
+    public @Nullable ItemStack modifyItemPoints(ItemStack input, int points, boolean isAdd) {
+        return null;
+    }
+
+    public int getCapacity() {
+        return 12800;
+    }
+
+    @Override
+    public int getSpeed() {
+        return 1;
+    }
 }

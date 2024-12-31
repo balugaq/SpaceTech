@@ -72,12 +72,12 @@ public final class SpaceTech extends JavaPlugin implements SlimefunAddon {
                 newWorld.environment(World.Environment.THE_END);
                 long seed = new Random().nextLong();
                 newWorld = newWorld.seed(seed);
-                newWorld = newWorld.type(WorldType.NORMAL);
+                newWorld = newWorld.type(WorldType.FLAT);
                 newWorld = newWorld.generateStructures(false);
                 newWorld = newWorld.generator(new SpaceGenerator());
                 World world = newWorld.createWorld();
                 if (world == null) {
-                    getInstance().getLogger().info("Failed to create planet \"" + worldName + "\"! ErrorCode: 5");
+                    getInstance().getLogger().info("Failed to create space world \"" + worldName + "\"!");
                     return;
                 }
 
