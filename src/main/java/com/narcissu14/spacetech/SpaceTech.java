@@ -67,8 +67,8 @@ public final class SpaceTech extends JavaPlugin implements SlimefunAddon {
 
     private void loadSpaceWorld() {
         for (String worldName : STConfig.spaceWorldList) {
-            WorldCreator newWorld = new WorldCreator(worldName);
             if (Bukkit.getWorld(worldName) == null) {
+                WorldCreator newWorld = new WorldCreator(worldName);
                 newWorld.environment(World.Environment.THE_END);
                 long seed = new Random().nextLong();
                 newWorld = newWorld.seed(seed);

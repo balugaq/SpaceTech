@@ -282,55 +282,51 @@ public class STItemSetup {
                 return 1;
             }
         }.register(SpaceTech.getInstance());
-        SlimefunItem createrCodeScanner = new SlimefunItem(STCategories.ARMOR, STItems.ITEM_CREATER_CODE_SCANNER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        RechargeableItem createrCodeScanner = new RechargeableItem(STCategories.ARMOR, STItems.ITEM_CREATER_CODE_SCANNER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.WITHER_PROOF_GLASS, SlimefunItems.GOLD_24K, SlimefunItems.WITHER_PROOF_GLASS,
                 SlimefunItems.PLASTIC_SHEET, STItems.SUPER_CIRCUIT_BOARD, SlimefunItems.PLASTIC_SHEET,
                 SlimefunItems.GOLD_24K, SlimefunItems.REINFORCED_PLATE, SlimefunItems.GOLD_24K
-        });
-        createrCodeScanner.addItemHandler(new ItemUseHandler() {
-            @Override
-            public void onRightClick(@NotNull PlayerRightClickEvent itemUseEvent) {
-                Player player = itemUseEvent.getPlayer();
-                ItemStack itemStack = itemUseEvent.getItem();
-                int capacity = 2048;
-                if (SlimefunUtils.isItemSimilar(itemStack, STItems.ITEM_CREATER_CODE_SCANNER, false)) {
-                    if (!player.isSneaking()) {
-                        itemUseEvent.cancel();
-                        return;
-                    }
-                    if (!itemUseEvent.getClickedBlock().isPresent()) {
-                        return;
-                    }
-                    Block block = itemUseEvent.getClickedBlock().get();
-                    //检查是否为物质制造机
-                    SlimefunItem item = StorageCacheUtils.getSfItem(block.getLocation());
-                    if (item != null && item.getId().equals("ITEM_CREATOR")) {
-                        //耗电
-                        float charge = ItemEnergy.getStoredEnergy(itemStack);
-                        float cost = 2048F;
-                        if (charge >= cost) {
-                            player.getInventory().setItemInMainHand((ItemEnergy.chargeItem(itemStack, -cost)));
-                            player.playSound(player.getLocation(), Sound.BLOCK_IRON_TRAPDOOR_OPEN, 0.7f, 0.6f);
-                            player.spawnParticle(Particle.END_ROD, block.getLocation().add(0, 0.6, 0), 10);
-                            ActionBarAPI.sendActionBar(player, "§6§l解译中...需要花费10秒");
-                            //检测
-                            new BukkitRunnable() {
-                                @Override
-                                public void run() {
-                                    String fullCode = Integer.toBinaryString(Integer.parseInt(StorageCacheUtils.getData(block.getLocation(), "random-code")));
-                                    String code = fullCode.substring(0, 2);
-                                    TitleAPI.sendTitle(player, 1, 2, 1, "§b解译成功", "§9首2位:§e " + code);
-                                    player.sendMessage("§b当前机器物质编码首2位:§e " + code);
-                                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 0.8f);
-                                }
-                            }.runTaskLaterAsynchronously(SpaceTech.getInstance(), 200);
-                        }
-                    } else {
-                        ActionBarAPI.sendActionBar(player, "§c§l你尝试解译的机器不是物质制造机！");
-                    }
+        }, 2048);
+        createrCodeScanner.addItemHandler((ItemUseHandler) rightClickEvent -> {
+            Player player = rightClickEvent.getPlayer();
+            ItemStack itemStack = rightClickEvent.getItem();
+            if (SlimefunUtils.isItemSimilar(itemStack, STItems.ITEM_CREATER_CODE_SCANNER, false)) {
+                if (!player.isSneaking()) {
+                    rightClickEvent.cancel();
+                    return;
                 }
-                itemUseEvent.cancel();
+                if (!rightClickEvent.getClickedBlock().isPresent()) {
+                    return;
+                }
+                Block block = rightClickEvent.getClickedBlock().get();
+                //检查是否为物质制造机
+                SlimefunItem item = StorageCacheUtils.getSfItem(block.getLocation());
+                if (item != null && item.getId().equals("ITEM_CREATOR")) {
+                    //耗电
+                    float charge = ItemEnergy.getStoredEnergy(itemStack);
+                    float cost = 2048F;
+                    if (charge >= cost) {
+                        player.getInventory().setItemInMainHand((ItemEnergy.chargeItem(itemStack, -cost)));
+                        player.playSound(player.getLocation(), Sound.BLOCK_IRON_TRAPDOOR_OPEN, 0.7f, 0.6f);
+                        player.spawnParticle(Particle.END_ROD, block.getLocation().add(0, 0.6, 0), 10);
+                        ActionBarAPI.sendActionBar(player, "§6§l解译中...需要花费10秒");
+                        //检测
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                String fullCode = Integer.toBinaryString(Integer.parseInt(StorageCacheUtils.getData(block.getLocation(), "random-code")));
+                                String code = fullCode.substring(0, 2);
+                                TitleAPI.sendTitle(player, 1, 2, 1, "§b解译成功", "§9首2位:§e " + code);
+                                player.sendMessage("§b当前机器物质编码首2位:§e " + code);
+                                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 0.8f);
+                            }
+                        }.runTaskLaterAsynchronously(SpaceTech.getInstance(), 200);
+                    }
+                } else {
+                    ActionBarAPI.sendActionBar(player, "§c§l你尝试解译的机器不是物质制造机！");
+                }
             }
+            rightClickEvent.cancel();
         });
         createrCodeScanner.register(SpaceTech.getInstance());
         RechargeableItem spaceOreScanner = new RechargeableItem(STCategories.ARMOR, STItems.SPACE_ORE_SCANNER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
