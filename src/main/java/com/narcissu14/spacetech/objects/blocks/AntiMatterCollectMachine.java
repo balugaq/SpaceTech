@@ -35,7 +35,7 @@ public abstract class AntiMatterCollectMachine extends AbstractPointsMachine {
 
     @Override
     public void registerDefaultRecipes() {
-        registerRecipe(10, new ItemStack[]{new ItemStack(Material.BLUE_DYE, 1)}, 32, new ItemStack[]{});
+        registerRecipe(10, new ItemStack[]{new ItemStack(Material.LAPIS_LAZULI, 1)}, 32, new ItemStack[]{});
         registerRecipe(128, new ItemStack[]{STItems.EMPTY_EM_UNIT}, -65536, new ItemStack[]{STItems.ANTIMATTER_EM_UNIT}, PointMachineRecipe.PointCheckType.EQUAL, 65536);
     }
 

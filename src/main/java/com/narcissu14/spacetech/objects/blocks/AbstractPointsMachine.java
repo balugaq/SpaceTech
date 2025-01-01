@@ -51,8 +51,8 @@ import java.util.Map;
  */
 public abstract class AbstractPointsMachine extends AContainer {
     public static final @NotNull Map<Block, PointMachineRecipe> processing = new HashMap<Block, PointMachineRecipe>();
-    public static final @NotNull Map<Block, Integer> progress = new HashMap<Block, Integer>();
-    protected static final @NotNull Map<Block, ItemStack> charginItems = new HashMap<Block, ItemStack>();
+    public static final @NotNull Map<Block, Integer> progress = new HashMap<>();
+    protected static final @NotNull Map<Block, ItemStack> charginItems = new HashMap<>();
     static final String POINTS_KEY = "machine-points";
     private static final int[] POINTS_BORDER = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
     private static final int[] POINTS_INFO = {10, 11, 12, 13, 14, 15, 16};
@@ -60,7 +60,7 @@ public abstract class AbstractPointsMachine extends AContainer {
     private static final int[] INPUT_SIGN = {28, 29};
     private static final int[] OUTPUT_SIGN = {33, 34};
     private static final @NotNull ItemStack NO_POINTS_ITEM = new ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE, 1);
-    protected final @NotNull List<PointMachineRecipe> recipes = new ArrayList<PointMachineRecipe>();
+    protected final @NotNull List<PointMachineRecipe> recipes = new ArrayList<>();
 
     public AbstractPointsMachine(@NotNull ItemGroup itemGroup, @NotNull ItemStack itemStack, @NotNull String id, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
         this(itemGroup, new SlimefunItemStack(id, itemStack), recipeType, recipe);
@@ -68,7 +68,7 @@ public abstract class AbstractPointsMachine extends AContainer {
 
     public AbstractPointsMachine(@NotNull ItemGroup itemGroup, @NotNull SlimefunItemStack item, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
         super(itemGroup, item, recipeType, recipe);
-        String name = this.getItemName();
+        setProcessingSpeed(1);
 
         new BlockMenuPreset(getId(), getInventoryTitle()) {
             @Override
@@ -84,7 +84,7 @@ public abstract class AbstractPointsMachine extends AContainer {
             @Override
             public boolean canOpen(@NotNull Block b, @NotNull Player p) {
                 boolean perm = p.hasPermission("slimefun.inventory.bypass") || Slimefun.getProtectionManager().hasPermission(p, b, Interaction.INTERACT_BLOCK);
-                return perm && (STConfig.originalSlimefun || AbstractPointsMachine.this.canUse(p, true));
+                return perm && AbstractPointsMachine.this.canUse(p, true);
             }
 
             @Override
@@ -165,8 +165,7 @@ public abstract class AbstractPointsMachine extends AContainer {
 
                 @Override
                 public boolean onClick(InventoryClickEvent event, Player player, int slot, @Nullable ItemStack item, ClickAction action) {
-                    if ((item == null)) return true;
-                    item.getType();
+                    if (item == null) return true;
                     return item.getType() == Material.AIR;
                 }
             });

@@ -5,6 +5,7 @@ import com.narcissu14.spacetech.utils.ActionBarAPI;
 import com.narcissu14.spacetech.utils.ItemEnergy;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
@@ -30,8 +31,8 @@ public class SpaceOre extends AbstractOre {
     private final @NotNull String breakMsg;
     private final String durMax;
 
-    public SpaceOre(ItemGroup itemGroup, @NotNull ItemStack item, @NotNull ItemStack oreNugget, String id, RecipeType recipeType, ItemStack[] recipe, String durMax) {
-        super(itemGroup, item, id, recipeType, recipe);
+    public SpaceOre(ItemGroup itemGroup, @NotNull SlimefunItemStack item, @NotNull ItemStack oreNugget, RecipeType recipeType, ItemStack[] recipe, String durMax) {
+        super(itemGroup, item, recipeType, recipe);
 
         breakMsg = item.getItemMeta().getDisplayName() + "§7 挖掘度: §e§l%dur% §7挖掘次数:§c§l ";
         this.durMax = durMax;
@@ -50,7 +51,7 @@ public class SpaceOre extends AbstractOre {
                     return;
                 }
                 if (!player.isSneaking()) {
-                    ActionBarAPI.sendActionBar(player, "§c请按住§e§l shift §c进行挖掘");
+                    ActionBarAPI.sendActionBar(player, "§c请按住§e§l Shift §c进行挖掘");
                     blockBreakEvent.setCancelled(true);
                     return;
                 }

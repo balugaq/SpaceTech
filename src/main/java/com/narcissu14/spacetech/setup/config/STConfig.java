@@ -11,7 +11,6 @@ import java.util.List;
  */
 public class STConfig extends AbstractConfig {
     public static List<String> spaceWorldList;
-    public static boolean originalSlimefun;
 
     public STConfig(@NotNull File configFile) {
         super(configFile);
@@ -20,7 +19,6 @@ public class STConfig extends AbstractConfig {
     @Override
     public void initOptions(@NotNull YamlConfiguration config) {
         spaceWorldList = config.getStringList("SpaceWorld.SpaceWorldList");
-        originalSlimefun = config.getBoolean("OriginalSlimefun");
     }
 
     @Override

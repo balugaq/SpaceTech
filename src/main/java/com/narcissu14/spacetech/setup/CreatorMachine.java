@@ -1,5 +1,6 @@
 package com.narcissu14.spacetech.setup;
 
+import com.narcissu14.spacetech.utils.ChargeableBlock;
 import com.narcissu14.spacetech.utils.MachineHelper;
 import com.narcissu14.spacetech.utils.SkullUtil;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
@@ -12,6 +13,7 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
+import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
@@ -83,7 +85,7 @@ public abstract class CreatorMachine extends AContainer {
             public void newInstance(final @NotNull BlockMenu menu, final @NotNull Block b) {
                 if (StorageCacheUtils.getData(b.getLocation(), "random-code") == null) {
                     Random random = new Random();
-                    StorageCacheUtils.setData(b.getLocation(), "random-code", String.valueOf(random.nextInt(127)));
+                    StorageCacheUtils.setData(b.getLocation(), "random-code", String.valueOf(random.nextInt(64, 127)));
                 }
                 if (StorageCacheUtils.getData(b.getLocation(), "last-code") == null) {
                     StorageCacheUtils.setData(b.getLocation(), "last-code", "0000000");
@@ -124,7 +126,7 @@ public abstract class CreatorMachine extends AContainer {
                 menu.replaceExistingItem(22, new CustomItemStack(resultItem, "§7制作: " + resultItem.getItemMeta().getDisplayName()));
                 menu.addMenuClickHandler(22, (p, arg1, arg2, arg3) -> {
                     Random random = new Random();
-                    StorageCacheUtils.setData(b.getLocation(), "random-code", String.valueOf(random.nextInt(127)));
+                    StorageCacheUtils.setData(b.getLocation(), "random-code", String.valueOf(random.nextInt(64, 127)));
                     int outItem = Integer.parseInt(StorageCacheUtils.getData(b.getLocation(), "output-item"));
                     StorageCacheUtils.setData(b.getLocation(), "output-item", (outItem >= CreatorMachine.this.recipes.size() - 1) ? "0" : String.valueOf(++outItem));
                     this.newInstance(menu, b);
@@ -154,10 +156,10 @@ public abstract class CreatorMachine extends AContainer {
             preset.addItem(i, new CustomItemStack(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (short) 7), " "), (player, i14, itemStack, clickAction) -> false);
         }
         for (int i : outputSign) {
-            preset.addItem(i, new CustomItemStack(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (short) 11), "§b输出槽"), (player, i13, itemStack, clickAction) -> false);
+            preset.addItem(i, new CustomItemStack(new ItemStack(Material.ORANGE_STAINED_GLASS_PANE, 1, (short) 11), "§b输出槽"), (player, i13, itemStack, clickAction) -> false);
         }
         for (int i : inputSign) {
-            preset.addItem(i, new CustomItemStack(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (short) 4), "§e输入槽"), (player, i12, itemStack, clickAction) -> false);
+            preset.addItem(i, new CustomItemStack(new ItemStack(Material.BLUE_STAINED_GLASS_PANE, 1, (short) 4), "§e输入槽"), (player, i12, itemStack, clickAction) -> false);
         }
         preset.addItem(40, new CustomItemStack(new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1, (short) 15), " "), (player, i, itemStack, clickAction) -> false);
         for (int i : getOutputSlots()) {
@@ -226,7 +228,7 @@ public abstract class CreatorMachine extends AContainer {
     protected void pushMainItems(@NotNull Block b, ItemStack[] items) {
         if (StorageCacheUtils.getData(b.getLocation(), "random-code").equals(String.valueOf(invertBinary(StorageCacheUtils.getData(b.getLocation(), "set-code"))))) {
             Random random = new Random();
-            StorageCacheUtils.setData(b.getLocation(), "random-code", String.valueOf(random.nextInt(127)));
+            StorageCacheUtils.setData(b.getLocation(), "random-code", String.valueOf(random.nextInt(64, 127)));
             Inventory inv = inject(b);
             inv.addItem(items);
             for (int slot : getOutputSlots()) {

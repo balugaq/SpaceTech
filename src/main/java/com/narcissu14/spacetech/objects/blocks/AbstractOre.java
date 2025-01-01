@@ -3,6 +3,7 @@ package com.narcissu14.spacetech.objects.blocks;
 import com.narcissu14.spacetech.objects.STItems;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,8 +19,8 @@ public abstract class AbstractOre extends SlimefunItem {
     final String DURABILITY = "durability";
     final String BREAK_TIMES = "break-times";
 
-    public AbstractOre(@NotNull ItemGroup itemGroup, @NotNull ItemStack item, @NotNull String id, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
-        super(itemGroup, item, id, recipeType, recipe);
+    public AbstractOre(@NotNull ItemGroup itemGroup, @NotNull SlimefunItemStack item, @NotNull RecipeType recipeType, ItemStack @NotNull [] recipe) {
+        super(itemGroup, item, recipeType, recipe);
     }
 
     void damageItem(@NotNull Player player) {

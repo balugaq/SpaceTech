@@ -1,6 +1,3 @@
 SpaceWorld:
   SpaceWorldList:
-    - space
-
-## Deprecated options
-OriginalSlimefun: true
+    - SpaceWorld

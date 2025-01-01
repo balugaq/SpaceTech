@@ -35,11 +35,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Narcissu14
@@ -47,108 +44,9 @@ import java.util.stream.Collectors;
 public class SpaceWorldListener implements Listener {
 
     private static final PotionEffect JUMP_EFFECT = new PotionEffect(PotionEffectType.JUMP, 40, 3, false, false);
-    private final @NotNull HashSet<Material> noPlaceItemSet = new HashSet<>();
-    //private static final PotionEffect NO_OXYGEN_EFFECT = new PotionEffect(PotionEffectType.WITHER, 100, 0, false, false);
-
+    private static final PotionEffect SLOW_FALL_EFFECT = new PotionEffect(PotionEffectType.SLOW_FALLING, 40, 3, false, false);
 
     public SpaceWorldListener(@NotNull SpaceTech plugin) {
-        // 末影水晶
-        noPlaceItemSet.add(Material.END_CRYSTAL);
-        // 火把
-        noPlaceItemSet.add(Material.TORCH);
-        // 各种树苗
-        noPlaceItemSet.addAll(filterWithSuffix("_SAPLING"));
-        // 各种树叶
-        noPlaceItemSet.addAll(filterWithSuffix("_LEAVES"));
-        // 各种盆栽 + 植物
-        noPlaceItemSet.add(Material.LARGE_FERN); //大型蕨
-        noPlaceItemSet.add(Material.SEAGRASS); //海草
-        noPlaceItemSet.add(Material.TALL_SEAGRASS); //高海草
-        noPlaceItemSet.add(Material.GRASS); //草
-        noPlaceItemSet.add(Material.TALL_GRASS); //高草丛
-        noPlaceItemSet.add(Material.LILAC); //丁香
-        noPlaceItemSet.add(Material.PEONY); //牡丹
-        noPlaceItemSet.add(Material.ROSE_BUSH); //玫瑰丛
-        noPlaceItemSet.add(Material.SWEET_BERRY_BUSH); //甜浆果丛
-        noPlaceItemSet.add(Material.LILY_OF_THE_VALLEY); //铃兰
-        noPlaceItemSet.add(Material.SUNFLOWER); //向日葵
-        noPlaceItemSet.add(Material.LILY_PAD); //睡莲
-        noPlaceItemSet.add(Material.VINE); //藤蔓
-        noPlaceItemSet.add(Material.MUSHROOM_STEM); //蘑菇柄
-        noPlaceItemSet.add(Material.FLOWER_POT); //花盆
-        noPlaceItemSet.add(Material.FERN); //蕨
-        noPlaceItemSet.add(Material.POTTED_FERN); //蕨盆栽
-        noPlaceItemSet.add(Material.DEAD_BUSH); //枯萎的灌木
-        noPlaceItemSet.add(Material.POTTED_DEAD_BUSH); //枯萎的灌木盆栽
-        noPlaceItemSet.add(Material.CACTUS); //仙人掌
-        noPlaceItemSet.add(Material.POTTED_CACTUS); //仙人掌盆栽
-        noPlaceItemSet.add(Material.BAMBOO); //竹子
-        noPlaceItemSet.add(Material.POTTED_BAMBOO); //竹子盆栽
-        noPlaceItemSet.add(Material.ALLIUM); //绒球葱
-        noPlaceItemSet.add(Material.POTTED_ALLIUM); //绒球葱盆栽
-        noPlaceItemSet.add(Material.RED_MUSHROOM); //红色蘑菇
-        noPlaceItemSet.add(Material.POTTED_RED_MUSHROOM); //红色蘑菇盆栽
-        noPlaceItemSet.add(Material.BROWN_MUSHROOM); //棕色蘑菇
-        noPlaceItemSet.add(Material.POTTED_BROWN_MUSHROOM); //棕色蘑菇盆栽
-        noPlaceItemSet.add(Material.AZURE_BLUET); //茜草花
-        noPlaceItemSet.add(Material.POTTED_AZURE_BLUET); //茜草花盆栽
-        noPlaceItemSet.add(Material.POPPY); //虞美人
-        noPlaceItemSet.add(Material.POTTED_POPPY); //虞美人盆栽
-        noPlaceItemSet.add(Material.OXEYE_DAISY); //滨菊
-        noPlaceItemSet.add(Material.POTTED_OXEYE_DAISY); //滨菊盆栽
-        noPlaceItemSet.add(Material.POTTED_LILY_OF_THE_VALLEY); //铃兰盆栽
-        noPlaceItemSet.add(Material.DANDELION); //蒲公英
-        noPlaceItemSet.add(Material.POTTED_DANDELION); //蒲公英盆栽
-        noPlaceItemSet.add(Material.CORNFLOWER); //矢车菊
-        noPlaceItemSet.add(Material.POTTED_CORNFLOWER); //矢车菊盆栽
-        noPlaceItemSet.add(Material.BLUE_ORCHID); //兰花
-        noPlaceItemSet.add(Material.POTTED_BLUE_ORCHID); //兰花盆栽
-        noPlaceItemSet.add(Material.RED_TULIP); //红色郁金香
-        noPlaceItemSet.add(Material.POTTED_RED_TULIP); //红色郁金香盆栽
-        noPlaceItemSet.add(Material.ORANGE_TULIP); //橙色郁金香
-        noPlaceItemSet.add(Material.POTTED_ORANGE_TULIP); //橙色郁金香盆栽
-        noPlaceItemSet.add(Material.WHITE_TULIP); //白色郁金香
-        noPlaceItemSet.add(Material.POTTED_WHITE_TULIP); //白色郁金香盆栽
-        noPlaceItemSet.add(Material.PINK_TULIP); //粉红色郁金香
-        noPlaceItemSet.add(Material.POTTED_PINK_TULIP); //粉色郁金香盆栽
-        noPlaceItemSet.add(Material.WITHER_ROSE); //凋零玫瑰
-        noPlaceItemSet.add(Material.POTTED_WITHER_ROSE); //凋零玫瑰盆栽
-        noPlaceItemSet.add(Material.POTTED_ACACIA_SAPLING); //金合欢树苗盆栽
-        noPlaceItemSet.add(Material.POTTED_SPRUCE_SAPLING); //云杉树苗盆栽
-        noPlaceItemSet.add(Material.POTTED_JUNGLE_SAPLING); //丛林树苗盆栽
-        noPlaceItemSet.add(Material.POTTED_BIRCH_SAPLING); //白桦树苗盆栽
-        noPlaceItemSet.add(Material.POTTED_OAK_SAPLING); //橡树树苗盆栽
-        noPlaceItemSet.add(Material.POTTED_DARK_OAK_SAPLING); //深色橡树树苗盆栽
-        noPlaceItemSet.add(Material.PUMPKIN); //南瓜
-        noPlaceItemSet.add(Material.PUMPKIN_SEEDS); //南瓜种子
-        noPlaceItemSet.add(Material.CARVED_PUMPKIN); //雕刻过的南瓜
-        noPlaceItemSet.add(Material.PUMPKIN_STEM); //南瓜梗
-        noPlaceItemSet.add(Material.ATTACHED_PUMPKIN_STEM); //结果的南瓜茎
-        noPlaceItemSet.add(Material.MELON); //西瓜
-        noPlaceItemSet.add(Material.MELON_SEEDS); //西瓜种子
-        noPlaceItemSet.add(Material.MELON_STEM); //西瓜茎
-        noPlaceItemSet.add(Material.ATTACHED_MELON_STEM); //结果的西瓜茎
-        noPlaceItemSet.add(Material.BEETROOT_SEEDS); //甜菜种子
-        noPlaceItemSet.add(Material.BEETROOTS); //甜菜根
-        noPlaceItemSet.add(Material.CARROTS); //胡萝卜
-        noPlaceItemSet.add(Material.WHEAT); //小麦
-        noPlaceItemSet.add(Material.HAY_BLOCK); //干草块
-        noPlaceItemSet.add(Material.WHEAT_SEEDS); //小麦种子
-        noPlaceItemSet.add(Material.SWEET_BERRIES); //甜浆果
-        noPlaceItemSet.add(Material.POTATOES); //马铃薯
-        noPlaceItemSet.add(Material.COCOA_BEANS); //可可豆
-        noPlaceItemSet.add(Material.NETHER_WART); //地狱疣
-        noPlaceItemSet.add(Material.NETHER_WART_BLOCK); //地狱疣块
-        noPlaceItemSet.add(Material.KELP); //海带
-        noPlaceItemSet.add(Material.KELP_PLANT); //海带植株
-        noPlaceItemSet.add(Material.DRIED_KELP); //干海带
-        noPlaceItemSet.add(Material.DRIED_KELP_BLOCK); //干海带块
-        noPlaceItemSet.add(Material.SEA_PICKLE); //海泡菜
-        noPlaceItemSet.add(Material.COCOA); //可可果
-        noPlaceItemSet.add(Material.BAMBOO_SAPLING); //竹笋
-        // 各种床
-        noPlaceItemSet.addAll(filterWithSuffix("_BED"));
-
         Bukkit.getPluginManager().registerEvents(this, plugin);
 
         new BukkitRunnable() {
@@ -159,6 +57,7 @@ public class SpaceWorldListener implements Listener {
                         continue;
                     }
                     player.addPotionEffect(JUMP_EFFECT);
+                    player.addPotionEffect(SLOW_FALL_EFFECT);
                 }
             }
         }.runTaskTimer(plugin, 0, 20);
@@ -178,12 +77,104 @@ public class SpaceWorldListener implements Listener {
         }.runTaskTimer(plugin, 0, 20);
     }
 
-    // 用后缀搜索物品
-    public static @NotNull Set<Material> filterWithSuffix(@NotNull String suffix) {
-        return Arrays.stream(Material.values())
-                .filter(m -> m.name().endsWith(suffix)
-                        && !m.name().startsWith("LEGACY_"))
-                .collect(Collectors.toSet());
+    public static boolean isBannedBlock(Material material) {
+        if (material.name().endsWith("_SAPLING")
+                || material.name().startsWith("POTTED_")
+                || material == Material.AZALEA
+                || material == Material.FLOWERING_AZALEA
+                || material == Material.BROWN_MUSHROOM
+                || material == Material.RED_MUSHROOM
+                || material == Material.CRIMSON_FUNGUS
+                || material == Material.WARPED_FUNGUS
+                || material == materialValueOf("SHORT_GRASS")
+                || material == Material.FERN
+                || material == Material.DEAD_BUSH
+                || material == Material.DANDELION
+                || material == Material.POPPY
+                || material == Material.BLUE_ORCHID
+                || material == Material.ALLIUM
+                || material == Material.AZURE_BLUET
+                || material == Material.RED_TULIP
+                || material == Material.ORANGE_TULIP
+                || material == Material.WHITE_TULIP
+                || material == Material.PINK_TULIP
+                || material == Material.OXEYE_DAISY
+                || material == Material.CORNFLOWER
+                || material == Material.LILY_OF_THE_VALLEY
+                || material == Material.TORCHFLOWER
+                || material == Material.WITHER_ROSE
+                || material == Material.PINK_PETALS
+                || material == Material.SPORE_BLOSSOM
+                || material == Material.BAMBOO
+                || material == Material.SUGAR_CANE
+                || material == Material.CACTUS
+                || material == Material.CRIMSON_ROOTS
+                || material == Material.WARPED_ROOTS
+                || material == Material.NETHER_SPROUTS
+                || material == Material.WEEPING_VINES
+                || material == Material.TWISTING_VINES
+                || material == Material.WEEPING_VINES_PLANT
+                || material == Material.TWISTING_VINES_PLANT
+                || material == Material.COCOA
+                || material == Material.SWEET_BERRY_BUSH
+                || material == Material.TORCHFLOWER_CROP
+                || material == Material.WHEAT
+                || material == Material.MELON_STEM
+                || material == Material.PUMPKIN_STEM
+                || material == Material.POTATOES
+                || material == Material.CARROTS
+                || material == Material.BEETROOTS
+                || material == Material.KELP
+                || material == Material.KELP_PLANT
+                || material == Material.SEAGRASS
+                || material == Material.LILY_PAD
+                || material == materialValueOf("CREAKING_HEART")
+                || material == materialValueOf("OPEN_EYEBLOSSOM")
+                || material == materialValueOf("CLOSED_EYEBLOSSOM")
+                || material == materialValueOf("PALE_HANGING_MOSS")
+                || material == materialValueOf("RESIN_CLUMP")
+                || material == Material.SEA_PICKLE
+                || material == Material.TALL_GRASS
+                || material == Material.LARGE_FERN
+                || material == Material.TALL_SEAGRASS
+                || material == Material.SUNFLOWER
+                || material == Material.LILAC
+                || material == Material.ROSE_BUSH
+                || material == Material.PEONY
+                || material == Material.PITCHER_PLANT
+                || material.name().endsWith("_CORAL")
+                || material.name().endsWith("_CORAL_FAN")
+                || material == Material.MUSHROOM_STEM
+                || material == Material.TORCH
+                || material == Material.REDSTONE_TORCH
+                || material == Material.REDSTONE_WALL_TORCH
+                || material == Material.WALL_TORCH
+                || material == Material.FIRE
+                || material == Material.SOUL_FIRE
+                || material == Material.SOUL_TORCH
+                || material == Material.SOUL_WALL_TORCH
+                || material == Material.NETHER_PORTAL
+                || material == Material.END_CRYSTAL
+                || material.name().endsWith("_BED")
+                || material == Material.LANTERN
+                || material == Material.SOUL_LANTERN
+                || material == Material.JACK_O_LANTERN
+                || material == Material.CAMPFIRE
+                || material == Material.SOUL_CAMPFIRE
+                || material == Material.BEEHIVE
+                || material == Material.BEE_NEST) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static Material materialValueOf(String name) {
+        try {
+            return Material.valueOf(name);
+        } catch (Throwable e) {
+            return null;
+        }
     }
 
     @EventHandler
@@ -224,7 +215,7 @@ public class SpaceWorldListener implements Listener {
         }
         if (event.getItem() != null) {
             Material mat = event.getItem().getType();
-            if (noPlaceItemSet.contains(mat)) {
+            if (isBannedBlock(mat)) {
                 event.setCancelled(true);
             }
         }
@@ -246,16 +237,16 @@ public class SpaceWorldListener implements Listener {
     private boolean isPlaced(@NotNull Block block, @NotNull Material material) {
         boolean isPlaced = false;
         switch (material) {
-            case WATER_BUCKET:
+            case WATER_BUCKET, POWDER_SNOW_BUCKET -> {
                 block.setType(Material.ICE);
                 isPlaced = true;
-                break;
-            case LAVA_BUCKET:
+            }
+            case LAVA_BUCKET -> {
                 block.setType(Material.OBSIDIAN);
                 isPlaced = true;
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
         return isPlaced;
     }
@@ -277,13 +268,9 @@ public class SpaceWorldListener implements Listener {
     public void onDispenseBucket(@NotNull BlockDispenseEvent event) {
         if (STConfig.spaceWorldList.contains(event.getBlock().getWorld().getName())) {
             switch (event.getItem().getType()) {
-                case WATER_BUCKET:
-                case LAVA_BUCKET:
-                case FLINT_AND_STEEL:
-                    event.setCancelled(true);
-                    break;
-                default:
-                    break;
+                case WATER_BUCKET, POWDER_SNOW_BUCKET, LAVA_BUCKET, FLINT_AND_STEEL -> event.setCancelled(true);
+                default -> {
+                }
             }
         }
     }
@@ -371,5 +358,4 @@ public class SpaceWorldListener implements Listener {
             }
         }
     }
-
 }
