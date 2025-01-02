@@ -41,6 +41,31 @@ public class PlanetPopulator extends BlockPopulator {
         PLANET_BLOCKS.add(Material.OBSIDIAN);
         PLANET_BLOCKS.add(Material.CYAN_TERRACOTTA);
         PLANET_BLOCKS.add(Material.CYAN_TERRACOTTA);
+        PLANET_BLOCKS.add(Material.GRANITE);
+        PLANET_BLOCKS.add(Material.ANDESITE);
+        PLANET_BLOCKS.add(Material.COBBLED_DEEPSLATE);
+        PLANET_BLOCKS.add(Material.BLACKSTONE);
+        PLANET_BLOCKS.add(Material.BLACK_TERRACOTTA);
+        PLANET_BLOCKS.add(Material.DIORITE);
+        PLANET_BLOCKS.add(Material.TUFF);
+        PLANET_BLOCKS.add(Material.COBBLESTONE);
+        PLANET_BLOCKS.add(Material.COBBLESTONE);
+        PLANET_BLOCKS.add(Material.COBBLESTONE);
+        PLANET_BLOCKS.add(Material.COBBLESTONE);
+        PLANET_BLOCKS.add(Material.OBSIDIAN);
+        PLANET_BLOCKS.add(Material.CYAN_TERRACOTTA);
+        PLANET_BLOCKS.add(Material.CYAN_TERRACOTTA);
+        PLANET_BLOCKS.add(Material.GRANITE);
+        PLANET_BLOCKS.add(Material.ANDESITE);
+        PLANET_BLOCKS.add(Material.COBBLED_DEEPSLATE);
+        PLANET_BLOCKS.add(Material.BLACKSTONE);
+        PLANET_BLOCKS.add(Material.BLACK_TERRACOTTA);
+        PLANET_BLOCKS.add(Material.DIORITE);
+        PLANET_BLOCKS.add(Material.TUFF);
+        PLANET_BLOCKS.add(Material.IRON_ORE);
+        PLANET_BLOCKS.add(Material.GOLD_ORE);
+        PLANET_BLOCKS.add(Material.DIAMOND_ORE);
+        PLANET_BLOCKS.add(Material.EMERALD_ORE);
     }
 
     @Override

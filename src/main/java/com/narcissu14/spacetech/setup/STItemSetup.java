@@ -58,14 +58,14 @@ public class STItemSetup {
     public static void setupItems() {
         new SlimefunItem(STCategories.RESOURCES, STItems.COPPER_ORE_NUGGET, RECIPE_TYPE_GET_BY_TOOL, new ItemStack[0])
                 .register(SpaceTech.getInstance());
-        new SpaceOre(STCategories.MACHINES, STItems.COPPER_ORE, STItems.COPPER_ORE_NUGGET, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SpaceOre(STCategories.RESOURCES, STItems.COPPER_ORE, STItems.COPPER_ORE_NUGGET, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 STItems.COPPER_ORE_NUGGET, STItems.COPPER_ORE_NUGGET, STItems.COPPER_ORE_NUGGET,
                 STItems.COPPER_ORE_NUGGET, STItems.COPPER_ORE_NUGGET, STItems.COPPER_ORE_NUGGET,
                 STItems.COPPER_ORE_NUGGET, STItems.COPPER_ORE_NUGGET, STItems.COPPER_ORE_NUGGET
         }, "100").register(SpaceTech.getInstance());
         new SlimefunItem(STCategories.RESOURCES, STItems.SILVER_ORE_NUGGET, RECIPE_TYPE_GET_BY_TOOL, new ItemStack[0])
                 .register(SpaceTech.getInstance());
-        new SpaceOre(STCategories.MACHINES, STItems.SILVER_ORE, STItems.SILVER_ORE_NUGGET, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SpaceOre(STCategories.RESOURCES, STItems.SILVER_ORE, STItems.SILVER_ORE_NUGGET, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 STItems.SILVER_ORE_NUGGET, STItems.SILVER_ORE_NUGGET, STItems.SILVER_ORE_NUGGET,
                 STItems.SILVER_ORE_NUGGET, STItems.SILVER_ORE_NUGGET, STItems.SILVER_ORE_NUGGET,
                 STItems.SILVER_ORE_NUGGET, STItems.SILVER_ORE_NUGGET, STItems.SILVER_ORE_NUGGET
@@ -73,7 +73,7 @@ public class STItemSetup {
         //钛
         new SlimefunItem(STCategories.RESOURCES,  STItems.TITANIUM_ORE_NUGGET, RECIPE_TYPE_GET_BY_TOOL, new ItemStack[0])
                 .register(SpaceTech.getInstance());
-        new SpaceOre(STCategories.MACHINES, STItems.TITANIUM_ORE, STItems.TITANIUM_ORE_NUGGET,  RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SpaceOre(STCategories.RESOURCES, STItems.TITANIUM_ORE, STItems.TITANIUM_ORE_NUGGET,  RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 STItems.TITANIUM_ORE_NUGGET, STItems.TITANIUM_ORE_NUGGET, STItems.TITANIUM_ORE_NUGGET,
                 STItems.TITANIUM_ORE_NUGGET, STItems.TITANIUM_ORE_NUGGET, STItems.TITANIUM_ORE_NUGGET,
                 STItems.TITANIUM_ORE_NUGGET, STItems.TITANIUM_ORE_NUGGET, STItems.TITANIUM_ORE_NUGGET
@@ -93,7 +93,7 @@ public class STItemSetup {
         //钕
         new SlimefunItem(STCategories.RESOURCES, STItems.NEODYMIUM_ORE_NUGGET, RECIPE_TYPE_GET_BY_TOOL, new ItemStack[0])
                 .register(SpaceTech.getInstance());
-        new SpaceOre(STCategories.MACHINES, STItems.NEODYMIUM_ORE, STItems.NEODYMIUM_ORE_NUGGET, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SpaceOre(STCategories.RESOURCES, STItems.NEODYMIUM_ORE, STItems.NEODYMIUM_ORE_NUGGET, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 STItems.NEODYMIUM_ORE_NUGGET, STItems.NEODYMIUM_ORE_NUGGET, STItems.NEODYMIUM_ORE_NUGGET,
                 STItems.NEODYMIUM_ORE_NUGGET, STItems.NEODYMIUM_ORE_NUGGET, STItems.NEODYMIUM_ORE_NUGGET,
                 STItems.NEODYMIUM_ORE_NUGGET, STItems.NEODYMIUM_ORE_NUGGET, STItems.NEODYMIUM_ORE_NUGGET
@@ -286,7 +286,7 @@ public class STItemSetup {
                 return 1;
             }
         }.register(SpaceTech.getInstance());
-        RechargeableItem createrCodeScanner = new RechargeableItem(STCategories.ARMOR, STItems.ITEM_CREATER_CODE_SCANNER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        RechargeableItem createrCodeScanner = new RechargeableItem(STCategories.TOOL, STItems.ITEM_CREATER_CODE_SCANNER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.WITHER_PROOF_GLASS, SlimefunItems.GOLD_24K, SlimefunItems.WITHER_PROOF_GLASS,
                 SlimefunItems.PLASTIC_SHEET, STItems.SUPER_CIRCUIT_BOARD, SlimefunItems.PLASTIC_SHEET,
                 SlimefunItems.GOLD_24K, SlimefunItems.REINFORCED_PLATE, SlimefunItems.GOLD_24K
@@ -305,7 +305,7 @@ public class STItemSetup {
                 Block block = rightClickEvent.getClickedBlock().get();
                 //检查是否为物质制造机
                 SlimefunItem item = StorageCacheUtils.getSfItem(block.getLocation());
-                if (item != null && item.getId().equals("ITEM_CREATOR")) {
+                if (item != null && item.getId().equals(STItems.ITEM_CREATOR.getItemId())) {
                     //耗电
                     float charge = ItemEnergy.getStoredEnergy(itemStack);
                     float cost = 2048F;
@@ -333,7 +333,7 @@ public class STItemSetup {
             rightClickEvent.cancel();
         });
         createrCodeScanner.register(SpaceTech.getInstance());
-        RechargeableItem spaceOreScanner = new RechargeableItem(STCategories.ARMOR, STItems.SPACE_ORE_SCANNER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        RechargeableItem spaceOreScanner = new RechargeableItem(STCategories.TOOL, STItems.SPACE_ORE_SCANNER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 SlimefunItems.ELECTRO_MAGNET, STItems.HARD_AXLE, SlimefunItems.ELECTRO_MAGNET,
                 SlimefunItems.PLASTIC_SHEET, STItems.SUPER_CIRCUIT_BOARD, SlimefunItems.PLASTIC_SHEET,
                 SlimefunItems.PLASTIC_SHEET, STItems.TITANIUM_PLATE, SlimefunItems.PLASTIC_SHEET
@@ -537,7 +537,7 @@ public class STItemSetup {
                 SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.ELECTRIC_MOTOR, SlimefunItems.REINFORCED_ALLOY_INGOT,
                 SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.REINFORCED_ALLOY_INGOT,
         }).register(SpaceTech.getInstance());
-        new RechargeableItem(STCategories.ARMOR, STItems.ORE_RIG_REINFORCED, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new RechargeableItem(STCategories.TOOL, STItems.ORE_RIG_REINFORCED, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 null, SlimefunItems.REINFORCED_ALLOY_INGOT, null,
                 SlimefunItems.REINFORCED_ALLOY_INGOT, STItems.TITANIUM, SlimefunItems.REINFORCED_ALLOY_INGOT,
                 null, STItems.RIG, null,
@@ -558,7 +558,7 @@ public class STItemSetup {
                 });
             }
         }.register(SpaceTech.getInstance());
-        new RechargeableItem(STCategories.ARMOR, STItems.ORE_RIG_CARBONADO, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new RechargeableItem(STCategories.TOOL, STItems.ORE_RIG_CARBONADO, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 null, SlimefunItems.CARBONADO, null,
                 SlimefunItems.CARBONADO, STItems.TITANIUM, SlimefunItems.CARBONADO,
                 null, STItems.ORE_RIG_REINFORCED, null,
@@ -579,7 +579,7 @@ public class STItemSetup {
                 });
             }
         }.register(SpaceTech.getInstance());
-        new RechargeableItem(STCategories.ARMOR, STItems.ORE_RIG_TITANIUM, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new RechargeableItem(STCategories.TOOL, STItems.ORE_RIG_TITANIUM, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 null, STItems.TITANIUM, null,
                 STItems.TITANIUM, STItems.TITANIUM, STItems.TITANIUM,
                 null, STItems.ORE_RIG_CARBONADO, null,

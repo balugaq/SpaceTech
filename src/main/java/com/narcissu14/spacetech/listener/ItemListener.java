@@ -34,6 +34,11 @@ public class ItemListener implements Listener {
         //以后也许会增加更多
     }
 
+    /*
+     * Deprecated
+     */
+
+    /*
     @EventHandler
     public void onPlayerUnlockNew(@NotNull ResearchUnlockEvent event) {
         if (!event.getPlayer().hasPermission("slimefun.*")) {
@@ -43,4 +48,6 @@ public class ItemListener implements Listener {
             Bukkit.broadcastMessage(unlockMsg);
         }
     }
+
+     */
 }
