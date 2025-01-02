@@ -19,10 +19,12 @@ import com.narcissu14.spacetech.utils.ItemEnergy;
 import com.narcissu14.spacetech.utils.TitleAPI;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
+import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.ToolUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.implementation.items.electric.generators.SolarGenerator;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
@@ -35,11 +37,13 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 /**
@@ -339,10 +343,12 @@ public class STItemSetup {
             ItemStack itemStack = rightClickEvent.getItem();
             if (SlimefunUtils.isItemSimilar(itemStack, STItems.SPACE_ORE_SCANNER, false)) {
                 if (!STConfig.spaceWorldList.contains(player.getWorld().getName())) {
+                    player.sendMessage("§c§l你只能在SpaceWorld才能使用该物品！");
                     rightClickEvent.cancel();
                     return;
                 }
                 if (!player.isSneaking()) {
+                    player.sendMessage("§c§l你必须潜行才可以使用该物品！");
                     rightClickEvent.cancel();
                     return;
                 }
@@ -393,7 +399,7 @@ public class STItemSetup {
                             ActionBarAPI.sendActionBar(player, "§c很遗憾周围没有检测到矿物");
                         }
                     }
-                }.runTaskLaterAsynchronously(SpaceTech.getInstance(), 120);
+                }.runTaskLaterAsynchronously(SpaceTech.getInstance(), 100);
             }
             rightClickEvent.cancel();
         });
@@ -535,17 +541,65 @@ public class STItemSetup {
                 null, SlimefunItems.REINFORCED_ALLOY_INGOT, null,
                 SlimefunItems.REINFORCED_ALLOY_INGOT, STItems.TITANIUM, SlimefunItems.REINFORCED_ALLOY_INGOT,
                 null, STItems.RIG, null,
-        }, 256).register(SpaceTech.getInstance());
+        }, 256) {
+            @Override
+            public void preRegister() {
+                addItemHandler((ToolUseHandler) (event, tool, fortune, drops) -> {
+                    SlimefunItem item = SlimefunItem.getByItem(tool);
+                    if (item instanceof RechargeableItem rechargeableItem) {
+                        if (rechargeableItem.getItemCharge(tool) < 2) {
+                            Player player = event.getPlayer();
+                            player.sendMessage("§c电量不足！");
+                            event.setCancelled(true);
+                            return;
+                        }
+                        rechargeableItem.removeItemCharge(tool, 2);
+                    }
+                });
+            }
+        }.register(SpaceTech.getInstance());
         new RechargeableItem(STCategories.ARMOR, STItems.ORE_RIG_CARBONADO, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 null, SlimefunItems.CARBONADO, null,
                 SlimefunItems.CARBONADO, STItems.TITANIUM, SlimefunItems.CARBONADO,
                 null, STItems.ORE_RIG_REINFORCED, null,
-        }, 512).register(SpaceTech.getInstance());
+        }, 512) {
+            @Override
+            public void preRegister() {
+                addItemHandler((ToolUseHandler) (event, tool, fortune, drops) -> {
+                    SlimefunItem item = SlimefunItem.getByItem(tool);
+                    if (item instanceof RechargeableItem rechargeableItem) {
+                        if (rechargeableItem.getItemCharge(tool) < 2) {
+                            Player player = event.getPlayer();
+                            player.sendMessage("§c电量不足！");
+                            event.setCancelled(true);
+                            return;
+                        }
+                        rechargeableItem.removeItemCharge(tool, 2);
+                    }
+                });
+            }
+        }.register(SpaceTech.getInstance());
         new RechargeableItem(STCategories.ARMOR, STItems.ORE_RIG_TITANIUM, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
                 null, STItems.TITANIUM, null,
                 STItems.TITANIUM, STItems.TITANIUM, STItems.TITANIUM,
                 null, STItems.ORE_RIG_CARBONADO, null,
-        }, 1024).register(SpaceTech.getInstance());
+        }, 1024) {
+            @Override
+            public void preRegister() {
+                addItemHandler((ToolUseHandler) (event, tool, fortune, drops) -> {
+                    SlimefunItem item = SlimefunItem.getByItem(tool);
+                    if (item instanceof RechargeableItem rechargeableItem) {
+                        if (rechargeableItem.getItemCharge(tool) < 2) {
+                            Player player = event.getPlayer();
+                            player.sendMessage("§c电量不足！");
+                            event.setCancelled(true);
+                            return;
+                        }
+                        rechargeableItem.removeItemCharge(tool, 2);
+                    }
+                });
+            }
+        }.register(SpaceTech.getInstance());
         new SlimefunItem(STCategories.TOOL, STItems.BEDROCK_DIAMOND_AXE, RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
                 null, null, null,
                 new ItemStack(Material.BEDROCK, 3), new ItemStack(Material.DIAMOND_AXE), null,

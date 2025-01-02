@@ -47,13 +47,35 @@ public final class ItemEnergy {
     }
 
     public static ItemStack chargeItem(ItemStack item, float energy) {
+        if (energy < 0) {
+            return removeEnergy(item, energy * -1);
+        }
+        if (energy == 0) {
+            return item;
+        }
         if (item == null || item.getType() == Material.AIR) {
             return null;
         }
         SlimefunItem sfitem = SlimefunItem.getByItem(item);
-        if (sfitem instanceof Rechargeable) {
-            Rechargeable rechargeable = (Rechargeable) sfitem;
+        if (sfitem instanceof Rechargeable rechargeable) {
             rechargeable.addItemCharge(item, energy);
+        }
+        return item;
+    }
+
+    public static ItemStack removeEnergy(ItemStack item, float energy) {
+        if (energy < 0) {
+            return chargeItem(item, energy * -1);
+        }
+        if (energy == 0) {
+            return item;
+        }
+        if (item == null || item.getType() == Material.AIR) {
+            return null;
+        }
+        SlimefunItem sfitem = SlimefunItem.getByItem(item);
+        if (sfitem instanceof Rechargeable rechargeable) {
+            rechargeable.removeItemCharge(item, energy);
         }
         return item;
     }
