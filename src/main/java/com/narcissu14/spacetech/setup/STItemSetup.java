@@ -4,6 +4,7 @@ import com.narcissu14.spacetech.SpaceTech;
 import com.narcissu14.spacetech.objects.RechargeableItem;
 import com.narcissu14.spacetech.objects.STCategories;
 import com.narcissu14.spacetech.objects.STItems;
+import com.narcissu14.spacetech.objects.UnplaceableItem;
 import com.narcissu14.spacetech.objects.blocks.AntiMatterCollectMachine;
 import com.narcissu14.spacetech.objects.blocks.BedrockBreakMachine;
 import com.narcissu14.spacetech.objects.blocks.BedrockCrackMachine;
@@ -600,27 +601,27 @@ public class STItemSetup {
                 });
             }
         }.register(SpaceTech.getInstance());
-        new SlimefunItem(STCategories.TOOL, STItems.BEDROCK_DIAMOND_AXE, RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
+        new UnplaceableItem(STCategories.TOOL, STItems.BEDROCK_DIAMOND_AXE, RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
                 null, null, null,
                 new ItemStack(Material.BEDROCK, 3), new ItemStack(Material.DIAMOND_AXE), null,
                 null, null, null
         }).register(SpaceTech.getInstance());
-        new SlimefunItem(STCategories.TOOL, STItems.BEDROCK_DIAMOND_PICKAXE, RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
+        new UnplaceableItem(STCategories.TOOL, STItems.BEDROCK_DIAMOND_PICKAXE, RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
                 null, null, null,
                 new ItemStack(Material.BEDROCK, 3), new ItemStack(Material.DIAMOND_PICKAXE), null,
                 null, null, null
         }).register(SpaceTech.getInstance());
-        new SlimefunItem(STCategories.TOOL, STItems.BEDROCK_DIAMOND_SWORD, RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
+        new UnplaceableItem(STCategories.TOOL, STItems.BEDROCK_DIAMOND_SWORD, RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
                 null, null, null,
                 new ItemStack(Material.BEDROCK, 2), new ItemStack(Material.DIAMOND_SWORD), null,
                 null, null, null
         }).register(SpaceTech.getInstance());
-        new SlimefunItem(STCategories.TOOL, STItems.BEDROCK_DIAMOND_HOE, RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
+        new UnplaceableItem(STCategories.TOOL, STItems.BEDROCK_DIAMOND_HOE, RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
                 null, null, null,
                 new ItemStack(Material.BEDROCK, 2), new ItemStack(Material.DIAMOND_HOE), null,
                 null, null, null
         }).register(SpaceTech.getInstance());
-        new SlimefunItem(STCategories.TOOL, STItems.BEDROCK_DIAMOND_SPADE, RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
+        new UnplaceableItem(STCategories.TOOL, STItems.BEDROCK_DIAMOND_SPADE, RECIPE_TYPE_UNIT_ITEM_CRAFTER, new ItemStack[]{
                 null, null, null,
                 new ItemStack(Material.BEDROCK, 1), new ItemStack(Material.DIAMOND_SHOVEL), null,
                 null, null, null
