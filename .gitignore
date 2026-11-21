@@ -13,3 +13,6 @@
 dependency-reduced-pom.xml
 
 .workbuddy/
+.codebuddy/
+.codegraph/
+.trellis/
