@@ -1,3 +1,8 @@
 SpaceWorld:
   SpaceWorldList:
     - SpaceWorld
+
+Mechanics:
+  BedrockBreakMachine:
+    # 一次启动最多沿破穿方向连续破穿多少格基岩，1 表示只破穿一格
+    ExtendBlocks: 4

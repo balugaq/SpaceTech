@@ -3,6 +3,7 @@ package com.narcissu14.spacetech.objects.blocks;
 import com.narcissu14.spacetech.SpaceTech;
 import com.narcissu14.spacetech.container.MachineDirection;
 import com.narcissu14.spacetech.objects.STItems;
+import com.narcissu14.spacetech.setup.config.STConfig;
 import com.narcissu14.spacetech.utils.SkullUtil;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
@@ -29,6 +30,10 @@ public abstract class BedrockBreakMachine extends AbstractPointsMachine {
     private final static ItemStack DIG_BUTTON = new CustomItemStack(new ItemStack(Material.HOPPER), "§c§l点击挖掘基岩",
             "", "§7当§e挖掘度§7到达最大后可以破穿指定方向的基岩", "§7你可以点击下方的按钮修改破穿的方位", "§7挖掘需要消耗基岩钻头", "", "§c§l注意: §7调整破穿方位会重置挖掘度");
     private final static String DIRECTION_KEY = "break-direction";
+    /**
+     * 每个机器单独保存的延伸格数，未设置时取配置里的上限
+     */
+    private final static String EXTEND_KEY = "break-extend";
     private static String ID;
     private static ItemStack POINTS_ITEM;
     private static int POINTS_MAX;
@@ -96,19 +101,18 @@ public abstract class BedrockBreakMachine extends AbstractPointsMachine {
                 player.sendMessage("§c挖掘度不足，现在还无法破穿基岩");
                 return false;
             }
-            Block facingBlock = b.getRelative(BlockFace.valueOf(StorageCacheUtils.getData(b.getLocation(), DIRECTION_KEY)));
+            BlockFace face = BlockFace.valueOf(StorageCacheUtils.getData(b.getLocation(), DIRECTION_KEY));
+            Block facingBlock = b.getRelative(face);
             if (!facingBlock.getType().equals(Material.BEDROCK)) {
                 player.sendMessage("§c破穿方向上的方块不是基岩");
                 return false;
             }
-            if (Slimefun.getProtectionManager().hasPermission(player, facingBlock, Interaction.BREAK_BLOCK)) {
-                //挖基岩
-                facingBlock.setType(Material.AIR);
+            int broken = breakBedrock(player, facingBlock, face, getExtend(b));
+            if (broken > 0) {
                 player.playSound(b.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 2f, 0.7f);
-                player.spawnParticle(Particle.EXPLOSION_NORMAL, b.getLocation(), 10);
+                player.spawnParticle(Particle.EXPLOSION_NORMAL, b.getLocation(), 5 * broken);
                 StorageCacheUtils.setData(b.getLocation(), POINTS_KEY, "0");
-            } else {
-                player.sendMessage("§c你没有权限破坏那个方向上的基岩！");
+                player.sendMessage("§a已沿§e" + face.name() + "§a方向破穿 §e" + broken + " §a格基岩");
             }
             return false;
         });
@@ -153,12 +157,68 @@ public abstract class BedrockBreakMachine extends AbstractPointsMachine {
             menu.replaceExistingItem(22, newButton);
             return false;
         });
+
+        menu.replaceExistingItem(24, getExtendButton(getExtend(b), getExtendMax()));
+        menu.addMenuClickHandler(24, (player, i, itemStack, clickAction) -> {
+            int next = getExtend(b) % getExtendMax() + 1;
+            StorageCacheUtils.setData(b.getLocation(), EXTEND_KEY, String.valueOf(next));
+            menu.replaceExistingItem(24, getExtendButton(next, getExtendMax()));
+            return false;
+        });
+    }
+
+    /**
+     * 从 facingBlock 起沿 face 方向连续破穿，遇到非基岩或无权限即停止
+     *
+     * @return 实际破穿的格数
+     */
+    private int breakBedrock(@NotNull Player player, @NotNull Block facingBlock, @NotNull BlockFace face, int extend) {
+        Block cursor = facingBlock;
+        int broken = 0;
+        for (int i = 0; i < extend; i++) {
+            if (!cursor.getType().equals(Material.BEDROCK)) {
+                break;
+            }
+            if (!Slimefun.getProtectionManager().hasPermission(player, cursor, Interaction.BREAK_BLOCK)) {
+                player.sendMessage("§c你没有权限破坏那个方向上的基岩！");
+                break;
+            }
+            cursor.setType(Material.AIR);
+            broken++;
+            cursor = cursor.getRelative(face);
+        }
+        return broken;
+    }
+
+    private static int getExtendMax() {
+        return Math.max(1, STConfig.bedrockBreakExtendMax);
+    }
+
+    private static int getExtend(@NotNull Block b) {
+        int max = getExtendMax();
+        String data = StorageCacheUtils.getData(b.getLocation(), EXTEND_KEY);
+        if (data == null) {
+            return max;
+        }
+        try {
+            return Math.min(Math.max(Integer.parseInt(data), 1), max);
+        } catch (NumberFormatException e) {
+            return max;
+        }
+    }
+
+    private static @NotNull ItemStack getExtendButton(int extend, int max) {
+        return new CustomItemStack(new ItemStack(Material.PISTON), "§7当前延伸格数: §e" + extend + " §7格",
+                "", "§7一次启动会沿破穿方向连续破穿", "§7碰到非基岩或达到格数上限即停止", "", "§a点击修改§e延伸格数", "§7可设置范围: §e1 ~ " + max + " 格");
     }
 
     @Override
     public void runOnBlockPlace(Player p, @NotNull Block b) {
         if (StorageCacheUtils.getData(b.getLocation(), DIRECTION_KEY) == null) {
             StorageCacheUtils.setData(b.getLocation(), DIRECTION_KEY, MachineDirection.DOWN.toString());
+        }
+        if (StorageCacheUtils.getData(b.getLocation(), EXTEND_KEY) == null) {
+            StorageCacheUtils.setData(b.getLocation(), EXTEND_KEY, String.valueOf(getExtendMax()));
         }
     }
 
