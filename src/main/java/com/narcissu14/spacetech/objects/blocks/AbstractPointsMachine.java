@@ -320,6 +320,9 @@ public abstract class AbstractPointsMachine extends AContainer {
             //已经在tick中判断为可充点
             //这里先假设配方仅有一个输入物
             ItemStack output = charginItems.get(b);
+            if (output == null) {
+                return;
+            }
             int points = recipe.getValueMax() - getItemPoints(output);
             if (nowValue - points < 0) {
                 points = nowValue;
@@ -422,10 +425,14 @@ public abstract class AbstractPointsMachine extends AContainer {
             }
         } else {
             //如果没有在进行生产流程
+            BlockMenu menu = StorageCacheUtils.getMenu(b.getLocation());
+            if (menu == null) {
+                return;
+            }
             PointMachineRecipe r = null;
-            Map<Integer, Integer> found = new HashMap<>();
+            Map<Integer, Integer> found = null;
+            ItemStack chargeItem = null;
 
-            recipeCheck:
             for (PointMachineRecipe recipe : this.recipes) {
                 //判断是否有足够扣除的点数
                 if (!recipe.getCheckType().equals(PointMachineRecipe.PointCheckType.NO_CHECK)) {
@@ -466,53 +473,26 @@ public abstract class AbstractPointsMachine extends AContainer {
                     }
                 }
                 //判断为哪种配方形式后再行处理
-                if (recipe.getType().equals(PointMachineRecipe.RecipeResultType.ITEM)) {
-                    for (ItemStack input : recipe.getInput()) {
-                        for (int slot : getInputSlots()) {
-                            if (SlimefunUtils.isItemSimilar(StorageCacheUtils.getMenu(b.getLocation()).getItemInSlot(slot), input, true)) {
-                                if (input != null) {
-                                    found.put(slot, input.getAmount());
-                                }
-                                //break;
-                            }
-                        }
-                    }
-                    if (found.size() == recipe.getInput().length) {
-                        r = recipe;
-                        break;
-                    }
-                    found.clear();
-                } else if (recipe.getType().equals(PointMachineRecipe.RecipeResultType.LORE)) {
+                if (recipe.getType().equals(PointMachineRecipe.RecipeResultType.LORE)) {
                     //检查输出槽是否有空位
-                    boolean hasEmptyOutSlot = false;
-                    for (int outSlot : getOutputSlots()) {
-                        if (StorageCacheUtils.getMenu(b.getLocation()).getItemInSlot(outSlot) == null) {
-                            hasEmptyOutSlot = true;
-                            break;
-                        }
-                    }
-                    if (!hasEmptyOutSlot) {
+                    if (!hasEmptyOutputSlot(menu)) {
                         return;
                     }
-                    ItemStack realInput = null;
-                    for (ItemStack input : recipe.getInput()) {
-                        for (int slot : getInputSlots()) {
-                            if (SlimefunUtils.isItemSimilar(StorageCacheUtils.getMenu(b.getLocation()).getItemInSlot(slot), input, false)) {
-                                if (input != null) {
-                                    found.put(slot, input.getAmount());
-                                    realInput = input;
-                                }
-                            }
-                        }
-                    }
-                    if (realInput != null) {
-                        charginItems.put(b, realInput);
-                    }
-                    if (found.size() == recipe.getInput().length) {
+                    ItemStack input = recipe.getInput().length > 0 ? recipe.getInput()[0] : null;
+                    ItemStack realInput = input == null ? null : findSlotItem(menu, input, false);
+                    Map<Integer, Integer> matched = matchInputs(menu, recipe.getInput(), false);
+                    if (matched != null && realInput != null) {
+                        found = matched;
+                        chargeItem = realInput;
                         r = recipe;
                         break;
                     }
-                    found.clear();
+                } else {
+                    found = matchInputs(menu, recipe.getInput(), true);
+                    if (found != null) {
+                        r = recipe;
+                        break;
+                    }
                 }
             }
             if (r != null) {
@@ -523,8 +503,11 @@ public abstract class AbstractPointsMachine extends AContainer {
                 if (r.getOutput() != null && !fits(b, r.getOutput())) {
                     return;
                 }
+                if (chargeItem != null) {
+                    charginItems.put(b, chargeItem);
+                }
                 for (Map.Entry<Integer, Integer> entry : found.entrySet()) {
-                    StorageCacheUtils.getMenu(b.getLocation()).consumeItem(entry.getKey(), entry.getValue());
+                    menu.consumeItem(entry.getKey(), entry.getValue());
                 }
                 processing.put(b, r);
                 progress.put(b, r.getTicks());
@@ -535,4 +518,70 @@ public abstract class AbstractPointsMachine extends AContainer {
     public abstract int getCapacity();
 
     public abstract int getSpeed();
+
+    /**
+     * 在输入槽中按「物品 + 数量」匹配配方需求。
+     * 同一物品分散在多个槽位、或一个槽位同时满足多项需求时都能正确匹配，
+     * 不能用「命中槽位数 == 需求条数」来判断，否则两个相同物品分装在两格时会永远匹配失败。
+     *
+     * @return 槽位 -> 应扣除的数量；无法满足全部需求时返回 null
+     */
+    private @Nullable Map<Integer, Integer> matchInputs(@NotNull BlockMenu menu, ItemStack @NotNull [] inputs, boolean checkLore) {
+        List<ItemStack> templates = new ArrayList<>();
+        for (ItemStack input : inputs) {
+            if (input != null && input.getType() != Material.AIR) {
+                templates.add(input);
+            }
+        }
+        //空输入配方不参与匹配，否则机器会凭空产出物品
+        if (templates.isEmpty()) {
+            return null;
+        }
+
+        int[] slots = getInputSlots();
+        ItemStack[] stackInSlot = new ItemStack[slots.length];
+        int[] available = new int[slots.length];
+        for (int i = 0; i < slots.length; i++) {
+            stackInSlot[i] = menu.getItemInSlot(slots[i]);
+            available[i] = stackInSlot[i] == null ? 0 : stackInSlot[i].getAmount();
+        }
+
+        Map<Integer, Integer> found = new HashMap<>();
+        for (ItemStack template : templates) {
+            int need = template.getAmount();
+            for (int i = 0; i < slots.length && need > 0; i++) {
+                //数量由这里按剩余量分配，故关闭 isItemSimilar 的数量比对
+                if (available[i] <= 0 || !SlimefunUtils.isItemSimilar(stackInSlot[i], template, checkLore, false)) {
+                    continue;
+                }
+                int take = Math.min(available[i], need);
+                found.merge(slots[i], take, Integer::sum);
+                available[i] -= take;
+                need -= take;
+            }
+            if (need > 0) {
+                return null;
+            }
+        }
+        return found;
+    }
+
+    private @Nullable ItemStack findSlotItem(@NotNull BlockMenu menu, @NotNull ItemStack template, boolean checkLore) {
+        for (int slot : getInputSlots()) {
+            ItemStack item = menu.getItemInSlot(slot);
+            if (item != null && SlimefunUtils.isItemSimilar(item, template, checkLore, false)) {
+                return item.clone();
+            }
+        }
+        return null;
+    }
+
+    private boolean hasEmptyOutputSlot(@NotNull BlockMenu menu) {
+        for (int slot : getOutputSlots()) {
+            if (menu.getItemInSlot(slot) == null) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
