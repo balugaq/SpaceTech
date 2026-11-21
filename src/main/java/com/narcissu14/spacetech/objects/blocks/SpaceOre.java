@@ -56,6 +56,13 @@ public class SpaceOre extends AbstractOre {
                     return;
                 }
                 Block block = blockBreakEvent.getBlock();
+                //先确认工具可用，避免方块数据已扣减却不给掉落
+                boolean electric = STItems.isEMiningTools(player.getInventory().getItemInMainHand());
+                if (electric && !consumeEnergy(player)) {
+                    ActionBarAPI.sendActionBar(player, "§c§l电力钻机电量不足");
+                    blockBreakEvent.setCancelled(true);
+                    return;
+                }
                 //以破坏工具决定挖掘度减少量
                 if (StorageCacheUtils.getData(block.getLocation(), DURABILITY) == null) {
                     initBlockInfo(block);
@@ -78,8 +85,8 @@ public class SpaceOre extends AbstractOre {
                     //破坏提示
                     ActionBarAPI.sendActionBar(player, breakMsg.replace("%dur%", String.valueOf(dur)) + newBreakTimes);
                 }
-                //扣除耐久
-                if (checkEMiningTool(player)) {
+                //电力钻机走耗电路线，普通工具走耐久路线，二者不叠加
+                if (!electric) {
                     damageItem(player);
                 }
                 blockBreakEvent.setCancelled(true);
@@ -88,20 +95,16 @@ public class SpaceOre extends AbstractOre {
     }
 
     /**
-     * 检查是否为钻机
+     * 电力钻机挖掘太空矿物消耗的电量
      */
-    private boolean checkEMiningTool(@NotNull Player player) {
+    private boolean consumeEnergy(@NotNull Player player) {
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (STItems.isEMiningTools(item)) {
-            float charge = ItemEnergy.getStoredEnergy(item);
-            float cost = 2F;
-            if (charge < cost) {
-                return false;
-            }
-            player.getInventory().setItemInMainHand(ItemEnergy.chargeItem(item, -cost));
-            return true;
+        float cost = 2F;
+        if (ItemEnergy.getStoredEnergy(item) < cost) {
+            return false;
         }
-        return false;
+        player.getInventory().setItemInMainHand(ItemEnergy.chargeItem(item, -cost));
+        return true;
     }
 
     private void initBlockInfo(Block block) {
