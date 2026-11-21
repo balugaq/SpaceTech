@@ -87,7 +87,7 @@ public abstract class SpaceGPSMarkMachine extends AbstractPointsMachine {
             if (StorageCacheUtils.getData(b.getLocation(), POINTS_KEY).equals(String.valueOf(pointsMax))) {
                 StorageCacheUtils.setData(b.getLocation(), POINTS_KEY, "0");
                 p.closeInventory();
-                TitleAPI.sendTitle(p, 1, 3, 1, "§6§l发射", "§e等待远方的消息吧！");
+                TitleAPI.sendTitle(p, 10, 40, 10, "§6§l发射", "§e等待远方的消息吧！");
                 p.playSound(b.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1f, 1.5f);
                 p.playSound(b.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 2f, 1.5f);
                 p.spawnParticle(Particle.EXPLOSION_LARGE, b.getLocation(), 10);
@@ -104,21 +104,21 @@ public abstract class SpaceGPSMarkMachine extends AbstractPointsMachine {
                                 break;
                             }
                         }
-                        Location location = GeneratorUtils.getSaveLocation(world, 500, 8);
+                        Location location = GeneratorUtils.getSaveLocation(world, STConfig.spaceGpsSearchRadius, STConfig.spaceGpsMaxFindTimes);
                         if (location != null) {
                             //添加标记并发送提示
-                            TitleAPI.sendTitle(p, 1, 2, 1, "§a§l发射成功", "§e请为寻找到的标记点命名");
+                            TitleAPI.sendTitle(p, 10, 40, 10, "§a§l发射成功", "§e请为寻找到的标记点命名");
                             Slimefun.getGPSNetwork().createWaypoint(p, location);
                         } else {
                             //发送Title消息告知标记失败
-                            TitleAPI.sendTitle(p, 1, 2, 1, "", "§c§l很遗憾...本次发射失败了，没有找到安全的着陆点");
+                            TitleAPI.sendTitle(p, 10, 40, 10, "", "§c§l很遗憾...本次发射失败了，没有找到安全的着陆点");
                             p.playSound(b.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1.5f);
                         }
                     }
                 }.runTaskLaterAsynchronously(SpaceTech.getInstance(), 200);
             } else {
                 //联氨量不足
-                TitleAPI.sendTitle(p, 1, 2, 1, "", "§c§l当前联氨量不足");
+                TitleAPI.sendTitle(p, 10, 40, 10, "", "§c§l当前联氨量不足");
             }
             return false;
         });

@@ -6,3 +6,8 @@ Mechanics:
   BedrockBreakMachine:
     # 一次启动最多沿破穿方向连续破穿多少格基岩，1 表示只破穿一格
     ExtendBlocks: 4
+  SpaceGPS:
+    # 太空GPS发射时随机寻找着陆点的半径
+    SearchRadius: 500
+    # 最多随机尝试多少个坐标，命中不了就报告发射失败
+    MaxFindTimes: 64
