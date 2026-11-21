@@ -480,8 +480,12 @@ public abstract class AbstractPointsMachine extends AContainer {
                     }
                     ItemStack input = recipe.getInput().length > 0 ? recipe.getInput()[0] : null;
                     ItemStack realInput = input == null ? null : findSlotItem(menu, input, false);
+                    //输入物不满足充点条件（例如头盔已经满氧）时不启动生产，避免空转
+                    if (realInput == null || !isChargeableItem(realInput)) {
+                        continue;
+                    }
                     Map<Integer, Integer> matched = matchInputs(menu, recipe.getInput(), false);
-                    if (matched != null && realInput != null) {
+                    if (matched != null) {
                         found = matched;
                         chargeItem = realInput;
                         r = recipe;
