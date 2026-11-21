@@ -7,7 +7,6 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChargeUtils;
-import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -20,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 /**
  * @author Narcissu14
@@ -86,8 +84,14 @@ public class STItems {
     private static final @NotNull HashMap<String, Integer> miningTools = new HashMap<>();
     /**
      * 特殊的电力挖矿工具，及其每次的挖掘度
+     * key 为 Slimefun 物品 ID：不能按 ItemStack 比材质，改过材质之后玩家手里的旧物品材质仍是旧的，
+     * SlimefunUtils#isItemSimilar 会直接因为材质不同判定为不相似
      */
-    private static final @NotNull HashMap<ItemStack, Integer> eMiningTools = new HashMap<>();
+    private static final @NotNull HashMap<String, Integer> eMiningTools = new HashMap<>();
+    /**
+     * 特殊的电力挖矿工具，及其电量上限
+     */
+    private static final @NotNull HashMap<String, Integer> eMiningToolCapacity = new HashMap<>();
     public static SlimefunItemStack COPPER_ORE = null;
     public static SlimefunItemStack SILVER_ORE = null;
     public static SlimefunItemStack TITANIUM_ORE = null;
@@ -182,47 +186,45 @@ public class STItems {
         miningTools.put("SPACETECH_REINFORCED_ALLOY_PICKAXE", 14);
         miningTools.put("SPACETECH_CARBONADO_PICKAXE", 20);
         //电力挖掘工具
-        eMiningTools.put(ORE_RIG_REINFORCED, 30);
-        eMiningTools.put(ORE_RIG_CARBONADO, 40);
-        eMiningTools.put(ORE_RIG_TITANIUM, 50);
+        eMiningTools.put(ORE_RIG_REINFORCED.getItemId(), 30);
+        eMiningTools.put(ORE_RIG_CARBONADO.getItemId(), 40);
+        eMiningTools.put(ORE_RIG_TITANIUM.getItemId(), 50);
+        eMiningToolCapacity.put(ORE_RIG_REINFORCED.getItemId(), 256);
+        eMiningToolCapacity.put(ORE_RIG_CARBONADO.getItemId(), 512);
+        eMiningToolCapacity.put(ORE_RIG_TITANIUM.getItemId(), 1024);
     }
 
     public static boolean isEMiningTools(ItemStack item) {
-        for (Entry<ItemStack, Integer> entry : eMiningTools.entrySet()) {
-            if (SlimefunUtils.isItemSimilar(item, entry.getKey(), false)) {
-                return true;
-            }
-        }
-        return false;
+        String id = getToolId(item);
+        return id != null && eMiningTools.containsKey(id);
     }
 
     public static int getToolBreakAmount(ItemStack item) {
-        for (Entry<ItemStack, Integer> entry : eMiningTools.entrySet()) {
-            if (SlimefunUtils.isItemSimilar(item, (entry.getKey()), false)) {
-                return entry.getValue();
+        String id = getToolId(item);
+        if (id != null) {
+            Integer eAmount = eMiningTools.get(id);
+            if (eAmount != null) {
+                return eAmount;
             }
-        }
-        SlimefunItem sfItem = SlimefunItem.getByItem(item);
-        if (sfItem != null && miningTools.containsKey(sfItem.getId())) {
-            return miningTools.get(sfItem.getId());
+            Integer amount = miningTools.get(id);
+            if (amount != null) {
+                return amount;
+            }
         }
         return 5;
     }
 
     public static int getToolCapacity(ItemStack item) {
-        if (SlimefunUtils.isItemSimilar(ORE_RIG_REINFORCED, item, false, false)) {
-            return 256;
-        }
+        String id = getToolId(item);
+        return id == null ? 0 : eMiningToolCapacity.getOrDefault(id, 0);
+    }
 
-        if (SlimefunUtils.isItemSimilar(ORE_RIG_CARBONADO, item, false, false)) {
-            return 512;
-        }
-
-        if (SlimefunUtils.isItemSimilar(ORE_RIG_TITANIUM, item, false, false)) {
-            return 1024;
-        }
-
-        return 0;
+    /**
+     * 取物品的 Slimefun 物品 ID，与物品当前材质无关
+     */
+    private static @Nullable String getToolId(@Nullable ItemStack item) {
+        SlimefunItem sfItem = SlimefunItem.getByItem(item);
+        return sfItem == null ? null : sfItem.getId();
     }
 
     /**
