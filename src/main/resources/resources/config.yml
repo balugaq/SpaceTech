@@ -11,3 +11,5 @@ Mechanics:
     SearchRadius: 500
     # 最多随机尝试多少个坐标，命中不了就报告发射失败
     MaxFindTimes: 64
+    # 打印每次选址尝试的坐标与结果，用于排查选址概率问题
+    Debug: false

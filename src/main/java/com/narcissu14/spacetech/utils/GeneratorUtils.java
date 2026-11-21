@@ -1,11 +1,14 @@
 package com.narcissu14.spacetech.utils;
 
+import com.narcissu14.spacetech.SpaceTech;
+import com.narcissu14.spacetech.setup.config.STConfig;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerHead;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.skins.PlayerSkin;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -21,6 +24,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 
 /**
  * @author Narcissu14
@@ -68,23 +73,47 @@ public class GeneratorUtils {
     }
 
     /**
-     * 寻找太空世界中的安全位置
+     * 在太空世界中寻找一个安全落脚点。
+     * 必须先把区块生成并 populate 完再扫描方块：未生成的区块读出来全是空气，
+     * 会把「星球还没生成」误判成「这里没有陆地」，玩家跑图之后成功率暴涨就是这个原因。
      *
-     * @param world 目标世界
+     * @param callback 找到时回调坐标，尝试 maxFindTimes 次仍失败时回调 null
      */
-    public static Location getSaveLocation(@Nullable World world, int radius, int maxFindTimes) {
+    public static void findSafeLocation(@Nullable World world, int radius, int maxFindTimes, @NotNull Consumer<@Nullable Location> callback) {
         if (world == null) {
-            return null;
+            callback.accept(null);
+            return;
         }
-        Random random = new Random();
-        //限制最多查找次数
-        for (int i = 0; i < maxFindTimes; i++) {
-            int x = random.nextInt(radius << 1) - radius;
-            int z = random.nextInt(radius << 1) - radius;
-            for (int y = world.getMaxHeight(); y > 30; y--) {
-                if (world.getBlockAt(x, y, z).getType().isSolid()) {
-                    return new Location(world, x, y + 1, z);
-                }
+        findSafeLocation(world, radius, maxFindTimes, 1, callback);
+    }
+
+    private static void findSafeLocation(@NotNull World world, int radius, int maxFindTimes, int attempt, @NotNull Consumer<@Nullable Location> callback) {
+        if (attempt > maxFindTimes) {
+            callback.accept(null);
+            return;
+        }
+        Random random = ThreadLocalRandom.current();
+        int x = random.nextInt(radius << 1) - radius;
+        int z = random.nextInt(radius << 1) - radius;
+        world.getChunkAtAsync(x >> 4, z >> 4).whenComplete((chunk, error) ->
+                Bukkit.getScheduler().runTask(SpaceTech.getInstance(), () -> {
+                    Location location = error == null ? scanColumn(world, x, z) : null;
+                    if (STConfig.debugSpaceGps) {
+                        SpaceTech.getInstance().getLogger().info("[GPS] 第 " + attempt + "/" + maxFindTimes + " 次选址 ("
+                                + x + ", " + z + ") " + (location == null ? "未找到落脚点" : "着陆点 y=" + location.getBlockY()));
+                    }
+                    if (location != null) {
+                        callback.accept(location);
+                    } else {
+                        findSafeLocation(world, radius, maxFindTimes, attempt + 1, callback);
+                    }
+                }));
+    }
+
+    private static @Nullable Location scanColumn(@NotNull World world, int x, int z) {
+        for (int y = world.getMaxHeight() - 1; y > 30; y--) {
+            if (world.getBlockAt(x, y, z).getType().isSolid()) {
+                return new Location(world, x, y + 1, z);
             }
         }
         return null;

@@ -12,7 +12,6 @@ import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -104,18 +103,26 @@ public abstract class SpaceGPSMarkMachine extends AbstractPointsMachine {
                                 break;
                             }
                         }
-                        Location location = GeneratorUtils.getSaveLocation(world, STConfig.spaceGpsSearchRadius, STConfig.spaceGpsMaxFindTimes);
-                        if (location != null) {
-                            //添加标记并发送提示
-                            TitleAPI.sendTitle(p, 10, 40, 10, "§a§l发射成功", "§e请为寻找到的标记点命名");
-                            Slimefun.getGPSNetwork().createWaypoint(p, location);
-                        } else {
-                            //发送Title消息告知标记失败
-                            TitleAPI.sendTitle(p, 10, 40, 10, "", "§c§l很遗憾...本次发射失败了，没有找到安全的着陆点");
-                            p.playSound(b.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1.5f);
-                        }
+                        GeneratorUtils.findSafeLocation(world, STConfig.spaceGpsSearchRadius, STConfig.spaceGpsMaxFindTimes, location -> {
+                            if (!p.isOnline()) {
+                                return;
+                            }
+                            if (location != null) {
+                                //添加标记并发送提示
+                                SpaceTech.getInstance().getLogger().info("[GPS] 为 " + p.getName() + " 创建太空标记点 "
+                                        + location.getWorld().getName() + " " + location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ());
+                                TitleAPI.sendTitle(p, 10, 40, 10, "§a§l发射成功", "§e请为寻找到的标记点命名");
+                                Slimefun.getGPSNetwork().createWaypoint(p, location);
+                            } else {
+                                //发送Title消息告知标记失败
+                                SpaceTech.getInstance().getLogger().info("[GPS] 为 " + p.getName() + " 选址失败，已尝试 "
+                                        + STConfig.spaceGpsMaxFindTimes + " 次");
+                                TitleAPI.sendTitle(p, 10, 40, 10, "", "§c§l很遗憾...本次发射失败了，没有找到安全的着陆点");
+                                p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1.5f);
+                            }
+                        });
                     }
-                }.runTaskLaterAsynchronously(SpaceTech.getInstance(), 200);
+                }.runTaskLater(SpaceTech.getInstance(), 200);
             } else {
                 //联氨量不足
                 TitleAPI.sendTitle(p, 10, 40, 10, "", "§c§l当前联氨量不足");

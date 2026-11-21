@@ -23,6 +23,10 @@ public class STConfig extends AbstractConfig {
      * 太空GPS选址的最大随机尝试次数
      */
     public static int spaceGpsMaxFindTimes;
+    /**
+     * 是否打印每次GPS选址尝试的坐标
+     */
+    public static boolean debugSpaceGps;
 
     public STConfig(@NotNull File configFile) {
         super(configFile);
@@ -34,6 +38,7 @@ public class STConfig extends AbstractConfig {
         bedrockBreakExtendMax = Math.max(1, config.getInt("Mechanics.BedrockBreakMachine.ExtendBlocks", 4));
         spaceGpsSearchRadius = Math.max(16, config.getInt("Mechanics.SpaceGPS.SearchRadius", 500));
         spaceGpsMaxFindTimes = Math.max(1, config.getInt("Mechanics.SpaceGPS.MaxFindTimes", 64));
+        debugSpaceGps = config.getBoolean("Mechanics.SpaceGPS.Debug", false);
     }
 
     @Override
